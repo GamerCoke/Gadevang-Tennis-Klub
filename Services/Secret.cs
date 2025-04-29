@@ -1,4 +1,4 @@
-﻿namespace Gadevang_Tennis_Klub.Services
+namespace Gadevang_Tennis_Klub.Services
 {
     public class Secret
     {
