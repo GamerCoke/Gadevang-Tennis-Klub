@@ -2,5 +2,8 @@
 {
     public interface IEventBooking
     {
+        int ID { get; set; }
+        int MemberID { get; set; }
+        int EventID { get; set; }
     }
 }
