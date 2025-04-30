@@ -2,7 +2,7 @@
 
 namespace Gadevang_Tennis_Klub.Interfaces.Services
 {
-    public interface ICourtDBcs
+    public interface ICourtDB
     {
         public bool CreateCourtAsync(ICourt court);
         public bool UpdateCourtAsync(ICourt court);
@@ -10,5 +10,6 @@ namespace Gadevang_Tennis_Klub.Interfaces.Services
         public ICourt GetCourtByIDAsync(int courtID);
         public List<ICourt> GetAllCourtsAsync();
         public List<ICourt> GetCourtsByTypeAsync(string type);
+        public List<ICourt> GetCourtsByNameAsync(string name);
     }
 }
