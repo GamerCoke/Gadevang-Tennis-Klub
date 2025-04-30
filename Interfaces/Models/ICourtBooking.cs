@@ -6,9 +6,11 @@
         public int Court_ID { get; set; }
         public TimeOnly Time { get; set; }
         public int ID { get; set; }
-        public IReadOnlyList<IMember> Participants { get; set; }
+        public IReadOnlyList<IMember>? Participants { get; set; }
         public int? Team_ID { get; set; }
         public int? Member_ID { get; set; }
         public int? Event_ID { get; set; }
+
+        public bool AddPartisipant(int memberID);
     }
 }

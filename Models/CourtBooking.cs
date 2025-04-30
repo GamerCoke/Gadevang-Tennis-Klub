@@ -21,7 +21,7 @@ namespace Gadevang_Tennis_Klub.Models
         public int ID { get; set; }
 
         [BindProperty]
-        public IReadOnlyList<IMember> Participants { get; set; }
+        public IReadOnlyList<IMember>? Participants { get; set; }
 
         [BindProperty]
         public int? Team_ID { get; set; }
@@ -34,7 +34,35 @@ namespace Gadevang_Tennis_Klub.Models
 
         public CourtBooking()
         {
-            
+        }
+
+        public CourtBooking(int id, int courtID, DateOnly date, TimeOnly time, int? teamID, int? memberID, int? eventID)
+        {
+            ID = id;
+            Court_ID = courtID;
+            Date = date;
+            Time = time;
+            if ((teamID != null) && (memberID == null) && (eventID == null))
+            {
+                Team_ID = teamID;
+            }
+            else if ((teamID == null) && (memberID != null) && (eventID == null))
+            {
+                Member_ID = memberID;
+            }
+            else if ((teamID != null) && (memberID == null) && (eventID != null))
+            {
+                Event_ID = eventID;
+            }
+            else
+                throw new Exception();
+        }
+
+        public bool AddPartisipant(int memberID)
+        {
+            throw new NotImplementedException();
+            // IMember part = new IMember();
+            // Participants.Add(part.GetMemberByID(memberID));
         }
     }
 }
