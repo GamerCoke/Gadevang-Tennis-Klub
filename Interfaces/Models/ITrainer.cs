@@ -1,6 +1,6 @@
 ﻿namespace Gadevang_Tennis_Klub.Interfaces.Models
 {
-    public interface ITrainer
+    public interface ITrainer : IBasePerson
     {
     }
 }
