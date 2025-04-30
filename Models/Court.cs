@@ -17,8 +17,14 @@ namespace Gadevang_Tennis_Klub.Models
         public string? Name { get; set; }
 
         public Court()
+        { 
+        }
+
+        public Court(int id, string type, string? name)
         {
-            
+            ID = id;
+            Type = type;
+            Name = name;
         }
     }
 }
