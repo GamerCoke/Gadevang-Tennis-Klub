@@ -27,7 +27,7 @@ namespace Gadevang_Tennis_Klub.Models
         [StringLength(256, ErrorMessage = "Email må ikke være mere end 256 karakterer lang")]
         [RegularExpression(
             "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
-            ErrorMessage = "Telefonnummer skal være i formattet \"+45 nn nn nn nn\""
+            ErrorMessage = "Email er i forkert format"
         )]
         public string Email { get; set; }
 
