@@ -3,7 +3,7 @@ using Gadevang_Tennis_Klub.Interfaces.Services;
 
 namespace Gadevang_Tennis_Klub.Services.IENumerable
 {
-    public class TeamDB : ITeamDB
+    public class TeamDB_IENU : ITeamDB
     {
         public bool CreateTeamASync(ITeam team)
         {

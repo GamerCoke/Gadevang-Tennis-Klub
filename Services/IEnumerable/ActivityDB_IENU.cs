@@ -1,9 +1,9 @@
 ﻿using Gadevang_Tennis_Klub.Interfaces.Models;
 using Gadevang_Tennis_Klub.Interfaces.Services;
 
-namespace Gadevang_Tennis_Klub.Services.SQL
+namespace Gadevang_Tennis_Klub.Services.IENumerable
 {
-    public class ActivityDB : IActivityDB
+    public class ActivityDB_IENU : IActivityDB
     {
         public bool CreateActivityAsync(IActivity activity)
         {

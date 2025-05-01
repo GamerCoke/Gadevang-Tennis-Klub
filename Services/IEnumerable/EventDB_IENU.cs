@@ -3,7 +3,7 @@ using Gadevang_Tennis_Klub.Interfaces.Services;
 
 namespace Gadevang_Tennis_Klub.Services.IENumerable
 {
-    public class EventDB : IEventDB
+    public class EventDB_IENU : IEventDB
     {
         public bool CreateEventAsync(IEvent ev)
         {

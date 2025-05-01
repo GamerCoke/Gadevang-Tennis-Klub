@@ -1,41 +1,46 @@
 ﻿using Gadevang_Tennis_Klub.Interfaces.Models;
 using Gadevang_Tennis_Klub.Interfaces.Services;
 
-namespace Gadevang_Tennis_Klub.Services.IENumerable
+namespace Gadevang_Tennis_Klub.Services.SQL
 {
-    public class CourtDB : ICourtDB
+    public class EventDB_SQL : IEventDB
     {
-        public bool CreateCourtAsync(ICourt court)
+        public bool CreateEventAsync(IEvent ev)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeleteCourtAsync(int courtID)
+        public bool DeleteEventAsync(int eventId)
         {
             throw new NotImplementedException();
         }
 
-        public List<ICourt> GetAllCourtsAsync()
+        public List<IEvent> GetAllEventsAsync()
         {
             throw new NotImplementedException();
         }
 
-        public ICourt GetCourtByIDAsync(int courtID)
+        public IEvent GetEventByIDAsync(int eventId)
         {
             throw new NotImplementedException();
         }
 
-        public List<ICourt> GetCourtsByNameAsync(string name)
+        public int GetEventCapacityAsync(int eventID)
         {
             throw new NotImplementedException();
         }
 
-        public List<ICourt> GetCourtsByTypeAsync(string type)
+        public List<IEvent> GetEventsByDateAsync(DateTime date)
         {
             throw new NotImplementedException();
         }
 
-        public bool UpdateCourtAsync(ICourt court)
+        public List<IEvent> GetEventsByMemberAsync(int memberID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateEventAsync(IEvent ev)
         {
             throw new NotImplementedException();
         }
