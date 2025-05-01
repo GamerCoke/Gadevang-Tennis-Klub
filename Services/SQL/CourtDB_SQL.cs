@@ -1,10 +1,12 @@
-﻿using Gadevang_Tennis_Klub.Interfaces.Models;
+﻿
+using Gadevang_Tennis_Klub.Interfaces.Models;
 using Gadevang_Tennis_Klub.Interfaces.Services;
 
 namespace Gadevang_Tennis_Klub.Services.SQL
 {
     public class CourtDB_SQL : ICourtDB
     {
+        // private string connectionString = Secret.ConnectionString;
         public bool CreateCourtAsync(ICourt court)
         {
             throw new NotImplementedException();
