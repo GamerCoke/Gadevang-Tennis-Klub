@@ -3,7 +3,7 @@ using Gadevang_Tennis_Klub.Interfaces.Services;
 
 namespace Gadevang_Tennis_Klub.Services.IENumerable.Booking
 {
-    public class CourtBookingDB : ICourtBookingDB
+    public class CourtBookingDB_IENU : ICourtBookingDB
     {
         public bool CreateCourtBookingAsync(ICourtBooking courtBooking)
         {

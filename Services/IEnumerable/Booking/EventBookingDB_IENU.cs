@@ -1,9 +1,9 @@
 ﻿using Gadevang_Tennis_Klub.Interfaces.Models;
 using Gadevang_Tennis_Klub.Interfaces.Services;
 
-namespace Gadevang_Tennis_Klub.Services.SQL.Booking
+namespace Gadevang_Tennis_Klub.Services.IENumerable.Booking
 {
-    public class EventBookingDB : IEventBookingDB
+    public class EventBookingDB_IENU : IEventBookingDB
     {
         public bool CreateEventBookingAsync(IEventBooking eventBooking)
         {

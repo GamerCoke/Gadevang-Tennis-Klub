@@ -3,44 +3,54 @@ using Gadevang_Tennis_Klub.Interfaces.Services;
 
 namespace Gadevang_Tennis_Klub.Services.SQL
 {
-    public class EventDB : IEventDB
+    public class TeamDB_SQL : ITeamDB
     {
-        public bool CreateEventAsync(IEvent ev)
+        public bool CreateTeamASync(ITeam team)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeleteEventAsync(int eventId)
+        public bool DeleteTeamAsync(int teamID)
         {
             throw new NotImplementedException();
         }
 
-        public List<IEvent> GetAllEventsAsync()
+        public List<ITeam> GetAllTeamAsync()
         {
             throw new NotImplementedException();
         }
 
-        public IEvent GetEventByIDAsync(int eventId)
+        public List<string> GetAllTrainersAsync()
         {
             throw new NotImplementedException();
         }
 
-        public int GetEventCapacityAsync(int eventID)
+        public bool GetTeamByIDAsync(int teamID)
         {
             throw new NotImplementedException();
         }
 
-        public List<IEvent> GetEventsByDateAsync(DateTime date)
+        public ITeam GetTeamByMemberAsync(int memberID)
         {
             throw new NotImplementedException();
         }
 
-        public List<IEvent> GetEventsByMemberAsync(int memberID)
+        public int GetTeamCapacityAsync(int teamID)
         {
             throw new NotImplementedException();
         }
 
-        public bool UpdateEventAsync(IEvent ev)
+        public List<ITeam> GetTeamsByActiveDateAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<ITeam> GetTeamsByTrainerAsync(string trainer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateTeamAsync(ITeam team)
         {
             throw new NotImplementedException();
         }

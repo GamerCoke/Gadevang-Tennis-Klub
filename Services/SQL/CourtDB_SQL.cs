@@ -3,7 +3,7 @@ using Gadevang_Tennis_Klub.Interfaces.Services;
 
 namespace Gadevang_Tennis_Klub.Services.SQL
 {
-    public class CourtDB : ICourtDB
+    public class CourtDB_SQL : ICourtDB
     {
         public bool CreateCourtAsync(ICourt court)
         {

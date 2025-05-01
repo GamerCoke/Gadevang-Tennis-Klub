@@ -3,7 +3,7 @@ using Gadevang_Tennis_Klub.Interfaces.Services;
 
 namespace Gadevang_Tennis_Klub.Services.SQL.Booking
 {
-    public class TeamBookingDB : ITeamBookingDB
+    public class TeamBookingDB_SQL : ITeamBookingDB
     {
         public bool CreateTeamBookingAsync(ITeamBooking teamBooking)
         {
