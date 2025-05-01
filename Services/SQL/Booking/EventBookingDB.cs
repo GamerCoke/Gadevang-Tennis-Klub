@@ -1,7 +1,7 @@
 ﻿using Gadevang_Tennis_Klub.Interfaces.Models;
 using Gadevang_Tennis_Klub.Interfaces.Services;
 
-namespace Gadevang_Tennis_Klub.Services
+namespace Gadevang_Tennis_Klub.Services.SQL.Booking
 {
     public class EventBookingDB : IEventBookingDB
     {
