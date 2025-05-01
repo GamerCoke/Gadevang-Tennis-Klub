@@ -58,11 +58,6 @@ namespace Gadevang_Tennis_Klub.Models
                 throw new Exception();
         }
 
-        public bool AddPartisipant(int memberID)
-        {
-            throw new NotImplementedException();
-            // IMember part = new IMember();
-            // Participants.Add(part.GetMemberByID(memberID));
-        }
+        
     }
 }

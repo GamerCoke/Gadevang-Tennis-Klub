@@ -11,6 +11,6 @@
         public int? Member_ID { get; set; }
         public int? Event_ID { get; set; }
 
-        public bool AddPartisipant(int memberID);
+        
     }
 }

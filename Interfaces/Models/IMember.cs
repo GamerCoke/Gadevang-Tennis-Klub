@@ -1,6 +1,6 @@
 ﻿namespace Gadevang_Tennis_Klub.Interfaces.Models
 {
-    public interface IMember : IMember
+    public interface IMember : IBasePerson
     {
         public string Sex { get; set; }
         public bool IsAdmin { get; set; }

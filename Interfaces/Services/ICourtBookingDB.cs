@@ -14,5 +14,6 @@ namespace Gadevang_Tennis_Klub.Interfaces.Services
         public List<ICourtBooking> GetCourtBookingsByTeamIDAsync(int teamID);
         public List<ICourtBooking> GetCourtBookingsByOrganiserAsync(int memberID);
         public List<ICourtBooking> GetCourtBookingsByParticipantsAsync(int memberID);
+        public bool AddPartisipant(int memberID);
     }
 }
