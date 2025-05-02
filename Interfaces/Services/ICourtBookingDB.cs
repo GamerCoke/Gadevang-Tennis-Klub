@@ -4,17 +4,17 @@ namespace Gadevang_Tennis_Klub.Interfaces.Services
 {
     public interface ICourtBookingDB
     {
-        public bool CreateCourtBookingAsync(ICourtBooking courtBooking);
-        public bool UpdateCourtBookingAsync(ICourtBooking courtBooking);
-        public bool DeleteCourtBookingAsync(int courtBookingID);
-        public List<ICourtBooking> GetAllCourtBookingsAsync();
-        public ICourtBooking GetCourtBookingByIDAsync(int courtBookingID);
-        public List<ICourtBooking> GetCourtBookingsByCourtIDAsync(int courtID);
-        public List<ICourtBooking> GetCourtBookingsByEventIDAsync(int eventID);
-        public List<ICourtBooking> GetCourtBookingsByTeamIDAsync(int teamID);
-        public List<ICourtBooking> GetCourtBookingsByOrganiserAsync(int memberID);
-        public List<ICourtBooking> GetCourtBookingsByParticipantsAsync(int memberID);
-        public bool AddPartisipant(int memberID);
-        public bool RemovePartisipant(int memberID);
+        public Task<bool> CreateCourtBookingAsync(ICourtBooking courtBooking);
+        public Task<bool> UpdateCourtBookingAsync(ICourtBooking courtBooking);
+        public Task<bool> DeleteCourtBookingAsync(int courtBookingID);
+        public Task<List<ICourtBooking>> GetAllCourtBookingsAsync();
+        public Task<ICourtBooking> GetCourtBookingByIDAsync(int courtBookingID);
+        public Task<List<ICourtBooking>> GetCourtBookingsByCourtIDAsync(int courtID);
+        public Task<List<ICourtBooking>> GetCourtBookingsByEventIDAsync(int eventID);
+        public Task<List<ICourtBooking>> GetCourtBookingsByTeamIDAsync(int teamID);
+        public Task<List<ICourtBooking>> GetCourtBookingsByOrganiserAsync(int memberID);
+        public Task<List<ICourtBooking>> GetCourtBookingsByParticipantsAsync(int memberID);
+        public Task<bool> AddPartisipant(int memberID);
+        public Task<bool> RemovePartisipant(int memberID);
     }
 }

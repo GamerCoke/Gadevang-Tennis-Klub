@@ -16,7 +16,7 @@ namespace Gadevang_Tennis_Klub.Models
 
         [BindProperty]
         [Required(ErrorMessage = "Tid er påkrævet")]
-        public TimeOnly Time { get; set; }
+        public int TimeSlot { get; set; }
 
         public int ID { get; set; }
 
