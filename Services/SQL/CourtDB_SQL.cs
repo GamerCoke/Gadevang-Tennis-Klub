@@ -14,188 +14,76 @@ namespace Gadevang_Tennis_Klub.Services.SQL
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                const string insStr = "INSERT INTO Courts VALUES (@TYPE, @NAME)";
-                SqlCommand insQue = new SqlCommand(insStr, con);
-                try
-                {
-                    insQue.Parameters.AddWithValue("@TYPE", court.Type);
-                    insQue.Parameters.AddWithValue("@NAME", court.Name);
-                    await con.OpenAsync();
-                    int nOR = await insQue.ExecuteNonQueryAsync();
-                    return nOR > 0;
-                }
-                catch (SqlException sqlExp)
-                {
-                    throw sqlExp;
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+                string insStr = $"INSERT INTO Courts VALUES ({court.Type}, {court.Name})";
+                return await NonReadQueryAsync(insStr);
             }
-            return true;
         }
 
         public async Task<bool> DeleteCourtAsync(int courtID)
         {
+            return await NonReadQueryAsync($"DELETE FROM Courts WHERE ID = {courtID}");
+        }
+
+        public async Task<List<ICourt>> GetAllCourtsAsync()
+        {
+            return await GetCourtsByQueryAsync(queStr);
+        }
+
+        public async Task<ICourt> GetCourtByIDAsync(int courtID)
+        {
+            return (await GetCourtsByQueryAsync(queStr + $" WHERE ID = {courtID}")).FirstOrDefault();
+        }
+
+        public async Task<List<ICourt>> GetCourtsByNameAsync(string name)
+        {
+            return await GetCourtsByQueryAsync(queStr + $" WHERE Name LIKE %{name}%");
+        }
+
+        public async Task<List<ICourt>> GetCourtsByTypeAsync(string type)
+        {
+            return await GetCourtsByQueryAsync(queStr + $" WHERE Type = {type}");
+        }
+
+        public async Task<bool> UpdateCourtAsync(ICourt court)
+        {
+            string updStr = $"UPDATE Courts VALUES ({court.Type}, {court.Name}) WHERE ID = {court.ID}";
+            return await NonReadQueryAsync(updStr);
+        }
+
+        private async Task<ICourt> GetCourtByReaderAsync(SqlDataReader rea)
+        {
+            int cID = rea.GetInt32(0);
+            string cTyp = rea.GetString(1);
+            string? cNam = rea.GetString(2);
+            Court court = new Court(cID, cTyp, cNam);
+            return court;
+        }
+        private async Task<bool> NonReadQueryAsync(string que)
+        {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                string delStr = $"DELETE FROM Courts WHERE ID = {courtID}";
-                SqlCommand delQue = new SqlCommand(delStr, con);
+                SqlCommand delQue = new SqlCommand(que, con);
 
                 await con.OpenAsync();
                 int nOR = await delQue.ExecuteNonQueryAsync();
                 return nOR > 0;
             }
-
         }
-
-        public async Task<List<ICourt>> GetAllCourtsAsync()
+        private async Task<List<ICourt>> GetCourtsByQueryAsync(string que)
         {
-            List<ICourt> courts = new List<ICourt>();
+            List<ICourt> courts = new();
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                try
-                {
-                    SqlCommand com = new SqlCommand(queStr, con);
-                    await com.Connection.OpenAsync();
-                    SqlDataReader rea = await com.ExecuteReaderAsync();
-                    while (await rea.ReadAsync())
-                    {
-                        int cID = rea.GetInt32(0);
-                        string cTyp = rea.GetString(1);
-                        string? cNam = rea.GetString(2);
-                        Court court = new Court(cID, cTyp, cNam);
-                        courts.Add(court);
-                    }
-                    rea.Close();
-                }
-                catch (SqlException sqlExp)
-                {
-                    throw sqlExp;
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+                SqlCommand com = new SqlCommand(que, con);
+                await com.Connection.OpenAsync();
+                SqlDataReader rea = await com.ExecuteReaderAsync();
+
+                while (await rea.ReadAsync())
+                    courts.Add(await GetCourtByReaderAsync(rea));
+
+                rea.Close();
             }
             return courts;
-        }
-
-        public async Task<ICourt> GetCourtByIDAsync(int courtID)
-        {
-            List<ICourt> courts = new List<ICourt>();
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    SqlCommand com = new SqlCommand(queStr + $" WHERE ID = {courtID}", con);
-                    await com.Connection.OpenAsync();
-                    SqlDataReader rea = await com.ExecuteReaderAsync();
-                    while (await rea.ReadAsync())
-                    {
-                        string cTyp = rea.GetString(1);
-                        string? cNam = rea.GetString(2);
-                        Court court = new Court(courtID, cTyp, cNam);
-                        courts.Add(court);
-                    }
-                }
-                catch (SqlException sqlExp)
-                {
-                    throw sqlExp;
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-            }
-            return courts.First();
-        }
-
-        public async Task<List<ICourt>> GetCourtsByNameAsync(string name)
-        {
-            List<ICourt> courts = new List<ICourt>();
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    SqlCommand com = new SqlCommand(queStr + $" WHERE Name LIKE '%{name}%'", con);
-                    await com.Connection.OpenAsync();
-                    SqlDataReader rea = await com.ExecuteReaderAsync();
-                    while (await rea.ReadAsync())
-                    {
-                        int cID = rea.GetInt32(0);
-                        string cTyp = rea.GetString(1);
-                        
-                        Court court = new Court(cID, cTyp, name);
-                        courts.Add(court);
-                    }
-                }
-                catch (SqlException sqlExp)
-                {
-                    throw sqlExp;
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-            }
-            return courts;
-        }
-
-        public async Task<List<ICourt>> GetCourtsByTypeAsync(string type)
-        {
-            List<ICourt> courts = new List<ICourt>();
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    SqlCommand com = new SqlCommand(queStr + $" WHERE Type = {type}", con);
-                    await com.Connection.OpenAsync();
-                    SqlDataReader rea = await com.ExecuteReaderAsync();
-                    while (await rea.ReadAsync())
-                    {
-                        int cID = rea.GetInt32(0);
-                        string? cNam = rea.GetString(2);
-
-                        Court court = new Court(cID, type, cNam);
-                        courts.Add(court);
-                    }
-                }
-                catch (SqlException sqlExp)
-                {
-                    throw sqlExp;
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-            }
-            return courts;
-        }
-
-        public async Task<bool> UpdateCourtAsync(ICourt court)
-        {
-            List<ICourt> courts = new List<ICourt>();
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                string updStr = $"UPDATE Courts SET Type = {court.Type}, Name = {court.Name} WHERE ID = {court.ID}";
-                SqlCommand updQue = new SqlCommand(updStr, con);
-                try
-                {
-                    con.OpenAsync();
-                    int nOR = await updQue.ExecuteNonQueryAsync();
-                    return nOR > 0;
-                }
-                catch (SqlException sqlExp)
-                {
-                    throw sqlExp;
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-            }
         }
     }
 }

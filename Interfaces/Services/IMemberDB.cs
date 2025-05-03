@@ -14,6 +14,6 @@ namespace Gadevang_Tennis_Klub.Interfaces.Services
         public Task<List<IMember>> GetMembersByAgeIntervalAsync(int from, int to);
         public Task<List<IMember>> GetMembersByAgeAboveAsync(int age);
         public Task<List<IMember>> GetMembersByAgeBelowAsync(int age);
-        public Task<IMember> GetMemberByLoginAsync();
+        public Task<IMember> GetMemberByLoginAsync(string name, string password);
     }
 }
