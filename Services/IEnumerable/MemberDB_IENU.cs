@@ -3,74 +3,64 @@ using Gadevang_Tennis_Klub.Interfaces.Services;
 
 namespace Gadevang_Tennis_Klub.Services.IEnumerable
 {
-    public class CourtDB_IENU : ICourtDB
+    public class MemberDB_IENU : IMemberDB
     {
-        public bool CreateCourtAsync(ICourt court)
+        public Task<bool> CreateMemberAsync(IMember member)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeleteCourtAsync(int courtID)
+        public Task<bool> DeleteMemberAsync(int memberD)
         {
             throw new NotImplementedException();
         }
 
-        public List<ICourt> GetAllCourtsAsync()
+        public Task<List<IMember>> GetAllMembersAsync()
         {
             throw new NotImplementedException();
         }
 
-        public ICourt GetCourtByIDAsync(int courtID)
+        public Task<IMember> GetMemberByIDAsync(int memberID)
         {
             throw new NotImplementedException();
         }
 
-        public List<ICourt> GetCourtsByNameAsync(string name)
+        public Task<IMember> GetMemberByLoginAsync()
         {
             throw new NotImplementedException();
         }
 
-        public List<ICourt> GetCourtsByTypeAsync(string type)
+        public Task<IMember> GetMemberByLoginAsync(string name, string password)
         {
             throw new NotImplementedException();
         }
 
-        public bool UpdateCourtAsync(ICourt court)
+        public Task<List<IMember>> GetMembersByAdminAsync(bool isAdmin)
         {
             throw new NotImplementedException();
         }
 
-        Task<bool> ICourtDB.CreateCourtAsync(ICourt court)
+        public Task<List<IMember>> GetMembersByAgeAboveAsync(int age)
         {
             throw new NotImplementedException();
         }
 
-        Task<bool> ICourtDB.DeleteCourtAsync(int courtID)
+        public Task<List<IMember>> GetMembersByAgeBelowAsync(int age)
         {
             throw new NotImplementedException();
         }
 
-        Task<List<ICourt>> ICourtDB.GetAllCourtsAsync()
+        public Task<List<IMember>> GetMembersByAgeIntervalAsync(int from, int to)
         {
             throw new NotImplementedException();
         }
 
-        Task<ICourt> ICourtDB.GetCourtByIDAsync(int courtID)
+        public Task<List<IMember>> GetMembersBySexAsync(string sex)
         {
             throw new NotImplementedException();
         }
 
-        Task<List<ICourt>> ICourtDB.GetCourtsByNameAsync(string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<List<ICourt>> ICourtDB.GetCourtsByTypeAsync(string type)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<bool> ICourtDB.UpdateCourtAsync(ICourt court)
+        public Task<bool> UpdateMemberAsync(IMember member)
         {
             throw new NotImplementedException();
         }

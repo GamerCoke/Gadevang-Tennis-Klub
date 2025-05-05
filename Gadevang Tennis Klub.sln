@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35919.96 d17.13
+VisualStudioVersion = 17.13.35919.96
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gadevang Tennis Klub", "Gadevang Tennis Klub.csproj", "{40F26858-27A0-4DD7-9D65-6562D6EDD4D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gadevang Tennis Klub", "Gadevang Tennis Klub.csproj", "{40F26858-27A0-4DD7-9D65-6562D6EDD4D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GTKConsoltest", "..\GTKConsoltest\GTKConsoltest.csproj", "{60103E86-5724-4870-B5FE-9D2254A56AD2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{40F26858-27A0-4DD7-9D65-6562D6EDD4D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40F26858-27A0-4DD7-9D65-6562D6EDD4D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40F26858-27A0-4DD7-9D65-6562D6EDD4D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60103E86-5724-4870-B5FE-9D2254A56AD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60103E86-5724-4870-B5FE-9D2254A56AD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60103E86-5724-4870-B5FE-9D2254A56AD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60103E86-5724-4870-B5FE-9D2254A56AD2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

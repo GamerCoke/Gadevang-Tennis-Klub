@@ -8,5 +8,6 @@
         DateTime Start { get; set; }
         TimeOnly End { get; set; }
         string Location { get; set; }
+        int? Capacity { get; set; }
     }
 }
