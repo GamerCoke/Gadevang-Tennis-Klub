@@ -3,65 +3,64 @@ using Gadevang_Tennis_Klub.Interfaces.Services;
 
 namespace Gadevang_Tennis_Klub.Services.IEnumerable
 {
-    public class TeamDB_IENU : ITeamDB
+    public class MemberDB_IENU : IMemberDB
     {
-
-        public Task<bool> CreateTeamAsync(ITeam team)
+        public Task<bool> CreateMemberAsync(IMember member)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteTeamAsync(int teamID)
+        public Task<bool> DeleteMemberAsync(int memberD)
         {
             throw new NotImplementedException();
         }
 
-        public Task <List<ITeam>> GetAllTeamAsync()
+        public Task<List<IMember>> GetAllMembersAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<ITeam?> GetTeamByIDAsync(int teamID)
+        public Task<IMember> GetMemberByIDAsync(int memberID)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ITeam> GetTeamsByMemberAsync(int memberID)
+        public Task<IMember> GetMemberByLoginAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> GetTeamCapacityAsync(int teamID)
+        public Task<IMember> GetMemberByLoginAsync(string name, string password)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<ITeam>> GetTeamsByActiveDateAsync()
+        public Task<List<IMember>> GetMembersByAdminAsync(bool isAdmin)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<ITeam>> GetTeamsByTrainerAsync(string trainer)
+        public Task<List<IMember>> GetMembersByAgeAboveAsync(int age)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<ITeam>> SearchTeamsAsync(Dictionary<string, object> searchCriteria)
+        public Task<List<IMember>> GetMembersByAgeBelowAsync(int age)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateTeamAsync(ITeam team)
+        public Task<List<IMember>> GetMembersByAgeIntervalAsync(int from, int to)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<ITeam>> GetTeamsByActiveDayAsync(string day)
+        public Task<List<IMember>> GetMembersBySexAsync(string sex)
         {
             throw new NotImplementedException();
         }
 
-        Task<List<ITeam>> ITeamDB.GetTeamsByMemberAsync(int memberID)
+        public Task<bool> UpdateMemberAsync(IMember member)
         {
             throw new NotImplementedException();
         }

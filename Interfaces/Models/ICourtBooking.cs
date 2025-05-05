@@ -4,7 +4,7 @@
     {
         public DateOnly Date { get; set; }
         public int Court_ID { get; set; }
-        public TimeOnly Time { get; set; }
+        public int Timeslot { get; set; }
         public int ID { get; set; }
         public IReadOnlyList<IMember>? Participants { get; set; }
         public int? Team_ID { get; set; }
