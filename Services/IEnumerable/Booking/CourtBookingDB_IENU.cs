@@ -60,5 +60,10 @@ namespace Gadevang_Tennis_Klub.Services.IENumerable.Booking
             // IMember part = new IMember();
             // Participants.Add(part.GetMemberByID(memberID));
         }
+
+        public bool RemovePartisipant(int memberID)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

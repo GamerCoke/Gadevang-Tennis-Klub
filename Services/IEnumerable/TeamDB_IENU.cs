@@ -5,52 +5,63 @@ namespace Gadevang_Tennis_Klub.Services.IENumerable
 {
     public class TeamDB_IENU : ITeamDB
     {
-        public bool CreateTeamASync(ITeam team)
+
+        public Task<bool> CreateTeamAsync(ITeam team)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeleteTeamAsync(int teamID)
+        public Task<bool> DeleteTeamAsync(int teamID)
         {
             throw new NotImplementedException();
         }
 
-        public List<ITeam> GetAllTeamAsync()
+        public Task <List<ITeam>> GetAllTeamAsync()
         {
             throw new NotImplementedException();
         }
 
-        public List<string> GetAllTrainersAsync()
+        public Task<ITeam?> GetTeamByIDAsync(int teamID)
         {
             throw new NotImplementedException();
         }
 
-        public bool GetTeamByIDAsync(int teamID)
+        public Task<ITeam> GetTeamsByMemberAsync(int memberID)
         {
             throw new NotImplementedException();
         }
 
-        public ITeam GetTeamByMemberAsync(int memberID)
+        public Task<int> GetTeamCapacityAsync(int teamID)
         {
             throw new NotImplementedException();
         }
 
-        public int GetTeamCapacityAsync(int teamID)
+        public Task<List<ITeam>> GetTeamsByActiveDateAsync()
         {
             throw new NotImplementedException();
         }
 
-        public List<ITeam> GetTeamsByActiveDateAsync()
+        public Task<List<ITeam>> GetTeamsByTrainerAsync(string trainer)
         {
             throw new NotImplementedException();
         }
 
-        public List<ITeam> GetTeamsByTrainerAsync(string trainer)
+        public Task<List<ITeam>> SearchTeamsAsync(Dictionary<string, object> searchCriteria)
         {
             throw new NotImplementedException();
         }
 
-        public bool UpdateTeamAsync(ITeam team)
+        public Task<bool> UpdateTeamAsync(ITeam team)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<ITeam>> GetTeamsByActiveDayAsync(string day)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<List<ITeam>> ITeamDB.GetTeamsByMemberAsync(int memberID)
         {
             throw new NotImplementedException();
         }

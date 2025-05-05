@@ -1,15 +1,7 @@
 namespace Gadevang_Tennis_Klub.Services
 {
-    public class Secret
+    public abstract class Secret
     {
-
-        //private static string _connectionString = 
-        //public static string ConnectionString
-        //{
-        //    get
-        //    {
-        //        return _connectionString;
-        //    }
-        //}
+        protected String connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=TennisKlubDB;Integrated Security=True;Connect Timeout=30;Encrypt=False";
     }
 }

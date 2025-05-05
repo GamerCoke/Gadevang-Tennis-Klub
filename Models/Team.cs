@@ -5,13 +5,13 @@ namespace Gadevang_Tennis_Klub.Models
 {
     public class Team : ITeam
     {
-        public int ID { get; set; }
+        public int? ID { get; set; }
         [BindProperty]
         public string Name { get; set; }
         [BindProperty]
         public string Description { get; set; }
         [BindProperty]
-        public ITrainer Trainer { get; set; }
+        public ITrainer? Trainer { get; set; }
         [BindProperty]
         public int Capacity { get; set; }
         [BindProperty]
