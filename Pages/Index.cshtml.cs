@@ -14,7 +14,14 @@ namespace Gadevang_Tennis_Klub.Pages
 
         public void OnGet()
         {
+            try
+            {
 
+            }
+            catch(Exception ex)
+            {
+                ViewData["ErrorMessage"] = ex.Message;
+            }
         }
     }
 }

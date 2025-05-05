@@ -1,13 +1,15 @@
 ﻿using Gadevang_Tennis_Klub.Interfaces.Models;
 using Gadevang_Tennis_Klub.Interfaces.Services;
 
-namespace Gadevang_Tennis_Klub.Services.IENumerable.Booking
+namespace Gadevang_Tennis_Klub.Services.IEnumerable.Booking
 {
     public class CourtBookingDB_IENU : ICourtBookingDB
     {
         public Task<bool> CreateCourtBookingAsync(ICourtBooking courtBooking)
         {
             throw new NotImplementedException();
+            // IMember part = new IMember();
+            // Participants.Add(part.GetMemberByID(memberID));
         }
 
         public Task<bool> DeleteCourtBookingAsync(int courtBookingID)
@@ -29,6 +31,7 @@ namespace Gadevang_Tennis_Klub.Services.IENumerable.Booking
         {
             throw new NotImplementedException();
         }
+
 
         public Task<List<ICourtBooking>> GetCourtBookingsByEventIDAsync(int eventID)
         {
@@ -54,10 +57,12 @@ namespace Gadevang_Tennis_Klub.Services.IENumerable.Booking
         {
             throw new NotImplementedException();
         }
+        
         public Task<bool> AddPartisipantAsync(int bookingID, int memberID)
         {
             throw new NotImplementedException();
         }
+        
         public Task<bool> RemovePartisipantAsync(int bookingID, int memberID)
         {
             throw new NotImplementedException();

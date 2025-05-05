@@ -77,6 +77,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL.Booking
                 $"where ID = {courtBooking.ID};";
             return await NonReadQueryAsync(query);
         }
+
         public async Task<bool> AddPartisipantAsync(int bookingID, int memberID)
         {
             ICourtBooking booking = await GetCourtBookingByIDAsync(bookingID);
@@ -190,6 +191,12 @@ namespace Gadevang_Tennis_Klub.Services.SQL.Booking
                 booking.Participants = participants;
                 reader.Close();
             }
+        }
+
+        public async Task<bool> RemovePartisipant(int memberID)
+        {
+            throw new NotImplementedException();
+
         }
     }
 }

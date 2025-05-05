@@ -4,12 +4,12 @@ namespace Gadevang_Tennis_Klub.Interfaces.Services
 {
     public interface ICourtDB
     {
-        public bool CreateCourtAsync(ICourt court);
-        public bool UpdateCourtAsync(ICourt court);
-        public bool DeleteCourtAsync(int courtID);
-        public ICourt GetCourtByIDAsync(int courtID);
-        public List<ICourt> GetAllCourtsAsync();
-        public List<ICourt> GetCourtsByTypeAsync(string type);
-        public List<ICourt> GetCourtsByNameAsync(string name);
+        public Task<bool> CreateCourtAsync(ICourt court);
+        public Task<bool> UpdateCourtAsync(ICourt court);
+        public Task<bool> DeleteCourtAsync(int courtID);
+        public Task<ICourt> GetCourtByIDAsync(int courtID);
+        public Task<List<ICourt>> GetAllCourtsAsync();
+        public Task<List<ICourt>> GetCourtsByTypeAsync(string type);
+        public Task<List<ICourt>> GetCourtsByNameAsync(string name);
     }
 }

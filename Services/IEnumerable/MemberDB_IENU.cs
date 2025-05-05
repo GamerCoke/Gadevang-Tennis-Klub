@@ -3,54 +3,59 @@ using Gadevang_Tennis_Klub.Interfaces.Services;
 
 namespace Gadevang_Tennis_Klub.Services.IEnumerable
 {
-    public class TeamDB_IENU : ITeamDB
+    public class MemberDB_IENU : IMemberDB
     {
-        public bool CreateTeamASync(ITeam team)
+        public Task<bool> CreateMemberAsync(IMember member)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeleteTeamAsync(int teamID)
+        public Task<bool> DeleteMemberAsync(int memberD)
         {
             throw new NotImplementedException();
         }
 
-        public List<ITeam> GetAllTeamAsync()
+        public Task<List<IMember>> GetAllMembersAsync()
         {
             throw new NotImplementedException();
         }
 
-        public List<string> GetAllTrainersAsync()
+        public Task<IMember> GetMemberByIDAsync(int memberID)
         {
             throw new NotImplementedException();
         }
 
-        public bool GetTeamByIDAsync(int teamID)
+        public Task<IMember> GetMemberByLoginAsync()
         {
             throw new NotImplementedException();
         }
 
-        public ITeam GetTeamByMemberAsync(int memberID)
+        public Task<List<IMember>> GetMembersByAdminAsync(bool isAdmin)
         {
             throw new NotImplementedException();
         }
 
-        public int GetTeamCapacityAsync(int teamID)
+        public Task<List<IMember>> GetMembersByAgeAboveAsync(int age)
         {
             throw new NotImplementedException();
         }
 
-        public List<ITeam> GetTeamsByActiveDateAsync()
+        public Task<List<IMember>> GetMembersByAgeBelowAsync(int age)
         {
             throw new NotImplementedException();
         }
 
-        public List<ITeam> GetTeamsByTrainerAsync(string trainer)
+        public Task<List<IMember>> GetMembersByAgeIntervalAsync(int from, int to)
         {
             throw new NotImplementedException();
         }
 
-        public bool UpdateTeamAsync(ITeam team)
+        public Task<List<IMember>> GetMembersBySexAsync(string sex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdateMemberAsync(IMember member)
         {
             throw new NotImplementedException();
         }
