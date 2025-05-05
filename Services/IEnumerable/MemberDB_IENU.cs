@@ -30,6 +30,11 @@ namespace Gadevang_Tennis_Klub.Services.IEnumerable
             throw new NotImplementedException();
         }
 
+        public Task<IMember> GetMemberByLoginAsync(string name, string password)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<List<IMember>> GetMembersByAdminAsync(bool isAdmin)
         {
             throw new NotImplementedException();

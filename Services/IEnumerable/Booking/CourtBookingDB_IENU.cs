@@ -8,8 +8,6 @@ namespace Gadevang_Tennis_Klub.Services.IEnumerable.Booking
         public Task<bool> CreateCourtBookingAsync(ICourtBooking courtBooking)
         {
             throw new NotImplementedException();
-            // IMember part = new IMember();
-            // Participants.Add(part.GetMemberByID(memberID));
         }
 
         public Task<bool> DeleteCourtBookingAsync(int courtBookingID)
@@ -61,8 +59,10 @@ namespace Gadevang_Tennis_Klub.Services.IEnumerable.Booking
         public Task<bool> AddPartisipantAsync(int bookingID, int memberID)
         {
             throw new NotImplementedException();
+            // IMember part = new IMember();
+            // Participants.Add(part.GetMemberByID(memberID));
         }
-        
+
         public Task<bool> RemovePartisipantAsync(int bookingID, int memberID)
         {
             throw new NotImplementedException();

@@ -29,7 +29,7 @@ namespace Gadevang_Tennis_Klub.Models
         [StringLength(256, ErrorMessage = "Kodeord må ikke være mere end 256 karakterer lang")]
         public string Password { get; set; }
 
-        public DateOnly DoB { get; set; }
+        public DateOnly Dob { get; set; }
 
         public Member() : base()
         {
@@ -47,7 +47,7 @@ namespace Gadevang_Tennis_Klub.Models
             Bio = bio;
             Address = adress;
             Password = password;
-            DoB = doB;
+            Dob = doB;
         }
     }
 }

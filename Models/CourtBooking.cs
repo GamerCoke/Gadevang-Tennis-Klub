@@ -55,7 +55,7 @@ namespace Gadevang_Tennis_Klub.Models
                 Event_ID = eventID;
             }
             else
-                throw new Exception("uppassende mængde af nulls i booking. der skal være én not null, og to nulls.");
+                throw new Exception("upassende mængde af nulls i booking. der skal være én not null, og to nulls.");
         }
 
         

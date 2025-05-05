@@ -185,7 +185,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL.Booking
                         image = null;
 
                     IMember member =
-                        new Member(id, name, phone, email, image, sex, isAdmin, bio, address, password);
+                        new Member(id, name, phone, email, image, sex, dob, isAdmin, bio, address, password);
                     participants.Add(member);
                 }
                 booking.Participants = participants;

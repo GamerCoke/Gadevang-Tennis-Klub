@@ -14,7 +14,9 @@ namespace Gadevang_Tennis_Klub.Services.SQL
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                string insStr = $"INSERT INTO Courts VALUES ({court.Type}, {court.Name})";
+                if (court.Name != null)
+                    court.Name = "\'"+$"{court.Name}"+"\'";
+                string insStr = $"INSERT INTO Courts VALUES ('{court.Type}', {court.Name})";
                 return await NonReadQueryAsync(insStr);
             }
         }
@@ -36,7 +38,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
 
         public async Task<List<ICourt>> GetCourtsByNameAsync(string name)
         {
-            return await GetCourtsByQueryAsync(queStr + $" WHERE Name LIKE %{name}%");
+            return await GetCourtsByQueryAsync(queStr + $" WHERE Name LIKE '%{name}%'");
         }
 
         public async Task<List<ICourt>> GetCourtsByTypeAsync(string type)

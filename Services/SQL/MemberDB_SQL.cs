@@ -8,7 +8,7 @@ using System.Numerics;
 
 namespace Gadevang_Tennis_Klub.Services.SQL
 {
-    public class MemberDB_IENU : IMemberDB
+    public class MemberDB_SQL : IMemberDB
     {
         private string connectionString = Secret.ConnectionString;
         private string queStr = "SELECT * FROM Members";
@@ -83,8 +83,8 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                 int isA = member.IsAdmin ? 1 : 0;
                 string updStr = $"UPDATE Members VALUES " +
                     $"('{member.Name}', '{member.Password}', '{member.Address}', '{member.Email}', " +
-                    $"'{member.Phone}', '{member.Sex}', {member.Dob}, '{member.Bio}', {img}, {isA}" +
-                    $"WHERE ID = {member.Id})";
+                    $"'{member.Phone}', '{member.Sex}', {member.Dob}, '{member.Bio}', {img}, {isA})" +
+                    $" WHERE ID = {member.Id}";
                 return await NonReadQueryAsync(updStr);
             }
         }

@@ -7,5 +7,6 @@
         public string Bio { get; set; }
         public string Address { get; set; }
         public string Password { get; set; }
+        public DateOnly Dob { get; set; }
     }
 }

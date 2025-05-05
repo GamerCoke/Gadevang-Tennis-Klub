@@ -39,5 +39,40 @@ namespace Gadevang_Tennis_Klub.Services.IEnumerable
         {
             throw new NotImplementedException();
         }
+
+        Task<bool> ICourtDB.CreateCourtAsync(ICourt court)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> ICourtDB.DeleteCourtAsync(int courtID)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<List<ICourt>> ICourtDB.GetAllCourtsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ICourt> ICourtDB.GetCourtByIDAsync(int courtID)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<List<ICourt>> ICourtDB.GetCourtsByNameAsync(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<List<ICourt>> ICourtDB.GetCourtsByTypeAsync(string type)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> ICourtDB.UpdateCourtAsync(ICourt court)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
