@@ -5,32 +5,32 @@ namespace Gadevang_Tennis_Klub.Services.IENumerable
 {
     public class ActivityDB_IENU : IActivityDB
     {
-        public bool CreateActivityAsync(IActivity activity)
+        public async Task<bool> CreateActivityAsync(IActivity activity)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeleteActivityAsync(int activityID)
+        public async Task<bool> DeleteActivityAsync(int eventID, int activityID)
         {
             throw new NotImplementedException();
         }
 
-        public List<IActivity> GetActivityByEventAsync(int eventID)
+        public async Task<List<IActivity>> GetActivitiesByEventAsync(int eventID)
         {
             throw new NotImplementedException();
         }
 
-        public IActivity GetActivityByIDAsync(int activityID)
+        public async Task<IActivity?> GetActivityByIDAsync(int eventID, int activityID)
         {
             throw new NotImplementedException();
         }
 
-        public List<IActivity> GetAllActivitiesAsync()
+        public async Task<List<IActivity>> GetAllActivitiesAsync()
         {
             throw new NotImplementedException();
         }
 
-        public bool UpdateActivityAsync(IActivity activity)
+        public async Task<bool> UpdateActivityAsync(IActivity activity)
         {
             throw new NotImplementedException();
         }

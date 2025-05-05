@@ -29,5 +29,10 @@ namespace Gadevang_Tennis_Klub.Services.SQL.Booking
         {
             throw new NotImplementedException();
         }
+
+        public List<IEvent> GetEventsByMemberAsync(int memberID)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

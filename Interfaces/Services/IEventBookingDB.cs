@@ -9,5 +9,6 @@ namespace Gadevang_Tennis_Klub.Interfaces.Services
         bool DeleteEventBookingAsync(int eventBookingID);
         bool UpdateEventBookingAsync(IEventBooking eventBooking);
         IEventBooking GetEventBookingById(int eventBookingID);
+        List<IEvent> GetEventsByMemberAsync(int memberID);
     }
 }

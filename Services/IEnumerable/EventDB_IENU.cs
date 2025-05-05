@@ -5,42 +5,37 @@ namespace Gadevang_Tennis_Klub.Services.IENumerable
 {
     public class EventDB_IENU : IEventDB
     {
-        public bool CreateEventAsync(IEvent ev)
+        public async Task<bool> CreateEventAsync(IEvent ev)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeleteEventAsync(int eventId)
+        public async Task<bool> DeleteEventAsync(int eventId)
         {
             throw new NotImplementedException();
         }
 
-        public List<IEvent> GetAllEventsAsync()
+        public async Task<List<IEvent>> GetAllEventsAsync()
         {
             throw new NotImplementedException();
         }
 
-        public IEvent GetEventByIDAsync(int eventId)
+        public async Task<IEvent?> GetEventByIDAsync(int eventId)
         {
             throw new NotImplementedException();
         }
 
-        public int GetEventCapacityAsync(int eventID)
+        public async Task<int?> GetEventCapacityAsync(int eventID)
         {
             throw new NotImplementedException();
         }
 
-        public List<IEvent> GetEventsByDateAsync(DateTime date)
+        public async Task<List<IEvent>> GetEventsByDateAsync(DateTime date)
         {
             throw new NotImplementedException();
         }
 
-        public List<IEvent> GetEventsByMemberAsync(int memberID)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool UpdateEventAsync(IEvent ev)
+        public async Task<bool> UpdateEventAsync(IEvent ev)
         {
             throw new NotImplementedException();
         }
