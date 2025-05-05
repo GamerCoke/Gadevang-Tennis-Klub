@@ -36,12 +36,12 @@ namespace Gadevang_Tennis_Klub.Models
         {
         }
 
-        public CourtBooking(int id, int courtID, DateOnly date, TimeOnly time, int? teamID, int? memberID, int? eventID)
+        public CourtBooking(int id, int courtID, DateOnly date, int timeSlot, int? teamID, int? memberID, int? eventID)
         {
             ID = id;
             Court_ID = courtID;
             Date = date;
-            Time = time;
+            TimeSlot = timeSlot;
             if ((teamID != null) && (memberID == null) && (eventID == null))
             {
                 Team_ID = teamID;
