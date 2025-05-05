@@ -1,4 +1,59 @@
 ﻿@page
 @model Gadevang_Tennis_Klub.Pages.Events.DeleteEventModel
 @{
+    ViewData["Title"] = "DeleteEvent";
+}
+
+<!-- Title & Return button -->
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Slet en begivenhed</h1>
+    @if (Model.Event != null && !Model.IsDeleted)
+    {
+        <a asp-page="GetAllEvents" class="btn btn-danger" role="button">Tilbage</a>
+    }
+</div>
+
+@if (Model.Event != null && !Model.IsDeleted)
+{
+    <p>Er du sikker på at du ønsker at slette følgende begivenhed:</p>
+
+    <!-- Table -->
+    <!-- Table -->
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Location</th>
+                <th>Capacity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.Event.ID</td>
+                <td>@Model.Event.Title</td>
+                <td>@Model.Event.Start</td>
+                <td>@Model.Event.End</td>
+                <td>@Model.Event.Location</td>
+                <td>@Model.Event.Capacity</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <form method="post">
+        <button class="btn btn-success btn-sm"> Delete </button>
+        <input type="hidden" name="eventID" value=@Model.Event.ID />
+    </form>
+}
+else if (Model.IsDeleted)
+{
+    <p>Begivenheden er blevet slettet</p>
+    <a asp-page="GetAllEvents" class="btn btn-success">Videre</a>
+}
+else
+{
+    <p>Noget gik galt: Begivenheden blev ikke slettet</p>
+    <a asp-page="GetAllEvents" class="btn btn-success">Videre</a>
 }

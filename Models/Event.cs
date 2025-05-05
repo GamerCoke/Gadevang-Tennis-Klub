@@ -20,6 +20,10 @@ namespace Gadevang_Tennis_Klub.Models
         public string Location { get; set; }
         public int? Capacity { get; set; }
 
+        public Event()
+        {
+            
+        }
         public Event(string title, string description, DateTime start, TimeOnly end, string location, int? capacity)
         {
             Title = title;
