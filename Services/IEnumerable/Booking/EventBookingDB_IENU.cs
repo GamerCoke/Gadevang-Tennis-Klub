@@ -5,27 +5,32 @@ namespace Gadevang_Tennis_Klub.Services.IENumerable.Booking
 {
     public class EventBookingDB_IENU : IEventBookingDB
     {
-        public bool CreateEventBookingAsync(IEventBooking eventBooking)
+        public Task<bool> CreateEventBookingAsync(IEventBooking eventBooking)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeleteEventBookingAsync(int eventBookingID)
+        public Task<bool> DeleteEventBookingAsync(int eventBookingID)
         {
             throw new NotImplementedException();
         }
 
-        public List<IEventBooking> GetAllEventBookingsAsync()
+        public Task<List<IEventBooking>> GetAllEventBookingsAsync()
         {
             throw new NotImplementedException();
         }
 
-        public IEventBooking GetEventBookingById(int eventBookingID)
+        public Task<IEventBooking> GetEventBookingById(int eventBookingID)
         {
             throw new NotImplementedException();
         }
 
-        public bool UpdateEventBookingAsync(IEventBooking eventBooking)
+        public Task<List<IEventBooking>> GetEventBookingsByEventIDAsync(int eventID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<IEventBooking>> GetEventBookingsByMemberIDAsync(int memberID)
         {
             throw new NotImplementedException();
         }
