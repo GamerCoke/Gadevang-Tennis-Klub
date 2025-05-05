@@ -161,50 +161,35 @@ namespace Gadevang_Tennis_Klub.Services.SQL.Booking
             string queryString = $"select Members.* from Partners join Members on Members.ID = Partners.MemberID where BookingID = {booking.ID};";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                try
+                List<IMember> participants = new();
+                SqlCommand command = new SqlCommand(queryString, connection);
+                await command.Connection.OpenAsync();
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
                 {
-                    List<IMember> participants = new();
-                    SqlCommand command = new SqlCommand(queryString, connection);
-                    await command.Connection.OpenAsync();
-                    SqlDataReader reader = await command.ExecuteReaderAsync();
-                    while (await reader.ReadAsync())
-                    {
-                        int id = reader.GetInt32(0);
-                        string name = reader.GetString(1);
-                        string password = reader.GetString(2);
-                        string address = reader.GetString(3);
-                        string email = reader.GetString(4);
-                        string phone = reader.GetString(5);
-                        string sex = reader.GetString(6);
-                        DateOnly dob = DateOnly.FromDateTime(reader.GetDateTime(7));
-                        string bio = reader.GetString(8);
-                        bool isAdmin = reader.GetBoolean(9);
+                    int id = reader.GetInt32(0);
+                    string name = reader.GetString(1);
+                    string password = reader.GetString(2);
+                    string address = reader.GetString(3);
+                    string email = reader.GetString(4);
+                    string phone = reader.GetString(5);
+                    string sex = reader.GetString(6);
+                    DateOnly dob = DateOnly.FromDateTime(reader.GetDateTime(7));
+                    string bio = reader.GetString(8);
+                    bool isAdmin = reader.GetBoolean(9);
 
-                        string? image;
-                        if (!await reader.IsDBNullAsync(10))
-                            image = reader.GetString(10);
-                        else
-                            image = null;
+                    string? image;
+                    if (!await reader.IsDBNullAsync(10))
+                        image = reader.GetString(10);
+                    else
+                        image = null;
 
-                        IMember member =
-                            new Member(id, name, phone, email, image, sex, isAdmin, bio, address, password);
-                        participants.Add(member);
-                    }
-                    booking.Participants = participants;
-                    reader.Close();
+                    IMember member =
+                        new Member(id, name, phone, email, image, sex, isAdmin, bio, address, password);
+                    participants.Add(member);
                 }
-                catch (SqlException sqlExp)
-                {
-                    Console.WriteLine($"Database error: " + sqlExp.Message);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Generel fejl ved: " + ex.Message);
-                }
-                finally
-                {
-
-                }
+                booking.Participants = participants;
+                reader.Close();
             }
         }
 
