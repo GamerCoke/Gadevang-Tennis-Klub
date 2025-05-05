@@ -16,7 +16,7 @@ namespace Gadevang_Tennis_Klub.Models
 
         [BindProperty]
         [Required(ErrorMessage = "Tid er påkrævet")]
-        public int TimeSlot { get; set; }
+        public int Timeslot { get; set; }
 
         public int ID { get; set; }
 
@@ -36,12 +36,12 @@ namespace Gadevang_Tennis_Klub.Models
         {
         }
 
-        public CourtBooking(int id, int courtID, DateOnly date, int timeSlot, int? teamID, int? memberID, int? eventID)
+        public CourtBooking(int id, int courtID, DateOnly date, int timeslot, int? teamID, int? memberID, int? eventID)
         {
             ID = id;
             Court_ID = courtID;
             Date = date;
-            TimeSlot = timeSlot;
+            Timeslot = timeslot;
             if ((teamID != null) && (memberID == null) && (eventID == null))
             {
                 Team_ID = teamID;
@@ -50,12 +50,12 @@ namespace Gadevang_Tennis_Klub.Models
             {
                 Member_ID = memberID;
             }
-            else if ((teamID != null) && (memberID == null) && (eventID != null))
+            else if ((teamID == null) && (memberID == null) && (eventID != null))
             {
                 Event_ID = eventID;
             }
             else
-                throw new Exception();
+                throw new Exception("uppassende mængde af nulls i booking. der skal være én not null, og to nulls.");
         }
 
         

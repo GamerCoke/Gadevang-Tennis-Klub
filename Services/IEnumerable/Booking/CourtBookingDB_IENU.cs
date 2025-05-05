@@ -5,17 +5,11 @@ namespace Gadevang_Tennis_Klub.Services.IEnumerable.Booking
 {
     public class CourtBookingDB_IENU : ICourtBookingDB
     {
-
-        public Task<bool> AddPartisipant(int memberID)
+        public Task<bool> CreateCourtBookingAsync(ICourtBooking courtBooking)
         {
             throw new NotImplementedException();
             // IMember part = new IMember();
             // Participants.Add(part.GetMemberByID(memberID));
-        }
-
-        public Task<bool> CreateCourtBookingAsync(ICourtBooking courtBooking)
-        {
-            throw new NotImplementedException();
         }
 
         public Task<bool> DeleteCourtBookingAsync(int courtBookingID)
@@ -38,6 +32,7 @@ namespace Gadevang_Tennis_Klub.Services.IEnumerable.Booking
             throw new NotImplementedException();
         }
 
+
         public Task<List<ICourtBooking>> GetCourtBookingsByEventIDAsync(int eventID)
         {
             throw new NotImplementedException();
@@ -58,12 +53,17 @@ namespace Gadevang_Tennis_Klub.Services.IEnumerable.Booking
             throw new NotImplementedException();
         }
 
-        public Task<bool> RemovePartisipant(int memberID)
+        public Task<bool> UpdateCourtBookingAsync(ICourtBooking courtBooking)
         {
             throw new NotImplementedException();
         }
-
-        public Task<bool> UpdateCourtBookingAsync(ICourtBooking courtBooking)
+        
+        public Task<bool> AddPartisipantAsync(int bookingID, int memberID)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public Task<bool> RemovePartisipantAsync(int bookingID, int memberID)
         {
             throw new NotImplementedException();
         }
