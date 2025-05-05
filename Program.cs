@@ -1,7 +1,12 @@
+using Gadevang_Tennis_Klub.Interfaces.Services;
+using Gadevang_Tennis_Klub.Services.SQL;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddTransient<IEventDB, EventDB_SQL>();
+builder.Services.AddTransient<IActivityDB, ActivityDB_SQL>();
 
 var app = builder.Build();
 
