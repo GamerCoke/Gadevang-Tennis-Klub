@@ -5,20 +5,6 @@
     ViewData["Title"] = "Events";
 }
 
-@if (ViewData["ErrorMessage"] != null)
-{
-    <script type="text/javascript">
-        window.onload = function ()
-        {
-            alert("@ViewData["ErrorMessage"]");
-        };
-    </script>
-    ViewData["ErrorMessage"] = null;
-}
-
-<!-- To use the icons -->
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-
 <h1>Begivenheder</h1>
 
 <hr />
@@ -67,7 +53,8 @@
                 <td>@ev.End</td>
                 <td>@ev.Location</td>
                 <td>@ev.Capacity</td>
-                <td>
+                <td class="text-end">
+                    <a class="btn btn-primary btn-sm" title="Update" asp-page="UpdateEvent" asp-route-eventID=@ev.ID><i class="fas fa-edit"></i></a>
                     <a class="btn btn-danger btn-sm" title="Delete" asp-page="DeleteEvent" asp-route-eventID=@ev.ID><i class="fas fa-trash"></i></a>
                 </td>
                 @*                 <td class="text-end">

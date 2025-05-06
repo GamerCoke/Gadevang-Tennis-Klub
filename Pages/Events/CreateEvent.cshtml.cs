@@ -19,7 +19,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
         }
         public void OnGet()
         {
-            NewEvent = new();
+            NewEvent = new Event { Start = DateTime.Today };
         }
 
         public async Task OnPostAsync()

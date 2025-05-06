@@ -1,4 +1,84 @@
 ﻿@page
 @model Gadevang_Tennis_Klub.Pages.Events.UpdateEventModel
 @{
+    ViewData["Title"] = "EditEvent";
+}
+
+<!-- Title & Return button -->
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Opdater begivenhed</h1>
+    @if (!@Model.IsUpdated)
+    {
+        <a asp-page="GetAllEvents" class="btn btn-danger" role="button">Tilbage</a>
+    }
+</div>
+
+@if (!@Model.IsUpdated)
+{
+    <form method="post">
+        <div class="form-group">
+            <input asp-for="@Model.Event.ID" class="form-control" hidden/>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Event.Title" class="control-label">Titel*</label>
+            <span asp-validation-for="@Model.Event.Title" class="text-danger"></span>
+            <input asp-for="@Model.Event.Title" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Event.Description" class="control-label">Beskrivelse*</label>
+            <span asp-validation-for="@Model.Event.Description" class="text-danger"></span>
+            <input asp-for="@Model.Event.Description" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Event.Start" class="control-label">Starttidspunkt*</label>
+            <span asp-validation-for="@Model.Event.Start" class="text-danger"></span>
+            <input asp-for="@Model.Event.Start" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Event.End" class="control-label">Sluttidspunkt*</label>
+            <span asp-validation-for="@Model.Event.End" class="text-danger"></span>
+            <input asp-for="@Model.Event.End" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Event.Location" class="control-label">Lokation*</label>
+            <span asp-validation-for="@Model.Event.Location" class="text-danger"></span>
+            <input asp-for="@Model.Event.Location" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Event.Capacity" class="control-label">Max tilmeldinger</label>
+            <input asp-for="@Model.Event.Capacity" class="form-control" />
+        </div>
+        <br />
+        <div class="formgroup">
+            <input type="submit" value="Bekræft" class="btn btn-success" />
+        </div>
+    </form>
+}
+else
+{
+    <p>Du har opdateret følgende begivenhed</p>
+
+    <!-- Table -->
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Location</th>
+                <th>Capacity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.Event.Title</td>
+                <td>@Model.Event.Start</td>
+                <td>@Model.Event.End</td>
+                <td>@Model.Event.Location</td>
+                <td>@Model.Event.Capacity</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a asp-page="GetAllEvents" class="btn btn-success">Videre</a>
 }
