@@ -32,7 +32,7 @@ CREATE TABLE Members (
 CREATE TABLE Courts (
 	ID int identity(0, 1) PRIMARY KEY not null,
 	Type varchar(32) not null,
-    Name varchar(32) not null
+    Name varchar(32) 
 );
 
 CREATE TABLE Events (
