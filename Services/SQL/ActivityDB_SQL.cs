@@ -36,7 +36,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                         DateTime startTime = reader.GetDateTime("StartTime");
                         TimeOnly endTime = reader.GetFieldValue<TimeOnly>("Duration");
 
-                        IActivity activity = new Activity(id, evID, description, title, startTime, endTime);
+                        IActivity activity = new Activity(id, evID, title, description, startTime, endTime);
                         activities.Add(activity);
                     }
                     reader.Close();
@@ -181,7 +181,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                         DateTime startTime = reader.GetDateTime("StartTime");
                         TimeOnly endTime = reader.GetFieldValue<TimeOnly>("Duration");
 
-                        activity = new Activity(id, evID, description, title, startTime, endTime);
+                        activity = new Activity(id, evID, title, description, startTime, endTime);
                     }
                     reader.Close();
                 }
@@ -220,7 +220,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                         DateTime startTime = reader.GetDateTime("StartTime");
                         TimeOnly endTime = reader.GetFieldValue<TimeOnly>("Duration");
 
-                        IActivity activity = new Activity(id, evID, description, title, startTime, endTime);
+                        IActivity activity = new Activity(id, evID, title, description, startTime, endTime);
                         activities.Add(activity);
                     }
                     reader.Close();

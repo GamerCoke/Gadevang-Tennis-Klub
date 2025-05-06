@@ -46,7 +46,7 @@
     <tbody>
         @foreach (Event ev in Model.Events)
         {
-            <tr>
+            <tr onclick="window.location.href='@Url.Page("GetEvent", new { eventID = ev.ID })'" style="cursor:pointer;">
                 <td>@ev.ID</td>
                 <td>@ev.Title</td>
                 <td>@ev.Start</td>
