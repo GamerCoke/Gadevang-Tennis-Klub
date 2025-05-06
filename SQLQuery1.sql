@@ -26,7 +26,7 @@ CREATE TABLE Members (
 	CONSTRAINT sexOptions
 	CHECK(Sex IN ('Herre', 'Dame', 'Andet')),
 
-	PRIMARY KEY (Name, PassWord)
+	PRIMARY KEY (Email, PassWord)
 );
 
 CREATE TABLE Courts (
