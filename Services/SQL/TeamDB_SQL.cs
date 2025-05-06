@@ -16,7 +16,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
 
         public async Task<bool> CreateTeamAsync(ITeam team)
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 try
                 {
@@ -57,7 +57,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
         {
             string deleteSQL = @"DELETE FROM Teams WHERE ID = @ID";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand cmd = new SqlCommand(deleteSQL, connection))
             {
                 cmd.Parameters.AddWithValue("@ID", teamID);
@@ -85,7 +85,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
         public async Task<List<ITeam>> GetAllTeamAsync()
         {
             List<ITeam> teams = new List<ITeam>();
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 try
                 {
@@ -137,7 +137,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
 
             string query = @"SELECT TeamID FROM TeamBookings WHERE MemberID = @MemberID";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand cmd = new SqlCommand(query, connection))
             {
                 cmd.Parameters.AddWithValue("@MemberID", memberID);
@@ -242,7 +242,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                 finalQuery += " WHERE " + string.Join(" AND ", whereClauses);
             }
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand cmd = new SqlCommand(finalQuery, connection))
             {
                 cmd.Parameters.AddRange(parameters.ToArray());
@@ -278,7 +278,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
 
         public async Task<bool> UpdateTeamAsync(ITeam team)
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand cmd = new SqlCommand(updateString, connection))
             {
                 cmd.Parameters.AddWithValue("@ID", team.ID);
