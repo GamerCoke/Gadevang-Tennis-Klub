@@ -199,9 +199,5 @@ namespace Gadevang_Tennis_Klub.Services.SQL.Booking
 
         }
 
-        public bool RemovePartisipant(int memberID)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
