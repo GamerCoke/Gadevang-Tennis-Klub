@@ -198,6 +198,5 @@ namespace Gadevang_Tennis_Klub.Services.SQL.Booking
             throw new NotImplementedException();
 
         }
-
     }
 }

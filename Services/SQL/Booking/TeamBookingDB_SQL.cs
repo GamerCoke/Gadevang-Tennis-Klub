@@ -1,33 +1,181 @@
 ﻿using Gadevang_Tennis_Klub.Interfaces.Models;
 using Gadevang_Tennis_Klub.Interfaces.Services;
+using Gadevang_Tennis_Klub.Models;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace Gadevang_Tennis_Klub.Services.SQL.Booking
 {
     public class TeamBookingDB_SQL : ITeamBookingDB
     {
-        public bool CreateTeamBookingAsync(ITeamBooking teamBooking)
+        private string _connectionString = Secret.ConnectionString;
+        private string insertString = "INSERT INTO TeamBookings (MemberID, TeamID) VALUES (@MemberID, @TeamID)";
+        private string deleteString = "DELETE FROM TeamBookings WHERE ID = @ID";
+        private string selectAllString = "SELECT ID, MemberID, TeamID FROM TeamBookings";
+        private string selectByIdString = "SELECT ID, MemberID, TeamID FROM TeamBookings WHERE ID = @ID";
+        private string updateString = "UPDATE TeamBookings SET MemberID = @MemberID, TeamID = @TeamID WHERE ID = @ID";
+
+        public async Task<bool> CreateTeamBookingAsync(ITeamBooking teamBooking)
         {
-            throw new NotImplementedException();
+            using SqlConnection connection = new SqlConnection(_connectionString);
+            using SqlCommand cmd = new SqlCommand(insertString, connection);
+            cmd.Parameters.AddWithValue("@MemberID", teamBooking.Member_ID);
+            cmd.Parameters.AddWithValue("@TeamID", teamBooking.Team_ID);
+
+            try
+            {
+                await connection.OpenAsync();
+                int rowsAffected = await cmd.ExecuteNonQueryAsync();
+                return rowsAffected > 0;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine("SQL Error (CreateTeamBookingAsync): " + sqlEx.Message);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("General Error (CreateTeamBookingAsync): " + ex.Message);
+                return false;
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
 
-        public bool DeleteTeamBookingAsync(int teamBookingID)
+        public async Task<bool> DeleteTeamBookingAsync(int teamBookingID)
         {
-            throw new NotImplementedException();
+            using SqlConnection connection = new SqlConnection(_connectionString);
+            using SqlCommand cmd = new SqlCommand(deleteString, connection);
+            cmd.Parameters.AddWithValue("@ID", teamBookingID);
+
+            try
+            {
+                await connection.OpenAsync();
+                int rowsAffected = await cmd.ExecuteNonQueryAsync();
+                return rowsAffected > 0;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine("SQL Error (DeleteTeamBookingAsync): " + sqlEx.Message);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("General Error (DeleteTeamBookingAsync): " + ex.Message);
+                return false;
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
 
-        public List<ITeamBooking> GetAllTeamBookingAsync()
+        public async Task<List<ITeamBooking>> GetAllTeamBookingAsync()
         {
-            throw new NotImplementedException();
+            List<ITeamBooking> teamBookings = new();
+            using SqlConnection connection = new SqlConnection(_connectionString);
+            using SqlCommand cmd = new SqlCommand(selectAllString, connection);
+
+            try
+            {
+                await connection.OpenAsync();
+                SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    teamBookings.Add(new TeamBooking
+                    {
+                        ID = Convert.ToInt32(reader["ID"]),
+                        Member_ID = Convert.ToInt32(reader["MemberID"]),
+                        Team_ID = Convert.ToInt32(reader["TeamID"])
+                    });
+                }
+
+                reader.Close();
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine("SQL Error (GetAllTeamBookingAsync): " + sqlEx.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("General Error (GetAllTeamBookingAsync): " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return teamBookings;
         }
 
-        public ITeamBooking GetTeamBookingFromIDAsync(int teamBookingID)
+        public async Task<ITeamBooking?> GetTeamBookingFromIDAsync(int teamBookingID)
         {
-            throw new NotImplementedException();
+            using SqlConnection connection = new SqlConnection(_connectionString);
+            using SqlCommand cmd = new SqlCommand(selectByIdString, connection);
+            cmd.Parameters.AddWithValue("@ID", teamBookingID);
+
+            try
+            {
+                await connection.OpenAsync();
+                SqlDataReader reader = await cmd.ExecuteReaderAsync();
+                if (await reader.ReadAsync())
+                {
+                    return new TeamBooking
+                    {
+                        ID = Convert.ToInt32(reader["ID"]),
+                        Member_ID = Convert.ToInt32(reader["MemberID"]),
+                        Team_ID = Convert.ToInt32(reader["TeamID"])
+                    };
+                }
+                reader.Close();
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine("SQL Error (GetTeamBookingFromIDAsync): " + sqlEx.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("General Error (GetTeamBookingFromIDAsync): " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return null;
         }
 
-        public bool UpdateTeamBookingAsync(ITeamBooking teamBooking)
+        public async Task<bool> UpdateTeamBookingAsync(ITeamBooking teamBooking)
         {
-            throw new NotImplementedException();
+            using SqlConnection connection = new SqlConnection(_connectionString);
+            using SqlCommand cmd = new SqlCommand(updateString, connection);
+            cmd.Parameters.AddWithValue("@ID", teamBooking.ID);
+            cmd.Parameters.AddWithValue("@MemberID", teamBooking.Member_ID);
+            cmd.Parameters.AddWithValue("@TeamID", teamBooking.Team_ID);
+
+            try
+            {
+                await connection.OpenAsync();
+                int affectedRows = await cmd.ExecuteNonQueryAsync();
+                return affectedRows > 0;
+            }
+            catch (SqlException sqlEx)
+            {
+                Console.WriteLine("SQL Error (UpdateTeamBookingAsync): " + sqlEx.Message);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("General Error (UpdateTeamBookingAsync): " + ex.Message);
+                return false;
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
     }
 }
