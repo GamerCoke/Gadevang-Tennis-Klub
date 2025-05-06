@@ -1,0 +1,117 @@
+﻿@page
+@using Gadevang_Tennis_Klub.Models
+@model Gadevang_Tennis_Klub.Pages.Events.CalendarModel
+@functions 
+{    
+    void RenderDayCell(int day, int month, int year, bool isCurrentMonth)
+    {
+        // C# :
+        DateTime today = DateTime.Today;
+        bool isToday = (day == today.Day && month == today.Month && year == today.Year);
+
+        string cellColor = isToday ? "background-color: #fcdbae;" : (!isCurrentMonth ? "background-color: #eeeeee;" : "");
+        string textColor = isCurrentMonth ? "" : "text-muted"; // Faded text style for other months than the current.
+
+        var eventsForThisDay = Model.Events.Where(e => e.Start.Day == day 
+                                                    && e.Start.Month == month 
+                                                    && e.Start.Year == year);
+
+        // HTML :
+        <text>
+            <td class="position-relative @textColor" style="height: 100px; @cellColor">
+                <span class="date-number">@day.</span>
+
+                @foreach (Event ev in eventsForThisDay)
+                {
+                    <button type="button"
+                    class="card mt-2 p-0 text-start"
+                    style="background-color: #87d49a; width:100%; color:@(isCurrentMonth ? "black" : "dimgray");"
+                    title="@ev.Title">
+                        <span class="small ps-1">@ev.Title</span>
+                    </button>
+                }
+            </td>
+        </text>
+    }
+}
+
+@{
+    ViewData["Title"] = "Calendar";
+
+    // Current month info's
+    int _daysInCurrentMonth = DateTime.DaysInMonth(Model.CurrentYear, Model.CurrentMonth);
+    DateTime _firstDayInCurrentMonth = new DateTime(Model.CurrentYear, Model.CurrentMonth, 1);
+    int _startDayOfWeekCurrentMonth = ((int)_firstDayInCurrentMonth.DayOfWeek + 6) % 7;
+
+    // Previous month info's
+    DateTime _previousMonth = _firstDayInCurrentMonth.AddMonths(-1);
+    int _daysInPreviousMonth = DateTime.DaysInMonth(_previousMonth.Year, _previousMonth.Month);
+    int _previousMonthStart = _daysInPreviousMonth - _startDayOfWeekCurrentMonth + 1;
+
+    // Next months info's
+    DateTime _nextMonth = _firstDayInCurrentMonth.AddMonths(1);
+    int _remainingCells = (7 - ((_startDayOfWeekCurrentMonth + _daysInCurrentMonth) % 7)) % 7; // To fill the rest of the cells with dates from the next month.
+
+    // Info's to control the cell creation loop
+    int _totalCells = _startDayOfWeekCurrentMonth + _daysInCurrentMonth + _remainingCells;
+    int _currentDay = 1, _nextMonthsCurrentDay = 1;
+}
+
+<style>
+    .date-number {
+        position: absolute;
+        top: 0rem;   /* Distance from top */
+        right: 0.1rem; /* Distance from right */
+        font-size: 12px;
+    }
+</style>
+
+@* <h1 class="text-center">Kalender</h1> *@
+<h3 class="text-center">@Model.MonthName @Model.CurrentYear</h3>
+
+<!-- Hidden fields for current month and year -->
+<input asp-for="@Model.CurrentMonth" hidden/>
+<input asp-for="@Model.CurrentYear" hidden/>
+
+<!-- Buttons -->
+<div class="d-flex justify-content-between">
+    <div class="d-flex gap-2">
+        <form method="post" asp-page-handler="Previous" asp-route-year="@Model.CurrentYear" asp-route-month="@Model.CurrentMonth">
+            <button type="submit" class="btn btn-primary">Previous</button>
+        </form>
+        <form method="post" asp-page-handler="Next" asp-route-year="@Model.CurrentYear" asp-route-month="@Model.CurrentMonth">
+            <button type="submit" class="btn btn-primary">Next</button>
+        </form>
+    </div>
+    <form method="post" asp-page-handler="Today">
+        <button type="submit" class="btn btn-primary">Today</button>
+    </form>
+</div>
+
+<!-- Calendar table data -->
+<table class="table table-bordered mt-3" style="table-layout: fixed; width: 100%;">
+    <tr>
+        @for (int i = 0; i < _totalCells; i++)
+        {
+            if (i % 7 == 0 && i != 0)
+            {
+                <!-- Make a new row every time we get to a monday -->
+                @:</tr><tr> 
+            }
+
+            // Making the cells:
+            if (i < _startDayOfWeekCurrentMonth) // Previous month
+            {
+                RenderDayCell(_previousMonthStart + i, _previousMonth.Month, _previousMonth.Year, false);
+            }
+            else if (i < _startDayOfWeekCurrentMonth + _daysInCurrentMonth) // Current month
+            {
+                RenderDayCell(_currentDay++, Model.CurrentMonth, Model.CurrentYear, true);
+            }
+            else // Next month
+            {
+                RenderDayCell(_nextMonthsCurrentDay++, _nextMonth.Month, _nextMonth.Year, false);
+            }
+        }
+    </tr>
+</table>
