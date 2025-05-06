@@ -7,8 +7,22 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Gadevang_Tennis_Klub.styles.css" asp-append-version="true" />
+
+    <!-- To use the icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
+    @if (ViewData["ErrorMessage"] != null)
+    {
+        <script type="text/javascript">
+            window.onload = function ()
+            {
+                alert("@ViewData["ErrorMessage"]");
+            };
+        </script>
+        ViewData["ErrorMessage"] = null;
+    }
+
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
@@ -26,7 +40,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Events/GetAllEvents">Events</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Events/GetAllEvents">Begivenheder</a>
                         </li>
                     </ul>
                 </div>

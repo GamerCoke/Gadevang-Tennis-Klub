@@ -17,34 +17,33 @@
 {
     <form method="post">
         <div class="form-group">
-            <label asp-for="@Model.NewEvent.Title" class="control-label"></label>
-            <input asp-for="@Model.NewEvent.Title" class="form-control" />
+            <label asp-for="@Model.NewEvent.Title" class="control-label">Titel*</label>
             <span asp-validation-for="@Model.NewEvent.Title" class="text-danger"></span>
+            <input asp-for="@Model.NewEvent.Title" class="form-control"/>
         </div>
         <div class="form-group">
-            <label asp-for="@Model.NewEvent.Description" class="control-label"></label>
-            <input asp-for="@Model.NewEvent.Description" class="form-control" />
+            <label asp-for="@Model.NewEvent.Description" class="control-label">Beskrivelse*</label>
             <span asp-validation-for="@Model.NewEvent.Description" class="text-danger"></span>
+            <input asp-for="@Model.NewEvent.Description" class="form-control" />
         </div>
         <div class="form-group">
-            <label asp-for="@Model.NewEvent.Start" class="control-label"></label>
-            <input asp-for="@Model.NewEvent.Start" class="form-control" />
+            <label asp-for="@Model.NewEvent.Start" class="control-label">Starttidspunkt*</label>
             <span asp-validation-for="@Model.NewEvent.Start" class="text-danger"></span>
+            <input asp-for="@Model.NewEvent.Start" class="form-control" />
         </div>
         <div class="form-group">
-            <label asp-for="@Model.NewEvent.End" class="control-label"></label>
-            <input asp-for="@Model.NewEvent.End" class="form-control" />
+            <label asp-for="@Model.NewEvent.End" class="control-label">Sluttidspunkt*</label>
             <span asp-validation-for="@Model.NewEvent.End" class="text-danger"></span>
+            <input asp-for="@Model.NewEvent.End" class="form-control" />
         </div>
         <div class="form-group">
-            <label asp-for="@Model.NewEvent.Location" class="control-label"></label>
-            <input asp-for="@Model.NewEvent.Location" class="form-control" />
+            <label asp-for="@Model.NewEvent.Location" class="control-label">Lokation*</label>
             <span asp-validation-for="@Model.NewEvent.Location" class="text-danger"></span>
+            <input asp-for="@Model.NewEvent.Location" class="form-control" />
         </div>
         <div class="form-group">
-            <label asp-for="@Model.NewEvent.Capacity" class="control-label"></label>
+            <label asp-for="@Model.NewEvent.Capacity" class="control-label">Max tilmeldinger</label>
             <input asp-for="@Model.NewEvent.Capacity" class="form-control" />
-            <span asp-validation-for="@Model.NewEvent.Capacity" class="text-danger"></span>
         </div>
         <br />
         <div class="formgroup">
