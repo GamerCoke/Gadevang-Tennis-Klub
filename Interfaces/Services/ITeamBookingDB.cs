@@ -4,10 +4,10 @@ namespace Gadevang_Tennis_Klub.Interfaces.Services
 {
     public interface ITeamBookingDB
     {
-        public List<ITeamBooking> GetAllTeamBookingAsync();
-        public bool CreateTeamBookingAsync(ITeamBooking teamBooking);
-        public bool DeleteTeamBookingAsync(int teamBookingID);
-        public bool UpdateTeamBookingAsync(ITeamBooking teamBooking);
-        public ITeamBooking GetTeamBookingFromIDAsync(int teamBookingID);
+        public Task<List<ITeamBooking>> GetAllTeamBookingAsync();
+        public Task<bool> CreateTeamBookingAsync(ITeamBooking teamBooking);
+        public Task<bool> DeleteTeamBookingAsync(int teamBookingID);
+        public Task<bool> UpdateTeamBookingAsync(ITeamBooking teamBooking);
+        public Task<ITeamBooking> GetTeamBookingFromIDAsync(int teamBookingID);
     }
 }
