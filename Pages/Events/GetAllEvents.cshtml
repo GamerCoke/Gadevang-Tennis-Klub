@@ -1,4 +1,86 @@
 ﻿@page
+@using Gadevang_Tennis_Klub.Models
 @model Gadevang_Tennis_Klub.Pages.Events.GetAllEventsModel
 @{
+    ViewData["Title"] = "Events";
 }
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <script type="text/javascript">
+        window.onload = function ()
+        {
+            alert("@ViewData["ErrorMessage"]");
+        };
+    </script>
+    ViewData["ErrorMessage"] = null;
+}
+
+<!-- To use the icons -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+<h1>Begivenheder</h1>
+
+<hr />
+
+<!-- Events count & Create event button -->
+<div class="row align-items-center mb-3">
+    <div class="col">
+        <p class="mb-0">Antal begivenheder: @Model.Events.Count</p>
+    </div>
+    <div class="col text-end">
+        @* @if (!string.IsNullOrEmpty(@Model.CurrentUser)) *@
+        @* { *@
+            <a asp-page="CreateEvent" class="btn btn-success" role="button">Opret begivenhed</a>
+        @* } *@
+    </div>
+</div>
+
+<br />
+
+<!-- Table with events -->
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Location</th>
+            <th>Capacity</th>
+            <th>Actions</th>
+            @*             <th class="text-end">
+                @if (!string.IsNullOrEmpty(@Model.CurrentUser))
+                {
+                    <p>Actions</p>
+                }
+            </th> *@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Event ev in Model.Events)
+        {
+            <tr>
+                <td>@ev.ID</td>
+                <td>@ev.Title</td>
+                <td>@ev.Start</td>
+                <td>@ev.End</td>
+                <td>@ev.Location</td>
+                <td>@ev.Capacity</td>
+                <td>
+                    <a class="btn btn-danger btn-sm" title="Delete" asp-page="DeleteEvent" asp-route-eventID=@ev.ID><i class="fas fa-trash"></i></a>
+                </td>
+                @*                 <td class="text-end">
+                    <p>
+                        <a class="btn btn-success btn-sm" title="Rooms" asp-page="../Rooms/GetAllRoomsForHotel" asp-route-hotelNo=@hotel.HotelNr><i class="fas fa-home"></i></a>
+                        @if (!string.IsNullOrEmpty(@Model.CurrentUser))
+                        {
+                            <a class="btn btn-primary btn-sm" title="Edit" asp-page="EditHotel" asp-route-hotelNo=@hotel.HotelNr><i class="fas fa-edit"></i></a>
+                            <a class="btn btn-danger btn-sm" title="Delete" asp-page="DeleteHotel" asp-route-hotelNo=@hotel.HotelNr><i class="fas fa-trash"></i></a>
+                        }
+                    </p>
+                </td> *@
+          </tr>
+        }
+    </tbody>
+</table> 

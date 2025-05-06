@@ -1,4 +1,82 @@
 ﻿@page
 @model Gadevang_Tennis_Klub.Pages.Events.CreateEventModel
 @{
+    ViewData["Title"] = "CreateEvent";
+}
+
+<!-- Title & Return button -->
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Opret begivenhed</h1>
+    @if (!Model.IsCreated)
+    {
+        <a asp-page="GetAllEvents" class="btn btn-danger" role="button">Tilbage</a>
+    }
+</div>
+
+@if (!Model.IsCreated)
+{
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="@Model.NewEvent.Title" class="control-label"></label>
+            <input asp-for="@Model.NewEvent.Title" class="form-control" />
+            <span asp-validation-for="@Model.NewEvent.Title" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.NewEvent.Description" class="control-label"></label>
+            <input asp-for="@Model.NewEvent.Description" class="form-control" />
+            <span asp-validation-for="@Model.NewEvent.Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.NewEvent.Start" class="control-label"></label>
+            <input asp-for="@Model.NewEvent.Start" class="form-control" />
+            <span asp-validation-for="@Model.NewEvent.Start" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.NewEvent.End" class="control-label"></label>
+            <input asp-for="@Model.NewEvent.End" class="form-control" />
+            <span asp-validation-for="@Model.NewEvent.End" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.NewEvent.Location" class="control-label"></label>
+            <input asp-for="@Model.NewEvent.Location" class="form-control" />
+            <span asp-validation-for="@Model.NewEvent.Location" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.NewEvent.Capacity" class="control-label"></label>
+            <input asp-for="@Model.NewEvent.Capacity" class="form-control" />
+            <span asp-validation-for="@Model.NewEvent.Capacity" class="text-danger"></span>
+        </div>
+        <br />
+        <div class="formgroup">
+            <input type="submit" value="Opret" class="btn btn-success" />
+        </div>
+    </form>
+}
+else
+{
+    <p>Du har oprettet følgende begivenhed:</p>
+
+    <!-- Table -->
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Location</th>
+                <th>Capacity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.NewEvent.Title</td>
+                <td>@Model.NewEvent.Start</td>
+                <td>@Model.NewEvent.End</td>
+                <td>@Model.NewEvent.Location</td>
+                <td>@Model.NewEvent.Capacity</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a asp-page="GetAllEvents" class="btn btn-success">Videre</a>
 }
