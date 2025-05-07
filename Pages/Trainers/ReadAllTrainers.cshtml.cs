@@ -6,11 +6,13 @@ namespace Gadevang_Tennis_Klub.Pages.Trainers
 {
     public class ReadAllTrainersModel : PageModel
     {
+        public ITeamDB TeamDB;
         public ITrainerDB TrainerDB;
         public bool IsAdmin;
-        public ReadAllTrainersModel(ITrainerDB trainerDB)
+        public ReadAllTrainersModel(ITrainerDB trainerDB, ITeamDB teamDB)
         {
             TrainerDB = trainerDB;
+            TeamDB = teamDB;
         }
 
         public void OnGet()

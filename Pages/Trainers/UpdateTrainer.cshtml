@@ -5,11 +5,11 @@
 }
 
 <title>Update Træner</title>
-<form asp-page-handler="login" method="post">
+<form method="post" enctype="multipart/form-data">
     <table>
         <tr>
             <label asp-for="@Model.Trainer.Id" class="control-label"></label>
-            <input asp-for="@Model.Trainer.Id" class="form-control" disabled/>
+            <input asp-for="@Model.Trainer.Id" class="form-control" readonly/>
         </tr>
         <tr>
             <label asp-for="@Model.Trainer.Name" class="control-label">Navn</label>
@@ -29,6 +29,17 @@
             <span asp-validation-for="@Model.Trainer.Email" class="text-danger"></span>
             <input asp-for="@Model.Trainer.Email" class="form-control" />
         </tr>
+        <div class="form-group">
+            <label asp-for="@Model.Photo" class="control-label"></label>
+            <div class="custom-file">
+                <input asp-for="@Model.Photo" class="custom-file-input form-control" onchange="previewImage(trainer)" />
+            </div>
+            <br />
+            <!-- Image Preview -->
+            <div>
+                <img id="imagePreview" style="max-width: 200px; max-height: 200px; display: none;" />
+            </div>
+        </div>
         <tr>
             <td>&nbsp</td>
             <td><Input type="submit" value="Updater" /></td>
@@ -40,3 +51,21 @@
 {
     <b class="text-danger">@Model.Message</b>
 }
+
+<!-- JS function to show an image preview -->
+<script>
+    function previewImage(trainer) {
+        const file = trainer.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const image = document.getElementById('imagePreview');
+            image.src = e.target.result;
+            image.style.display = 'block'; // Show the image
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+</script>

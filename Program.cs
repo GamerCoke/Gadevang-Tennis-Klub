@@ -8,6 +8,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddTransient<IEventDB, EventDB_SQL>();
 builder.Services.AddTransient<IActivityDB, ActivityDB_SQL>();
 builder.Services.AddTransient<ITrainerDB, TrainerDB_SQL>();
+builder.Services.AddTransient<ITeamDB, TeamDB_SQL>();
 builder.Services.AddTransient<IMemberDB, MemberDB_SQL>();
 
 builder.Services.AddSession();    //cookie
