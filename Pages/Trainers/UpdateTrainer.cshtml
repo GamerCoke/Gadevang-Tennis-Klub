@@ -1,0 +1,42 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.Trainers.UpdateTrainerModel
+@{
+    ViewData["Title"] = "Updater Træner";
+}
+
+<title>Update Træner</title>
+<form asp-page-handler="login" method="post">
+    <table>
+        <tr>
+            <label asp-for="@Model.Trainer.Id" class="control-label"></label>
+            <input asp-for="@Model.Trainer.Id" class="form-control" disabled/>
+        </tr>
+        <tr>
+            <label asp-for="@Model.Trainer.Name" class="control-label">Navn</label>
+            <br />
+            <span asp-validation-for="@Model.Trainer.Name" class="text-danger"></span>
+            <input asp-for="@Model.Trainer.Name" class="form-control" />
+        </tr>
+        <tr>
+            <label asp-for="@Model.Trainer.Phone" class="control-label">Telefon</label>
+            <br />
+            <span asp-validation-for="@Model.Trainer.Phone" class="text-danger"></span>
+            <input asp-for="@Model.Trainer.Phone" class="form-control" />
+        </tr>
+        <tr>
+            <label asp-for="@Model.Trainer.Email" class="control-label">Email</label>
+            <br />
+            <span asp-validation-for="@Model.Trainer.Email" class="text-danger"></span>
+            <input asp-for="@Model.Trainer.Email" class="form-control" />
+        </tr>
+        <tr>
+            <td>&nbsp</td>
+            <td><Input type="submit" value="Updater" /></td>
+        </tr>
+    </table>
+</form>
+
+@if (Model.Message != null)
+{
+    <b class="text-danger">@Model.Message</b>
+}
