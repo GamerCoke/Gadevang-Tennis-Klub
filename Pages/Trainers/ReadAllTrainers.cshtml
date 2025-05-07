@@ -1,0 +1,59 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.Trainers.ReadAllTrainersModel
+@{
+    ViewData["Title"] = "Trænere";
+}
+
+@if (Model.IsAdmin)
+{
+    <a asp-page="CreateTrainer"
+       class="button">Opret Træner</a>
+}
+
+<title>Trænere</title>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Navn</th>
+            <th>Telefon</th>
+            <th>Email</th>
+            <th>Billede</th>
+            @if (Model.IsAdmin)
+            {
+                <th>Handlinger</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var trainer in await Model.TrainerDB.GetAllTrainersAsync())
+        {
+            <tr>
+                <td>@trainer.Id</td>
+                <td>@trainer.Name</td>
+                <td>@trainer.Phone</td>
+                <td>@trainer.Email</td>
+                <td>
+                    @if (trainer.Image == null)
+                    {
+                        <p>null</p>
+                    }
+                    else
+                    {
+                        <p>@trainer.Image</p>
+                    }
+                </td>
+                @if (Model.IsAdmin)
+                {
+                    <td>
+                        <a asp-page="DeleteTrainer" asp-route-trainerID=@trainer.Id
+                           class="button">Slet</a>
+                        <br />
+                        <a asp-page="UpdateTrainer" asp-route-trainerID=@trainer.Id
+                           class="button">Updater</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
