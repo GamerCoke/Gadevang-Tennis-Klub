@@ -15,7 +15,7 @@ CREATE TABLE Members (
 	Name varchar(256) not null,
 	PassWord varchar(256) not null,
 	Address varchar(256) not null,
-	Email varchar(256) not null,
+	Email varchar(256) UNIQUE not null,
 	Phone varchar(16) not null,
 	Sex varchar(8) not null,
 	DoB Date not null,
