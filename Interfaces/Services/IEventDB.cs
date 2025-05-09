@@ -15,7 +15,7 @@ namespace Gadevang_Tennis_Klub.Interfaces.Services
         /// </summary>
         /// <param name="ev">The event to be inserted</param>
         /// <returns>True if the insert was successfull, otherwise false</returns>
-        Task<bool> CreateEventAsync(IEvent ev);
+        Task<int?> CreateEventAsync(IEvent ev);
 
         /// <summary>
         /// Deletes an event from the database

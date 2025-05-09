@@ -18,6 +18,14 @@ namespace Gadevang_Tennis_Klub.Pages.Events
             _eventDB = eventDB;
         }
 
+        private List<IEvent> SortByDate(List<IEvent> listToSort)
+        {
+            List<IEvent> sortedList = listToSort;
+            sortedList.Sort((d1, d2) => d1.Start.CompareTo(d2.Start));
+
+            return sortedList;
+        }
+
         public async Task OnGetAsync()
         {
             try
@@ -25,6 +33,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
                 //CurrentUser = HttpContext.Session.GetString("UserName");
 
                 Events = await _eventDB.GetAllEventsAsync();
+                SortByDate(Events);
             }
             catch (Exception ex)
             {
