@@ -10,7 +10,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
     {
         private readonly string _connectionString = Secret.ConnectionString;
         private readonly string _getAllEventsSql = "select ID, Title, Description, StartTime, Duration, Location, Capacity FROM Events";
-        private readonly string _insertSql = "insert INTO Events Values(@Title, @Description, @StartTime, @Duration, @Location, @Capacity)";
+        private readonly string _insertSql = "insert into Events (Title, Description, StartTime, Duration, Location, Capacity) OUTPUT INSERTED.ID VALUES (@Title, @Description, @StartTime, @Duration, @Location, @Capacity);";
         private readonly string _deleteSql = "delete FROM Events WHERE ID = @ID";
         private readonly string _updateEventSql = "update Events SET Title = @Title, Description = @Description, StartTime = @StartTime, Duration = @Duration, Location = @Location, Capacity = @Capacity WHERE ID = @ID";
         private readonly string _getEventByIDSql = "select ID, Title, Description, StartTime, Duration, Location, Capacity FROM Events WHERE ID = @ID";
@@ -55,7 +55,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
             return events;
         }
 
-        public async Task<bool> CreateEventAsync(IEvent ev)
+        public async Task<int?> CreateEventAsync(IEvent ev)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -69,12 +69,10 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                     command.Parameters.AddWithValue("@StartTime", ev.Start);
                     command.Parameters.AddWithValue("@Duration", ev.End);
                     command.Parameters.AddWithValue("@Location", ev.Location);
-                    command.Parameters.AddWithValue("@Capacity", ev.Capacity);
+                    command.Parameters.AddWithValue("@Capacity", ev.Capacity ?? (object)DBNull.Value);
 
-                    int noOfRows = await command.ExecuteNonQueryAsync();
-                    Console.WriteLine($"Antal indsatte i tabellen {noOfRows}");
-
-                    if (noOfRows == 1) return true;
+                    object result = await command.ExecuteScalarAsync(); // Tries to retrieve the event id it got from the database.
+                    return result != null ? Convert.ToInt32(result) : null;
                 }
                 catch (SqlException sqlEx)
                 {
@@ -87,7 +85,6 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                     throw ex;
                 }
             }
-            return false;
         }
 
         public async Task<bool> DeleteEventAsync(int eventId)
@@ -136,7 +133,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                     command.Parameters.AddWithValue("@StartTime", ev.Start);
                     command.Parameters.AddWithValue("@Duration", ev.End);
                     command.Parameters.AddWithValue("@Location", ev.Location);
-                    command.Parameters.AddWithValue("@Capacity", ev.Capacity);
+                    command.Parameters.AddWithValue("@Capacity", ev.Capacity ?? (object)DBNull.Value);
 
                     await command.Connection.OpenAsync();
 

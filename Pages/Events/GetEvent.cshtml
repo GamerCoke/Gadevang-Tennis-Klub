@@ -5,6 +5,10 @@
     ViewData["Title"] = "Event";
 }
 
+<div class="text-end">
+<a class="btn btn-primary btn-sm" title="Redigér begivenhed" asp-page="UpdateEvent" asp-route-eventID=@Model.Event.ID><i class="fas fa-edit"></i></a>
+    <a class="btn btn-danger btn-sm" title="Slet begivenhed" asp-page="DeleteEvent" asp-route-eventID=@Model.Event.ID><i class="fas fa-trash"></i></a>
+</div>
 
 <div class="card p-3 mx-auto" style="width:65%">
     <!-- Title & Return button -->

@@ -5,7 +5,7 @@ namespace Gadevang_Tennis_Klub.Services.IEnumerable
 {
     public class EventDB_IENU : IEventDB
     {
-        public Task<bool> CreateEventAsync(IEvent ev)
+        public Task<int?> CreateEventAsync(IEvent ev)
         {
             throw new NotImplementedException();
         }

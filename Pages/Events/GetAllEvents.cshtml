@@ -15,59 +15,45 @@
         <p class="mb-0">Antal begivenheder: @Model.Events.Count</p>
     </div>
     <div class="col text-end">
-        @* @if (!string.IsNullOrEmpty(@Model.CurrentUser)) *@
-        @* { *@
-            <a asp-page="CreateEvent" class="btn btn-success" role="button">Opret begivenhed</a>
-        @* } *@
+        <a asp-page="CreateEvent" class="btn btn-success" role="button">Opret begivenhed</a>
     </div>
 </div>
 
 <br />
 
-<!-- Table with events -->
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Start</th>
-            <th>End</th>
-            <th>Location</th>
-            <th>Capacity</th>
-            <th>Actions</th>
-            @*             <th class="text-end">
-                @if (!string.IsNullOrEmpty(@Model.CurrentUser))
-                {
-                    <p>Actions</p>
-                }
-            </th> *@
-        </tr>
-    </thead>
+<table class="table table-hover" style="width: 100%; border-collapse: collapse;">
     <tbody>
         @foreach (Event ev in Model.Events)
         {
-            <tr onclick="window.location.href='@Url.Page("GetEvent", new { eventID = ev.ID })'" style="cursor:pointer;">
-                <td>@ev.ID</td>
-                <td>@ev.Title</td>
-                <td>@ev.Start</td>
-                <td>@ev.End</td>
-                <td>@ev.Location</td>
-                <td>@ev.Capacity</td>
-                <td class="text-end">
-                    <a class="btn btn-primary btn-sm" title="Update" asp-page="UpdateEvent" asp-route-eventID=@ev.ID><i class="fas fa-edit"></i></a>
-                    <a class="btn btn-danger btn-sm" title="Delete" asp-page="DeleteEvent" asp-route-eventID=@ev.ID><i class="fas fa-trash"></i></a>
-                </td>
-                @*                 <td class="text-end">
-                    <p>
-                        <a class="btn btn-success btn-sm" title="Rooms" asp-page="../Rooms/GetAllRoomsForHotel" asp-route-hotelNo=@hotel.HotelNr><i class="fas fa-home"></i></a>
-                        @if (!string.IsNullOrEmpty(@Model.CurrentUser))
+            <tr onclick="window.location.href='@Url.Page("GetEvent", new { eventID = ev.ID })'" style="cursor:pointer; border-bottom: 1px solid #ccc;">
+                <td style="padding: 10px;">
+                    <div style="display: flex; align-items: center;">
+                        <!-- Calendar-style date box with a red top and white bottom -->
+                        <div style="width: 50px; border: 1px solid red; text-align: center; font-family: Arial, sans-serif;">
+                            <!-- Month section in red -->
+                            <div style="background-color: red; color: white; padding: 4px 0; font-size: 0.8em;">
+                                @ev.Start.ToString("MMM", new System.Globalization.CultureInfo("da-DK")).ToUpper()
+                            </div>
+                            <!-- Day section in white -->
+                            <div style="background-color: white; color: black; padding: 6px 0; font-size: 1.2em; font-weight: bold;">
+                                @ev.Start.Day
+                            </div>
+                        </div>
+                        <!-- Event details -->
+                        <div style="margin-left: 15px;">
+                            <div style="font-size: 1.1em; font-weight: bold;">@ev.Title</div>
+                            <div style="color: #555;"><i class="fas fa-clock text-center" style="width: 20px;"></i> @ev.Start.ToString("HH:mm")-@ev.End</div>
+                            <div style="color: #555;"><i class="fa-solid fa-location-dot text-center" style="width: 20px;"></i> @ev.Location</div>
+                        </div>
+                        @if (ev.Capacity != null && ev.Capacity != 0)
                         {
-                            <a class="btn btn-primary btn-sm" title="Edit" asp-page="EditHotel" asp-route-hotelNo=@hotel.HotelNr><i class="fas fa-edit"></i></a>
-                            <a class="btn btn-danger btn-sm" title="Delete" asp-page="DeleteHotel" asp-route-hotelNo=@hotel.HotelNr><i class="fas fa-trash"></i></a>
+                            <div style="color: #888; font-size: 0.9em; align-self: flex-end; margin-left: auto;">
+                                <i class="fa-solid fa-user text-center" style="width: 20px;"></i> 0 / @ev.Capacity tilmeldte
+                            </div>
                         }
-                    </p>
-                </td> *@
-          </tr>
+                    </div>
+                </td>
+            </tr>
         }
     </tbody>
-</table> 
+</table>

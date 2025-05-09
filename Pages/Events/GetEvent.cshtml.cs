@@ -1,3 +1,4 @@
+using Gadevang_Tennis_Klub.Interfaces.Models;
 using Gadevang_Tennis_Klub.Interfaces.Services;
 using Gadevang_Tennis_Klub.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -10,8 +11,8 @@ namespace Gadevang_Tennis_Klub.Pages.Events
         private IEventDB _eventDB;
         private IActivityDB _activityDB;
 
-        public Event Event { get; set; }
-        public List<Activity> Activities { get; set; }
+        public IEvent Event { get; set; }
+        public List<IActivity> Activities { get; set; }
 
 
         public GetEventModel(IEventDB eventDB, IActivityDB activityDB)
@@ -24,8 +25,8 @@ namespace Gadevang_Tennis_Klub.Pages.Events
         {
             try
             {
-                Event = (Event)await _eventDB.GetEventByIDAsync(eventID);
-                Activities = (await _activityDB.GetActivitiesByEventAsync(eventID)).Cast<Activity>().ToList();
+                Event = await _eventDB.GetEventByIDAsync(eventID);
+                Activities = await _activityDB.GetActivitiesByEventAsync(eventID);
             }
             catch (Exception ex)
             {
