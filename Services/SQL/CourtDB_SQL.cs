@@ -43,12 +43,14 @@ namespace Gadevang_Tennis_Klub.Services.SQL
 
         public async Task<List<ICourt>> GetCourtsByTypeAsync(string type)
         {
-            return await GetCourtsByQueryAsync(queStr + $" WHERE Type = {type}");
+            return await GetCourtsByQueryAsync(queStr + $" WHERE Type LIKE '%{type}%'");
         }
 
         public async Task<bool> UpdateCourtAsync(ICourt court)
         {
-            string updStr = $"UPDATE Courts VALUES ({court.Type}, {court.Name}) WHERE ID = {court.ID}";
+            
+            string name = court.Name != null ? $"\'{court.Name}\'" : "NULL";
+            string updStr = $"UPDATE Courts SET Type = '{court.Type}', Name = {name} WHERE ID = {court.ID}";
             return await NonReadQueryAsync(updStr);
         }
 

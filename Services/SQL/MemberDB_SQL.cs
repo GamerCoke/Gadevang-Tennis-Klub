@@ -5,6 +5,8 @@ using Microsoft.Data.SqlClient;
 using static System.Net.Mime.MediaTypeNames;
 using System.Net;
 using System.Numerics;
+using System.Reflection.PortableExecutable;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Gadevang_Tennis_Klub.Services.SQL
 {
@@ -17,11 +19,17 @@ namespace Gadevang_Tennis_Klub.Services.SQL
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                string img = member.Image == null ? "null" : $"'{member.Image}'";
-                int isA = member.IsAdmin ? 1 : 0;
+                if (member.Image.IsNullOrEmpty())
+                    member.Image = "null";
+                if (!member.Image.IsNullOrEmpty())
+                    member.Image = "\'" + $"{member.Image}" + "\'";
+                int year = member.Dob.Year;
+                int month = member.Dob.Month;
+                int day = member.Dob.Day;
+                int isA = member.IsAdmin == false ? 0 : 1;
                 string insStr = $"INSERT INTO Members VALUES " +
                     $"('{member.Name}', '{member.Password}', '{member.Address}', '{member.Email}', " +
-                    $"'{member.Phone}', '{member.Sex}', {member.Dob}, '{member.Bio}', {img}, {isA});";
+                    $"'{member.Phone}', '{member.Sex}', '{year}-{month}-{day}', '{member.Bio}', {isA}, {member.Image});";
                 return await NonReadQueryAsync(insStr);
             }
         }
@@ -33,7 +41,9 @@ namespace Gadevang_Tennis_Klub.Services.SQL
 
         public async Task<List<IMember>> GetAllMembersAsync()
         {
+
             return await GetMembersByQueryAsync(queStr);
+
         }
 
         public async Task<IMember> GetMemberByIDAsync(int memberID)
@@ -41,38 +51,48 @@ namespace Gadevang_Tennis_Klub.Services.SQL
             return (await GetMembersByQueryAsync(queStr + $" WHERE ID = {memberID}")).FirstOrDefault();
         }
 
-        public async Task<IMember> GetMemberByLoginAsync(string name, string password)
+        public async Task<IMember> GetMemberByLoginAsync(string email, string password)
         {
-            return (await GetMembersByQueryAsync(queStr + $" WHERE Name = {name} AND Password = {password}")).FirstOrDefault();
+            return (await GetMembersByQueryAsync(queStr + $" WHERE Email = '{email}' AND Password = '{password}'")).FirstOrDefault();
         }
 
         public async Task<List<IMember>> GetMembersByAdminAsync(bool isAdmin)
         {
-            return await GetMembersByQueryAsync(queStr + $" WHERE IsAdmin = {isAdmin}");
+            int isA = isAdmin == false ? 0 : 1;
+            return await GetMembersByQueryAsync(queStr + $" WHERE IsAdmin = {isA}");
         }
 
         public async Task<List<IMember>> GetMembersByAgeAboveAsync(int age)
         {
             DateOnly actAge = (DateOnly.FromDateTime(DateTime.Now)).AddYears(-age);
-            return await GetMembersByQueryAsync(queStr + $" WHERE DoB < {actAge}");
+            return await GetMembersByQueryAsync(queStr + $" WHERE DoB < '{actAge}'");
         }
 
         public async Task<List<IMember>> GetMembersByAgeBelowAsync(int age)
         {
             DateOnly actAge = (DateOnly.FromDateTime(DateTime.Now)).AddYears(-age);
-            return await GetMembersByQueryAsync(queStr + $" WHERE DoB > {actAge}");
+            return await GetMembersByQueryAsync(queStr + $" WHERE DoB > '{actAge}'");
         }
 
         public async Task<List<IMember>> GetMembersByAgeIntervalAsync(int from, int to)
         {
-            DateOnly froAge = (DateOnly.FromDateTime(DateTime.Now)).AddYears(-from);
-            DateOnly toAge = (DateOnly.FromDateTime(DateTime.Now)).AddYears(-to);
-            return await GetMembersByQueryAsync(queStr + $" WHERE DoB BETWEEN {froAge} AND {toAge}");
+            if (from > to) 
+            {
+                DateOnly froAge = (DateOnly.FromDateTime(DateTime.Now)).AddYears(-from);
+                DateOnly toAge = (DateOnly.FromDateTime(DateTime.Now)).AddYears(-to);
+                return await GetMembersByQueryAsync(queStr + $" WHERE DoB BETWEEN '{froAge}' AND '{toAge}'");
+            }
+            else 
+            {
+                DateOnly froAge = (DateOnly.FromDateTime(DateTime.Now)).AddYears(-to);
+                DateOnly toAge = (DateOnly.FromDateTime(DateTime.Now)).AddYears(-from);
+                return await GetMembersByQueryAsync(queStr + $" WHERE DoB BETWEEN '{froAge}' AND '{toAge}'");
+            }
         }
 
         public async Task<List<IMember>> GetMembersBySexAsync(string sex)
         {
-            return await GetMembersByQueryAsync(queStr + $" WHERE Sex = {sex}");
+            return await GetMembersByQueryAsync(queStr + $" WHERE Sex = '{sex}'");
         }
 
         public async Task<bool> UpdateMemberAsync(IMember member)
@@ -80,10 +100,9 @@ namespace Gadevang_Tennis_Klub.Services.SQL
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 string img = member.Image == null ? "null" : $"'{member.Image}'";
-                int isA = member.IsAdmin ? 1 : 0;
-                string updStr = $"UPDATE Members VALUES " +
-                    $"('{member.Name}', '{member.Password}', '{member.Address}', '{member.Email}', " +
-                    $"'{member.Phone}', '{member.Sex}', {member.Dob}, '{member.Bio}', {img}, {isA})" +
+                string updStr = $"UPDATE Members SET " +
+                    $"(Name = '{member.Name}', PassWord = '{member.Password}', Address = '{member.Address}', Email = '{member.Email}', " +
+                    $"Phone = '{member.Phone}', Sex = '{member.Sex}', DoB = {member.Dob}, Bio = '{member.Bio}', Image = {img}, IsAdmin = {member.IsAdmin})" +
                     $" WHERE ID = {member.Id}";
                 return await NonReadQueryAsync(updStr);
             }
@@ -91,7 +110,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
 
         private async Task<List<IMember>> GetMembersByQueryAsync(string que)
         {
-            List<IMember> members = new();
+            List<IMember> members = new List<IMember>();
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 SqlCommand com = new SqlCommand(que, con);
@@ -107,19 +126,6 @@ namespace Gadevang_Tennis_Klub.Services.SQL
         }
         private async Task<IMember> GetMemberByReaderAsync(SqlDataReader rea)
         {
-            #region member DB ref
-            //ID int identity(0, 1) UNIQUE,
-            //Name varchar(256) not null,
-            //PassWord varchar(256) not null,
-            //Address varchar(256) not null,
-            //Email varchar(256) not null,
-            //Phone varchar(16) not null,
-            //Sex varchar(8) not null,
-            //DoB Date not null,
-            //Bio varchar(1024) not null,
-            //IsAdmin bit not null,
-            //Image varchar(64)
-            #endregion
             int mID = rea.GetInt32(0);
             string mNa = rea.GetString(1);
             string mPa = rea.GetString(2);
@@ -129,21 +135,13 @@ namespace Gadevang_Tennis_Klub.Services.SQL
             string mSe = rea.GetString(6);
             DateOnly mDo = DateOnly.FromDateTime(rea.GetDateTime(7));
             string mBi = rea.GetString(8);
-            bool mIa = rea.GetInt32(9) == 1;
-            string? mIm = rea.GetString(10);
-            #region member model ctor ref
-            // int id,
-            // string name,
-            // string phone,
-            // string email,
-            // string? image,
-            // string sex,
-            // DateOnly doB,
-            // bool isAdmin,
-            // string bio,
-            // string adress,
-            // string password
-            #endregion
+            bool mIa = rea.GetBoolean(9); 
+            string? mIm;
+            if (!await rea.IsDBNullAsync(10))
+                mIm = rea.GetString(10);
+            else
+                mIm = null;
+
             Member member = new Member(mID, mNa, mPh, mEm, mIm, mSe, mDo, mIa, mBi, mAd, mPa);
             return member;
         }

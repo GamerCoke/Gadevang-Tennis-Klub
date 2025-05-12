@@ -1,0 +1,29 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.User.LoginModel
+@{
+    ViewData["Title"] = "Home page";
+}
+@if (Model.UserCookie != null)
+{
+    <p>@Model.UserCookie</p>
+}
+<title>Login</title>
+<form asp-page-handler="login" method="post">
+    <table>
+        <tr>
+            <label asp-for="@Model.Email" class="control-label"></label>
+            <input asp-for="@Model.Email" class="form-control" />
+            <span asp-validation-for="@Model.Email" class="text-danger"></span>
+        </tr>
+        <tr>
+            <label asp-for="@Model.Kodeord" class="control-label"></label>
+            <input asp-for="@Model.Kodeord" class="form-control" />
+            <span asp-validation-for="@Model.Kodeord" class="text-danger"></span>
+        </tr>
+        <tr>
+            <td>&nbsp</td>
+            <td><Input type="submit" value="Login" /></td>
+        </tr>
+    </table>
+
+</form>

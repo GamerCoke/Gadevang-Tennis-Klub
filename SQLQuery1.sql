@@ -40,7 +40,7 @@ CREATE TABLE Events (
     Title varchar(64) not null,
     Description varchar(1024) not null,
 	StartTime DATETIME not null,
-	Duration TIME not null,
+	EndTime TIME not null,
 	Location varchar(64) not null,
 	Capacity int
 );
@@ -50,8 +50,8 @@ CREATE TABLE Activities (
 	EventID int not null,
 	Description varchar(512) not null,
 	Title varchar(32) not null,
-	StartTime DATETIME not null,
-	Duration TIME not null,
+	StartTime DATE not null,
+	EndTime DATE not null,
 
 	FOREIGN KEY (EventID) REFERENCES Events(ID)
 );
@@ -208,21 +208,21 @@ INSERT INTO Events
 VALUES ('Store Flødebolle Dag', '', '2025-06-18 10:00:00', '14:00:00', 'Klubhuset', '100')
 
 INSERT INTO Activities
-VALUES(0, '', 'Klargøring af banerne', '2025-05-24 10:00:00', '11:00:00')
+VALUES(0, '', 'Klargøring af banerne', '2025-05-24 10:00:00', '2025-05-24 11:00:00')
 INSERT INTO Activities
-VALUES(0, '', 'Standerhejsning', '2025-05-24 11:00:00', '12:00:00')
+VALUES(0, '', 'Standerhejsning', '2025-05-24 11:00:00', '2025-05-24 12:00:00')
 INSERT INTO Activities
-VALUES(3, '', 'Dame Double', '2025-06-26 09:00:00', '11:00:00')
+VALUES(3, '', 'Dame Double', '2025-06-26 09:00:00', '2025-06-26 11:00:00')
 INSERT INTO Activities
-VALUES(3, '', 'Dame Single', '2025-06-26 11:00:00', '13:00:00')
+VALUES(3, '', 'Dame Single', '2025-06-26 11:00:00', '2025-06-26 13:00:00')
 INSERT INTO Activities
-VALUES(3, '', 'Herre Double', '2025-06-26 13:00:00', '15:00:00')
+VALUES(3, '', 'Herre Double', '2025-06-26 13:00:00', '2025-06-26 15:00:00')
 INSERT INTO Activities
-VALUES(3, '', 'Herre Single', '2025-06-26 15:00:00', '17:00:00')
+VALUES(3, '', 'Herre Single', '2025-06-26 15:00:00', '2025-06-26 17:00:00')
 INSERT INTO Activities
-VALUES(6, 'Alt om flødebollers oprindelse og om hvorfor det er så vigtigt at indtage dem', 'Foredrag og flødeboller', '2025-06-18 10:00:00', '11:00:00')
+VALUES(6, 'Alt om flødebollers oprindelse og om hvorfor det er så vigtigt at indtage dem', 'Foredrag og flødeboller', '2025-06-18 10:00:00', '2025-06-18 11:00:00')
 INSERT INTO Activities
-VALUES(6, 'Der skal spises flødeboller', 'Flødebolleædning', '2025-06-18 11:00:00', '14:00:00')
+VALUES(6, 'Der skal spises flødeboller', 'Flødebolleædning', '2025-06-18 11:00:00', '2025-06-18 14:00:00')
 
 INSERT INTO Announcements
 VALUES (0, 'Søger Partner', 'Vil gerne spille noget tennis på tirsdag, er der nogen der er interesseret?', '2024-01-03', 'Partner')
@@ -238,6 +238,9 @@ VALUES ('Smith', '+45 56 56 56 56', 'Smith@mail.dk', null)
 INSERT INTO Trainers
 VALUES ('Daffy', '+45 56 56 56 56', 'Daffy@mail.us', null)
 
+
+INSERT INTO Teams
+VALUES ('test', 'test', 1, 2, 'Fredag', 1750)
 INSERT INTO Teams
 VALUES ('Mini', 'Minitræning for børn i alderen 5-7 år', 1, 8, 'Onsdag', 450)
 INSERT INTO Teams
