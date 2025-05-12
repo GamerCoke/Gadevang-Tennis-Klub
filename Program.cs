@@ -12,6 +12,10 @@ builder.Services.AddTransient<IEventBookingDB, EventBookingDB_SQL>();
 builder.Services.AddTransient<ITrainerDB, TrainerDB_SQL>();
 builder.Services.AddTransient<ITeamDB, TeamDB_SQL>();
 builder.Services.AddTransient<IMemberDB, MemberDB_SQL>();
+builder.Services.AddTransient<ICourtBookingDB, CourtBookingDB_SQL>();
+builder.Services.AddTransient<ICourtDB, CourtDB_SQL>();
+builder.Services.AddTransient<IEventBookingDB, EventBookingDB_SQL>();
+builder.Services.AddTransient<ITeamBookingDB, TeamBookingDB_SQL>();
 
 builder.Services.AddSession();    //cookie
 builder.Services.AddHttpContextAccessor();//cookie

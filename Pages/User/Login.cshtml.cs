@@ -24,12 +24,6 @@ namespace Gadevang_Tennis_Klub.Pages.User
         public void OnGet()
         {
             UserCookie = HttpContext.Session.GetString("User");
-            if (UserCookie != null)
-            {
-                int id = int.Parse(UserCookie.Split('|')[0]);
-                bool isAdmin = bool.Parse(UserCookie.Split('|')[1]);
-                string name = UserCookie.Split('|')[2];
-            }
         }
 
         public IActionResult OnPostLogin()
@@ -37,7 +31,7 @@ namespace Gadevang_Tennis_Klub.Pages.User
             IMember user = MemberDB.GetMemberByLoginAsync(Email, Kodeord).Result;
             if (user != null)
                 HttpContext.Session.SetString("User", $"{user.Id}|{user.IsAdmin}|{user.Name}");
-            return RedirectToPage();
+            return RedirectToPage(@"MyPage");
         }
     }
 }
