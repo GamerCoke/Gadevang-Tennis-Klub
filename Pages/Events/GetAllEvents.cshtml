@@ -48,7 +48,7 @@
                         @if (ev.Capacity != null && ev.Capacity != 0)
                         {
                             <div style="color: #888; font-size: 0.9em; align-self: flex-end; margin-left: auto;">
-                                <i class="fa-solid fa-user text-center" style="width: 20px;"></i> 0 / @ev.Capacity tilmeldte
+                                <i class="fa-solid fa-user text-center" style="width: 20px;"></i> @(Model.EventBookingsDict[@ev.ID].Count) / @(ev.Capacity) tilmeldte
                             </div>
                         }
                     </div>

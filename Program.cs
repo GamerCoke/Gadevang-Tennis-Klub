@@ -1,5 +1,6 @@
 using Gadevang_Tennis_Klub.Interfaces.Services;
 using Gadevang_Tennis_Klub.Services.SQL;
+using Gadevang_Tennis_Klub.Services.SQL.Booking;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddTransient<IEventDB, EventDB_SQL>();
 builder.Services.AddTransient<IActivityDB, ActivityDB_SQL>();
+builder.Services.AddTransient<IEventBookingDB, EventBookingDB_SQL>();
 builder.Services.AddTransient<ITrainerDB, TrainerDB_SQL>();
 builder.Services.AddTransient<ITeamDB, TeamDB_SQL>();
 builder.Services.AddTransient<IMemberDB, MemberDB_SQL>();

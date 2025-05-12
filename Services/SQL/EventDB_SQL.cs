@@ -246,5 +246,13 @@ namespace Gadevang_Tennis_Klub.Services.SQL
             }
             return events;
         }
+
+        public List<IEvent> SortEventsByDate(List<IEvent> listToSort)
+        {
+            List<IEvent> sortedList = listToSort;
+            sortedList.Sort((d1, d2) => d1.Start.CompareTo(d2.Start));
+
+            return sortedList;
+        }
     }
 }
