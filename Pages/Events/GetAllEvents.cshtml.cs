@@ -2,28 +2,24 @@ using Gadevang_Tennis_Klub.Interfaces.Models;
 using Gadevang_Tennis_Klub.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Collections.Concurrent;
 
 namespace Gadevang_Tennis_Klub.Pages.Events
 {
     public class GetAllEventsModel : PageModel
     {
         private IEventDB _eventDB;
+        private IEventBookingDB _eventBookingDB;
 
         //public string? CurrentUser { get; private set; }
         public List<IEvent> Events { get; set; }
+        public ConcurrentDictionary<int, List<IEventBooking>> EventBookingsDict { get; set; } 
 
 
-        public GetAllEventsModel(IEventDB eventDB)
+        public GetAllEventsModel(IEventDB eventDB, IEventBookingDB eventBookingDB)
         {
             _eventDB = eventDB;
-        }
-
-        private List<IEvent> SortByDate(List<IEvent> listToSort)
-        {
-            List<IEvent> sortedList = listToSort;
-            sortedList.Sort((d1, d2) => d1.Start.CompareTo(d2.Start));
-
-            return sortedList;
+            _eventBookingDB = eventBookingDB;
         }
 
         public async Task OnGetAsync()
@@ -32,8 +28,13 @@ namespace Gadevang_Tennis_Klub.Pages.Events
             {
                 //CurrentUser = HttpContext.Session.GetString("UserName");
 
-                Events = await _eventDB.GetAllEventsAsync();
-                SortByDate(Events);
+                Events = _eventDB.SortEventsByDate(await _eventDB.GetAllEventsAsync());
+
+                EventBookingsDict = new();
+                foreach (IEvent ev in Events)
+                {
+                    EventBookingsDict.TryAdd(ev.ID, await _eventBookingDB.GetEventBookingsByEventIDAsync(ev.ID));
+                }
             }
             catch (Exception ex)
             {
