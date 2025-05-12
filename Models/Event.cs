@@ -12,7 +12,7 @@ namespace Gadevang_Tennis_Klub.Models
         public string Title { get; set; }
 
         [Required(ErrorMessage = "Beskrivelse er påkrævet")]
-        [StringLength(64, ErrorMessage = "Beskrivelse må ikke være mere end 1024 karakterer lang")]
+        [StringLength(1024, ErrorMessage = "Beskrivelse må ikke være mere end 1024 karakterer lang")]
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Starttidspunkt er påkrævet")]
@@ -73,7 +73,7 @@ namespace Gadevang_Tennis_Klub.Models
 
         public static ValidationResult? ValidateEnd(TimeOnly end, ValidationContext context) // Must be static to access it at runtime
         {
-            return (end >= TimeOnly.FromDateTime(((Event)context.ObjectInstance).Start)) ? ValidationResult.Success : new ValidationResult("Sluttidspunkt skal enten være det samme som starttidspunkt, eller efter");
+            return (end >= TimeOnly.FromDateTime(((Event)context.ObjectInstance).Start)) ? ValidationResult.Success : new ValidationResult("Sluttidspunkt skal enten være det samme som starttidspunktet, eller senere");
         }
     }
 }

@@ -11,14 +11,18 @@
 }
 
 <title>Trænere</title>
-<table>
+<table class ="table table-hover">
     <thead>
         <tr>
-            <th>Id</th>
+            <th>Billede</th>
+            @if (Model.IsAdmin)
+            {
+                <th>Id</th>
+            }
             <th>Navn</th>
             <th>Telefon</th>
             <th>Email</th>
-            <th>Billede</th>
+            <th>Hold</th>
             @if (Model.IsAdmin)
             {
                 <th>Handlinger</th>
@@ -29,10 +33,6 @@
         @foreach (var trainer in await Model.TrainerDB.GetAllTrainersAsync())
         {
             <tr>
-                <td>@trainer.Id</td>
-                <td>@trainer.Name</td>
-                <td>@trainer.Phone</td>
-                <td>@trainer.Email</td>
                 <td>
                     @if (trainer.Image == null)
                     {
@@ -40,7 +40,24 @@
                     }
                     else
                     {
-                        <p>@trainer.Image</p>
+                        <img class="img-fluid" src="~/Images/@trainer.Image" alt="@trainer.Name" style="max-width: 100px; max-height: 100px;" />
+                    }
+                </td>
+                @if (Model.IsAdmin)
+                {
+                    <td>@trainer.Id</td>
+                }
+                <td>@trainer.Name</td>
+                <td>@trainer.Phone</td>
+                <td>@trainer.Email</td>
+                <td>
+                    @{
+                        string teams = "| ";
+                        foreach (var team in await Model.TeamDB.GetTeamsByTrainerAsync(trainer.Id.ToString()))
+                        {
+                            teams += team.Name + " | ";
+                        }
+                        <p>@teams</p>
                     }
                 </td>
                 @if (Model.IsAdmin)
@@ -57,3 +74,21 @@
         }
     </tbody>
 </table>
+
+<!-- JS function to show an image preview -->
+<script>
+    function previewImage(trainer) {
+        const file = trainer.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const image = document.getElementById('imagePreview');
+            image.src = e.target.result;
+            image.style.display = 'block'; // Show the image
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+</script>

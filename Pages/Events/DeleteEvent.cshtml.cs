@@ -8,13 +8,17 @@ namespace Gadevang_Tennis_Klub.Pages.Events
     public class DeleteEventModel : PageModel
     {
         private IEventDB _eventDB;
+        private IActivityDB _activityDB;
 
         public IEvent? Event { get; private set; }
+        public List<IActivity> Activities { get; set; }
+
         public bool IsDeleted { get; private set; }
 
-        public DeleteEventModel(IEventDB eventDB)
+        public DeleteEventModel(IEventDB eventDB, IActivityDB activityDB)
         {
             _eventDB = eventDB;
+            _activityDB = activityDB;
         }
 
         public async Task OnGet(int eventID)
@@ -22,6 +26,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
             try
             {
                 Event = await _eventDB.GetEventByIDAsync(eventID);
+                Activities = await _activityDB.GetActivitiesByEventAsync(eventID);
             }
             catch (Exception ex)
             {
