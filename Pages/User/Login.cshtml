@@ -1,11 +1,7 @@
 ﻿@page
 @model Gadevang_Tennis_Klub.Pages.User.LoginModel
 @{
-    ViewData["Title"] = "Home page";
-}
-@if (Model.UserCookie != null)
-{
-    <p>@Model.UserCookie</p>
+    ViewData["Title"] = "Login";
 }
 <title>Login</title>
 <form asp-page-handler="login" method="post">
