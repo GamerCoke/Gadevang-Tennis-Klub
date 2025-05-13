@@ -1,0 +1,52 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.CourtBookings.Members.CreateMemberBookingModel
+@{
+    ViewData["Title"] = "Book Bane";
+}
+<h1>Book en Bane</h1>
+
+<form asp-page-handler="login" method="post">
+    <table>
+        <tr>
+            <label asp-for="@Model.Date" class="control-label">Dato</label>
+            <br />
+            <span asp-validation-for="@Model.Date" class="text-danger"></span>
+            <input asp-for="@Model.Date" class="form-control" />
+        </tr>
+        <tr>
+            <label asp-for="@Model.Timeslot" class="control-label">Tidsslot</label>
+            <br />
+            <span asp-validation-for="@Model.Timeslot" class="text-danger"></span>
+            <input asp-for="@Model.Timeslot" class="form-control" />
+        </tr>
+        <tr>
+            <label for="courtId">Vælg en bane:</label>
+            <br />
+            <select name="courtId" id="courtId">
+                @foreach (var court in await Model.CourtDB.GetAllCourtsAsync())
+                {
+                    @if (court.ID == Model.CourtId)
+                    {
+                        <option value="@court.ID" selected>
+                            @($"Bane ({court.ID}): {court.Name}, Type: {court.Type}")
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="@court.ID">
+                            @($"Bane ({court.ID}): {court.Name}, Type: {court.Type}")
+                        </option>
+                    }
+                }
+            </select>
+        </tr>
+        <tr>
+            @if (Model.Message != null)
+            {
+                <p class="text-danger">@Model.Message</p>
+            }
+            <td>&nbsp</td>
+            <td><Input type="submit" value="Opret" /></td>
+        </tr>
+    </table>
+</form>

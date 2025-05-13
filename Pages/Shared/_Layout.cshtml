@@ -49,12 +49,6 @@
                             </li>
                         }
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Events/GetAllEvents">Begivenheder (Admin)</a>
                         </li>
                         <li class="nav-item">
@@ -63,13 +57,30 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Trainers/ReadAllTrainers">Trænere</a>
                         </li>
+                        @if (Context.Session.GetString("User") == null || !bool.Parse(Context.Session.GetString("User").Split('|')[1]))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/CourtBookings/Members/CreateMemberBooking">Book en Bane</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/CourtBookings/Members/CreateMemberBooking">Book en Bane</a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/CourtBookings/">Book Baner for en Begivenhed</a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/CourtBookings/">Book Baner for et Hold</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Members/GetAllMembers">Medlemmer</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Courts/GetAllCourts">Baner</a>
                         </li>
-
                     </ul>
                 </div>
             </div>
