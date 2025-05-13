@@ -43,14 +43,15 @@
             <th>Tid</th>
             <th>Organisator</th>
             <th>Deltagere</th>
+            <th>Handlinger</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var booking in await Model.CourtBookingDB.GetCourtBookingsByParticipantsAsync(Model.Member.Id))
         {
             <tr>
-                <td>@($"{booking.Court_ID}: {(await Model.CourtDB.GetCourtByIDAsync(booking.Court_ID)).Name}")</td>
-                <td>@($"Dato: {booking.Date} | Tidslot: {booking.Timeslot}")</td>
+                <td>@($"#{booking.Court_ID}: {(await Model.CourtDB.GetCourtByIDAsync(booking.Court_ID)).Name}")</td>
+                <td>@($"Dato: {booking.Date} | Tidslot: {booking.Timeslot} / {new TimeOnly(booking.Timeslot + 6, 0, 0)}-{new TimeOnly(booking.Timeslot + 7, 0, 0)}")</td>
                 <td>@($"{(await Model.MemberDB.GetMemberByIDAsync((int)booking.Member_ID)).Name}")</td>
                 <td>
                     @{
@@ -66,6 +67,18 @@
                                 <p>@member.Name</p>
                             }
                         }
+                    }
+                </td>
+                <td>
+                    @if (Model.Member.Id == booking.Member_ID)
+                    {
+                        <a class="button" asp-page="/CourtBookings/Members/AddParticipant" asp-route-bookingId=@booking.ID>Tilføj Deltager</a>
+                        <br />
+                        <a class="button" asp-page="/CourtBookings/Members/DeleteMemberBooking" asp-route-bookingId=@booking.ID>Slet Booking</a>
+                    }
+                    else
+                    {
+                        <a class="button" asp-page="/CourtBookings/Members/LeaveBooking" asp-route-bookingId=@booking.ID>Forlad Booking</a>
                     }
                 </td>
             </tr>

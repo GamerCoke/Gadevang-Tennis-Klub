@@ -1,0 +1,10 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.CourtBookings.Members.LeaveBookingModel
+@{
+    ViewData["Title"] = "Forlad Booking";
+}
+<form method="post">
+    <input hidden value="@Model.BookingId" id="bookingId" />
+    <input type="submit" class="button" value="Slet" />
+</form>
+<a asp-page="/User/MyPage">Tilbage</a>
