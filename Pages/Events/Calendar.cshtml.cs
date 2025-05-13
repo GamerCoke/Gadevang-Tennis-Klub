@@ -165,7 +165,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
                 ViewData["ErrorMessage"] = ex.Message;
             }
 
-            await LoadCalendar(new DateTime(currentYear, currentMonth, 1));
+            await LoadCalendar(new DateTime(currentYear, currentMonth, 1)); 
             return Page();
         }
 
