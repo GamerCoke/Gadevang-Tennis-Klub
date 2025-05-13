@@ -30,6 +30,8 @@ namespace Gadevang_Tennis_Klub.Pages.Courts
                 SortByID(Courts);
                 IsAdmin = false;
                 string? user = HttpContext.Session.GetString("User");
+                if (user != null)
+                    IsAdmin = bool.Parse(user.Split('|')[1]);
 
                 return Page();
             }
