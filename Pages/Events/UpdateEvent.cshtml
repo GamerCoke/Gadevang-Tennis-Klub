@@ -125,30 +125,8 @@
     }
     else
     {
-        <p>Du har opdateret følgende begivenhed</p>
+        <p>Begivenheden er blevet opdateret.</p>
 
-        <!-- Table -->
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Start</th>
-                    <th>End</th>
-                    <th>Location</th>
-                    <th>Capacity</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@Model.Event.Title</td>
-                    <td>@Model.Event.Start</td>
-                    <td>@Model.Event.End</td>
-                    <td>@Model.Event.Location</td>
-                    <td>@Model.Event.Capacity</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <a asp-page="GetEvent" asp-route-eventID=@Model.Event.ID class ="btn btn-success">Videre</a>
+        <a asp-page="GetEvent" asp-route-eventID=@Model.Event.ID class="btn btn-success w-auto align-self-start">Videre</a>
     }
 </div>

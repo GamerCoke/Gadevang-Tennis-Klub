@@ -33,13 +33,15 @@
 
     <hr />
 
+    <!-- Event description -->
     <br />
     <div style="display: flex; align-items: flex-start; gap: 10px; margin-left: 15px;">
         <i class="fa-solid fa-pen" style="width: 20px; display: block; margin-top: 5px;"></i>
-        <p style="margin: 0;">@Model.Event.Description</p>
+        <pre style="font-family: inherit; font-size: inherit; white-space: pre-wrap;">@Model.Event.Description</pre>
     </div>
     <br />
 
+    <!-- Event activities -->
     @if (Model.Activities != null && Model.Activities.Count != 0)
     {
         <hr />
@@ -60,15 +62,16 @@
 
     <hr />
 
-    <!-- Event details -->
+    <!-- Time & location -->
     <div style="margin-left: 15px;">
         <div style="color: #555;"><i class="fas fa-clock text-center" style="width: 20px;"></i> @Model.Event.Start.ToString("HH:mm")-@Model.Event.End</div>
         <div style="color: #555;"><i class="fa-solid fa-location-dot text-center" style="width: 20px;"></i> @Model.Event.Location</div>
     </div>
+    <!-- Capacity display -->
     @if (Model.Event.Capacity != null && Model.Event.Capacity != 0)
     {
         <div style="color: #888; font-size: 0.9em; align-self: flex-end; margin-left: auto;">
-            <i class="fa-solid fa-user text-center" style="width: 20px;"></i> 0 / @Model.Event.Capacity tilmeldte
+            <i class="fa-solid fa-user text-center" style="width: 20px;"></i> @Model.EventBookings.Count / @Model.Event.Capacity tilmeldte
         </div>
     }
 </div>

@@ -12,6 +12,12 @@ namespace Gadevang_Tennis_Klub.Pages.Events
         private IEventDB _eventDB;
         private IActivityDB _activityDB;
 
+
+        public string? CurrentUser { get; private set; }
+        public bool IsAdmin { get; private set; }
+
+
+
         public bool IsCreated { get; set; }
         [BindProperty] public Event NewEvent { get; set; }
         [BindProperty] public List<Activity> NewActivities { get; set; }
@@ -22,10 +28,24 @@ namespace Gadevang_Tennis_Klub.Pages.Events
             _eventDB = eventDB;
             _activityDB = activityDB;
         }
-        public void OnGet()
+        public IActionResult OnGet()
         {
-            NewEvent = new Event { Start = DateTime.Today.AddHours(10), End = new TimeOnly(20, 0) }; // Adds default date and time values to the new event.
-            NewActivities = new();
+            // Validate if user is logged in, and is admin before showing data.         
+            CurrentUser = HttpContext.Session.GetString("User");
+            if (string.IsNullOrEmpty(CurrentUser))
+            {
+                return RedirectToPage(@"/User/Login");
+            }
+
+            IsAdmin = bool.Parse(CurrentUser.Split('|')[1]);
+            if (IsAdmin)
+            {
+                NewEvent = new Event { Start = DateTime.Today.AddHours(10), End = new TimeOnly(20, 0) }; // Adds default date and time values to the new event.
+                NewActivities = new();
+
+                return Page();
+            }
+            return RedirectToPage(@"/Index");
         }
 
         public void OnPostAddActivity()

@@ -14,6 +14,11 @@ namespace Gadevang_Tennis_Klub.Pages.Events
         private IEventDB _eventDB;
         private IActivityDB _activityDB;
 
+
+        public string? CurrentUser { get; private set; }
+        public bool IsAdmin { get; private set; }
+
+
         public bool IsUpdated { get; set; }
         [BindProperty] public Event Event { get; set; }
         [BindProperty] public List<Activity> Activities { get; set; }
@@ -27,19 +32,33 @@ namespace Gadevang_Tennis_Klub.Pages.Events
             _activityDB = activityDB;
         }
 
-        public async Task OnGet(int eventID)
+        public async Task<IActionResult> OnGetAsync(int eventID)
         {
-            try
+            // Validate if user is logged in, and is admin before showing data.         
+            CurrentUser = HttpContext.Session.GetString("User");
+            if (string.IsNullOrEmpty(CurrentUser))
             {
-                Event = (Event)await _eventDB.GetEventByIDAsync(eventID);
-                Activities = (await _activityDB.GetActivitiesByEventAsync(eventID)).Cast<Activity>().ToList();
+                return RedirectToPage(@"/User/Login");
+            }
 
-                DeletedActivities = new();
-            }
-            catch (Exception ex)
+            IsAdmin = bool.Parse(CurrentUser.Split('|')[1]);
+            if (IsAdmin)
             {
-                ViewData["ErrorMessage"] = ex.Message;
+                try
+                {
+                    Event = (Event)await _eventDB.GetEventByIDAsync(eventID);
+                    Activities = (await _activityDB.GetActivitiesByEventAsync(eventID)).Cast<Activity>().ToList();
+
+                    DeletedActivities = new();
+
+                    return Page();
+                }
+                catch (Exception ex)
+                {
+                    ViewData["ErrorMessage"] = ex.Message;
+                }
             }
+            return RedirectToPage(@"/Index");
         }
 
         public void OnPostAddActivity()
