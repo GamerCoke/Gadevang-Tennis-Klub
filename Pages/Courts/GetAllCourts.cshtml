@@ -30,10 +30,33 @@
             }
             <th>Navn</th>
             <th>Type</th>
+            @if(Model.IsAdmin)
+            {
+                <th>Handlinger</th>
+            }
         </tr>
-</thead>
-
+    </thead>
+    <tbody>
+        @foreach (var court in await Model._cbd.GetAllCourtsAsync())
+        {
+            <tr>
+                @if(Model.IsAdmin)
+                {
+                    <td>@court.ID</td>
+                }
+                <td>@court.Name</td>
+                <td>@court.Type</td>
+                @if (Model.IsAdmin)
+                {
+                    <td>
+                        <a asp-page="DeleteCourt" asp-route-courtID=@court.ID
+                           class="button">Slet</a>
+                        <br />
+                        <a asp-page="UpdateCourt" asp-route-courtID=@court.ID
+                           class="button">Updater</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
 </table>
-<div>
-
-</div>
