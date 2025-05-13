@@ -35,6 +35,11 @@ namespace Gadevang_Tennis_Klub.Services.IEnumerable
             throw new NotImplementedException();
         }
 
+        public List<IEvent> SortEventsByDate(List<IEvent> listToSort)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<bool> UpdateEventAsync(IEvent ev)
         {
             throw new NotImplementedException();

@@ -10,15 +10,18 @@ namespace Gadevang_Tennis_Klub.Pages.Events
     {
         private IEventDB _eventDB;
         private IActivityDB _activityDB;
+        private IEventBookingDB _eventBookingDB;
 
         public IEvent Event { get; set; }
         public List<IActivity> Activities { get; set; }
+        public List<IEventBooking> EventBookings { get; set; }
 
 
-        public GetEventModel(IEventDB eventDB, IActivityDB activityDB)
+        public GetEventModel(IEventDB eventDB, IActivityDB activityDB, IEventBookingDB eventBookingDB)
         {
             _eventDB = eventDB;
             _activityDB = activityDB;
+            _eventBookingDB = eventBookingDB;
         }
 
         public async Task OnGet(int eventID)
@@ -27,6 +30,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
             {
                 Event = await _eventDB.GetEventByIDAsync(eventID);
                 Activities = await _activityDB.GetActivitiesByEventAsync(eventID);
+                EventBookings = await _eventBookingDB.GetEventBookingsByEventIDAsync(eventID);
             }
             catch (Exception ex)
             {

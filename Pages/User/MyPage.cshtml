@@ -1,0 +1,146 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.User.MyPageModel
+@{
+    ViewData["Title"] = "Min side";
+}
+
+<label asp-for="@Model.Member.Id" class="control-label">Id</label>
+<input asp-for="@Model.Member.Id" class="form-control" readonly />
+
+<label asp-for="@Model.Member.Name" class="control-label">Navn</label>
+<input asp-for="@Model.Member.Name" class="form-control" readonly />
+
+<label asp-for="@Model.Member.Address" class="control-label">Adresse</label>
+<input asp-for="@Model.Member.Address" class="form-control" readonly />
+
+<label asp-for="@Model.Member.Dob" class="control-label">Fødselsdag</label>
+<input asp-for="@Model.Member.Dob" class="form-control" readonly />
+
+<label asp-for="@Model.Member.Sex" class="control-label">Sex</label>
+<input asp-for="@Model.Member.Sex" class="form-control" readonly />
+
+<label asp-for="@Model.Member.Email" class="control-label">Email</label>
+<input asp-for="@Model.Member.Email" class="form-control" readonly />
+
+<label asp-for="@Model.Member.Phone" class="control-label">Telefon</label>
+<input asp-for="@Model.Member.Phone" class="form-control" readonly />
+
+<textarea readonly style="width: 100%">@Model.Member.Bio</textarea>
+
+<br />
+<a asp-page="/Members/UpdateMember" asp-route-memberID=@Model.Member.Id
+   class="button">Updater</a>
+
+<br />
+<br />
+<br />
+
+<h1>Baner bookede</h1>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Bane</th>
+            <th>Tid</th>
+            <th>Organisator</th>
+            <th>Deltagere</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var booking in await Model.CourtBookingDB.GetCourtBookingsByParticipantsAsync(Model.Member.Id))
+        {
+            <tr>
+                <td>@($"{booking.Court_ID}: {(await Model.CourtDB.GetCourtByIDAsync(booking.Court_ID)).Name}")</td>
+                <td>@($"Dato: {booking.Date} | Tidslot: {booking.Timeslot}")</td>
+                <td>@($"{(await Model.MemberDB.GetMemberByIDAsync((int)booking.Member_ID)).Name}")</td>
+                <td>
+                    @{
+                        var members = booking.Participants;
+                        if (members.Count == 0)
+                        {
+                            <p>Du spiller mod Maskinen</p>
+                        }
+                        else
+                        {
+                            foreach (var member in members)
+                            {
+                                <p>@member.Name</p>
+                            }
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+<h1>Begivenheder bookede</h1>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Titel</th>
+            <th>Lokation</th>
+            <th>Tid</th>
+            <th>Beskrivelse</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var booking in (await Model.EventBookingDB.GetAllEventBookingsAsync()).Where(@event => @event.MemberID == Model.Member.Id))
+        {
+            var Event = await Model.EventDB.GetEventByIDAsync(booking.EventID);
+            <tr>
+                <td>@Event.Title</td>
+                <td>@Event.Location</td>
+                <td>@($"{DateOnly.FromDateTime(Event.Start)}: {TimeOnly.FromDateTime(Event.Start)}-{Event.End}")</td>
+                <td>@Event.Description</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+<h1>Teams bookede</h1>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Navn</th>
+            <th>Træner</th>
+            <th>Beskrivelse</th>
+            <th>Pris</th>
+            <th>Dag</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var team in (await Model.TeamDB.GetTeamsByMemberAsync(Model.Member.Id)))
+        {
+            <tr>
+                <td>@team.Name</td>
+                <td>
+                    @{
+                        var trainers = await Model.TrainerDB.GetAllTrainersAsync();
+                        int trainerID = -1;
+                        foreach (var tr in trainers)
+                        {
+                            foreach (var te in await Model.TeamDB.GetTeamsByTrainerAsync(tr.Id.ToString()))
+                            {
+                                if (te.ID == team.ID)
+                                {
+                                    trainerID = tr.Id;
+                                    break;
+                                }
+                            }
+                        }
+                        if (trainerID == -1) throw new Exception("WTF --- kill me");
+                        var trainer = await Model.TrainerDB.GetTrainerByIDAsync(trainerID);
+                        <p>@trainer.Name</p>
+                        @if (trainer.Image != null)
+                        {
+                            <img class="img-fluid" src="~/Images/@trainer.Image" alt="@trainer.Name" style="max-width: 100px; max-height: 100px;" />
+                        }
+                    }
+                </td>
+                <td>@team.Description</td>
+                <td>@team.Price</td>
+                <td>@team.ActiveDay</td>
+            </tr>
+        }
+    </tbody>
+</table>
