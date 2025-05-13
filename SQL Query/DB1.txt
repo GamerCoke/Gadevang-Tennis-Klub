@@ -21,7 +21,7 @@ CREATE TABLE Members (
 	DoB Date not null,
 	Bio varchar(1024) not null,
 	IsAdmin bit not null,
-	Image varchar(64),
+	Image varchar(256),
 
 	CONSTRAINT sexOptions
 	CHECK(Sex IN ('Herre', 'Dame', 'Andet')),
