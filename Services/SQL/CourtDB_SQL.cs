@@ -14,8 +14,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                if (court.Name != null)
-                    court.Name = "\'"+$"{court.Name}"+"\'";
+                string name = court.Name == null ? "null" : $"'{court.Name}'";
                 string insStr = $"INSERT INTO Courts VALUES ('{court.Type}', {court.Name})";
                 return await NonReadQueryAsync(insStr);
             }

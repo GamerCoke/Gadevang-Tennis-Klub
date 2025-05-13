@@ -15,13 +15,13 @@ CREATE TABLE Members (
 	Name varchar(256) not null,
 	PassWord varchar(256) not null,
 	Address varchar(256) not null,
-	Email varchar(256) not null,
+	Email varchar(256) UNIQUE not null,
 	Phone varchar(16) not null,
 	Sex varchar(8) not null,
 	DoB Date not null,
 	Bio varchar(1024) not null,
 	IsAdmin bit not null,
-	Image varchar(64),
+	Image varchar(256),
 
 	CONSTRAINT sexOptions
 	CHECK(Sex IN ('Herre', 'Dame', 'Andet')),
@@ -51,7 +51,7 @@ CREATE TABLE Activities (
 	Description varchar(512) not null,
 	Title varchar(32) not null,
 	StartTime DATE not null,
-	EndTime DATE not null,
+	EndTime TIME not null,
 
 	FOREIGN KEY (EventID) REFERENCES Events(ID)
 );
@@ -122,7 +122,7 @@ CREATE TABLE CourtBookings (
 );
 
 CREATE TABLE TeamBookings (
-	ID int identity(0, 1) not null,
+	ID int identity(0, 1) UNIQUE not null,
 	MemberID int not null,
 	TeamID int not null,
 
@@ -133,7 +133,7 @@ CREATE TABLE TeamBookings (
 );
 
 CREATE TABLE EventBookings (
-	ID int identity(0, 1) not null,
+	ID int identity(0, 1) UNIQUE not null,
 	MemberID int not null,
 	EventID int not null,
 

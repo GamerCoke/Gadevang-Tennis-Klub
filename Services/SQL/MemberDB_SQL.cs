@@ -14,22 +14,34 @@ namespace Gadevang_Tennis_Klub.Services.SQL
     {
         private string connectionString = Secret.ConnectionString;
         private string queStr = "SELECT * FROM Members";
+        //private string queStr = "SELECT * FROM Members";
+        //private string insStr = @"INSERT INTO Members (Name, PassWord, Address, Email, Phone, Sex, DoB, Bio, IsAdmin, Image) VALUES (@Name, @Password, @Address, @Email, @Phone, @Sex, @Dob, @Bio, @IsAdmin, @Image)";
+        //private string delStr = @"DELETE FROM Members WHERE ID = @ID";
+        //private string updStr = @"UPDATE Members (Name, PassWord, Address, Email, Phone, Sex, DoB, Bio, IsAdmin, Image) SET (@Name, @Password, @Address, @Email, @Phone, @Sex, @Dob, @Bio, @IsAdmin, @Image) WHERE ID = @ID"
 
         public async Task<bool> CreateMemberAsync(IMember member)
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                if (member.Image.IsNullOrEmpty())
-                    member.Image = "null";
-                if (!member.Image.IsNullOrEmpty())
-                    member.Image = "\'" + $"{member.Image}" + "\'";
-                int year = member.Dob.Year;
-                int month = member.Dob.Month;
-                int day = member.Dob.Day;
+                /*
+                 using (SqlCommand com = new SqlCommand(insStr, con))
+                com.Parameters.AddWithValue("@Name", member.Name);
+                com.Parameters.AddWithValue("@Password", member.Password);
+                com.Parameters.AddWithValue("@Address", member.Address);
+                com.Parameters.AddWithValue("@Email", member.Email);
+                com.Parameters.AddWithValue("@Phone", member.Phone);
+                com.Parameters.AddWithValue("@Sex", member.Sex);
+                com.Parameters.AddWithValue("@Dob", string Bday = $"{member.Dob.Year}-{member.Dob.Month}-{member.Dob.Day}");
+                com.Parameters.AddWithValue("@Bio", member.Bio);
+                com.Parameters.AddWithValue("@IsAdmin", int isA = member.IsAdmin == false ? 0 : 1);
+                com.Parameters.AddWithValue("@Image", string image = member.Image == null ? "null" : member.Image);
+                 */
+                string image = member.Image == null ? "null" : $"'{member.Image}'";
+                string Bday = $"{member.Dob.Year}-{member.Dob.Month}-{member.Dob.Day}";
                 int isA = member.IsAdmin == false ? 0 : 1;
                 string insStr = $"INSERT INTO Members VALUES " +
                     $"('{member.Name}', '{member.Password}', '{member.Address}', '{member.Email}', " +
-                    $"'{member.Phone}', '{member.Sex}', '{year}-{month}-{day}', '{member.Bio}', {isA}, {member.Image});";
+                    $"'{member.Phone}', '{member.Sex}', '{Bday}', '{member.Bio}', {isA}, {image});";
                 return await NonReadQueryAsync(insStr);
             }
         }
@@ -99,10 +111,12 @@ namespace Gadevang_Tennis_Klub.Services.SQL
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                string img = member.Image == null ? "null" : $"'{member.Image}'";
+                string image = member.Image == null ? "null" : $"'{member.Image}'";
+                string Bday = $"{member.Dob.Year}-{member.Dob.Month}-{member.Dob.Day}";
+                int isA = member.IsAdmin == false ? 0 : 1;
                 string updStr = $"UPDATE Members SET " +
-                    $"(Name = '{member.Name}', PassWord = '{member.Password}', Address = '{member.Address}', Email = '{member.Email}', " +
-                    $"Phone = '{member.Phone}', Sex = '{member.Sex}', DoB = {member.Dob}, Bio = '{member.Bio}', Image = {img}, IsAdmin = {member.IsAdmin})" +
+                    $"Name = '{member.Name}', PassWord = '{member.Password}', Address = '{member.Address}', Email = '{member.Email}', " +
+                    $"Phone = '{member.Phone}', Sex = '{member.Sex}', DoB = '{Bday}', Bio = '{member.Bio}', Image = {image}, IsAdmin = {isA}" +
                     $" WHERE ID = {member.Id}";
                 return await NonReadQueryAsync(updStr);
             }
@@ -150,10 +164,10 @@ namespace Gadevang_Tennis_Klub.Services.SQL
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                SqlCommand delQue = new SqlCommand(que, con);
+                SqlCommand queCon = new SqlCommand(que, con);
 
                 await con.OpenAsync();
-                int nOR = await delQue.ExecuteNonQueryAsync();
+                int nOR = await queCon.ExecuteNonQueryAsync();
                 return nOR > 0;
             }
         }
