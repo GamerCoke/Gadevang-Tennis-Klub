@@ -1,5 +1,6 @@
 using Gadevang_Tennis_Klub.Interfaces.Models;
 using Gadevang_Tennis_Klub.Interfaces.Services;
+using Gadevang_Tennis_Klub.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Concurrent;
@@ -11,7 +12,11 @@ namespace Gadevang_Tennis_Klub.Pages.Events
         private IEventDB _eventDB;
         private IEventBookingDB _eventBookingDB;
 
-        //public string? CurrentUser { get; private set; }
+
+        public string? CurrentUser { get; private set; }
+        public bool IsAdmin { get; private set; }
+
+
         public List<IEvent> Events { get; set; }
         public ConcurrentDictionary<int, List<IEventBooking>> EventBookingsDict { get; set; } 
 
@@ -22,25 +27,37 @@ namespace Gadevang_Tennis_Klub.Pages.Events
             _eventBookingDB = eventBookingDB;
         }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            try
+            // Validate if user is logged in, and is admin before showing data.         
+            CurrentUser = HttpContext.Session.GetString("User");
+            if (string.IsNullOrEmpty(CurrentUser))
             {
-                //CurrentUser = HttpContext.Session.GetString("UserName");
+                return RedirectToPage(@"/User/Login");
+            }
 
-                Events = _eventDB.SortEventsByDate(await _eventDB.GetAllEventsAsync());
-
-                EventBookingsDict = new();
-                foreach (IEvent ev in Events)
+            IsAdmin = bool.Parse(CurrentUser.Split('|')[1]); 
+            if (IsAdmin)
+            {
+                try
                 {
-                    EventBookingsDict.TryAdd(ev.ID, await _eventBookingDB.GetEventBookingsByEventIDAsync(ev.ID));
+                    Events = _eventDB.SortEventsByDate(await _eventDB.GetAllEventsAsync());
+
+                    EventBookingsDict = new();
+                    foreach (IEvent ev in Events)
+                    {
+                        EventBookingsDict.TryAdd(ev.ID, await _eventBookingDB.GetEventBookingsByEventIDAsync(ev.ID));
+                    }
+
+                    return Page();
+                }
+                catch (Exception ex)
+                {
+                    Events = new List<IEvent>();
+                    ViewData["ErrorMessage"] = ex.Message;
                 }
             }
-            catch (Exception ex)
-            {
-                Events = new List<IEvent>();
-                ViewData["ErrorMessage"] = ex.Message;
-            }
+            return RedirectToPage(@"/Index");
         }
     }
 }

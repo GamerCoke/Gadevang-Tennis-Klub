@@ -10,7 +10,7 @@
         DateTime today = DateTime.Today;
         bool isToday = (day == today.Day && month == today.Month && year == today.Year);
 
-        string cellColor = isToday ? "background-color: #fcdbae;" : (!isCurrentMonth ? "background-color: #eeeeee;" : "");
+        string cellColor = isToday ? "background-color: #fcdbae;" : (!isCurrentMonth ? "background-color: #eeeeee;" : ""); // Cell color for today: orange, for other months: gray.
         string textColor = isCurrentMonth ? "" : "text-muted"; // Faded text style for other months than the current.
 
         var eventsForThisDay = Model.Events.Where(e => e.Start.Day == day 
@@ -25,10 +25,10 @@
                 @foreach (Event ev in eventsForThisDay)
                 {
                     <button type="submit" class="card mt-2 p-0 text-start"
-                    style="background-color: #87d49a; width:100%; color:@(isCurrentMonth ? "black" : "dimgray");"
-                    name="eventID"
-                    value="@ev.ID"
-                    title="@ev.Title">
+                            style="background-color: #87d49a; width:100%; color:@(isCurrentMonth ? "black" : "dimgray");"
+                            name="eventID"
+                            value="@ev.ID"
+                            title="@ev.Title">
                         <span class="small ps-1">@ev.Title</span>
                     </button>
                 }
@@ -68,9 +68,26 @@
     }
 </style>
 
-@* <h1 class="text-center">Kalender</h1> *@
-<h3 class="text-center">@Model.MonthName @Model.CurrentYear</h3>
 
+<!-- Popup messages to show successfull event register & unregister -->
+@{
+    if (!string.IsNullOrEmpty(@Model.MessageSuccess))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button>
+            @Model.MessageSuccess
+        </div>
+    }
+    if (!string.IsNullOrEmpty(@Model.MessageDanger))
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button>
+            @Model.MessageDanger
+        </div>
+    }
+}
+
+<h3 class="text-center">@Model.MonthName @Model.CurrentYear</h3>
 <!-- Hidden fields for current month and year -->
 <input asp-for="@Model.CurrentMonth" hidden/>
 <input asp-for="@Model.CurrentYear" hidden/>
@@ -126,7 +143,7 @@
     <div class="modal" id="eventModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form method="post" asp-page-handler="EventRegister">
+                <form method="post">
 
                     <!-- Modal Header -->
                     <div class="modal-header">
@@ -155,7 +172,7 @@
                         <br />
                         <div style="display: flex; align-items: flex-start; gap: 10px;">
                             <i class="fa-solid fa-pen" style="width: 20px; display: block; margin-top: 5px;"></i>
-                            <p style="margin: 0;">@Model.CurrentEvent.Description</p>
+                            <pre style="font-family: inherit; font-size: inherit; white-space: pre-wrap;">@Model.CurrentEvent.Description</pre>
                         </div>
                         <br />
 
@@ -204,9 +221,17 @@
                     <!-- Modal footer -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        @if (Model.CurrentEvent.Capacity != null && Model.CurrentEvent.Capacity != 0)
+                        @if (Model.CurrentEvent.Capacity != null && Model.CurrentEvent.Capacity > 0)
                         {
-                            <button type="submit" class="btn btn-success">Tilmeld</button>
+                            // If a user is logged in and is booked for the event -> show option to unregister from the event.
+                            @if ((!string.IsNullOrEmpty(Model.CurrentUser)) && (await Model.GetMemberBooking(Model.CurrentEvent.ID, int.Parse(Model.CurrentUser.Split('|')[0])) != null))
+                            {
+                                <button type="submit" class="btn btn-danger" asp-page-handler="EventUnregister">Afmeld</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-success" asp-page-handler="EventRegister">Tilmeld</button>
+                            }    
                         }
                     </div>
                 </form>
