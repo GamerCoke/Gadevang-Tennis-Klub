@@ -9,9 +9,7 @@ namespace Gadevang_Tennis_Klub.Pages.Members
 {
     public class DeleteMemberModel : PageModel
     {
-        public IMember? Member { get; set; }
-        public IFormFile? Photo { get; set; }
-
+        public IMember Member { get; set; }
         public IMemberDB _memberDB;
         public bool IsAdmin;
         public DeleteMemberModel(IMemberDB memberDB)
@@ -47,12 +45,13 @@ namespace Gadevang_Tennis_Klub.Pages.Members
         {
             try
             {
-                IsDeleted = await _memberDB.DeleteMemberAsync(memberID);
+                await _memberDB.DeleteMemberAsync(memberID);
                 return RedirectToPage(@"/Members/GetAllMembers");
             }
             catch (Exception ex)
             {
                 ViewData["ErrorMessage"] = ex.Message;
+                Member = await _memberDB.GetMemberByIDAsync(memberID);
                 return Page();
             }
         }

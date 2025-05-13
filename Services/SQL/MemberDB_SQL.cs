@@ -111,10 +111,12 @@ namespace Gadevang_Tennis_Klub.Services.SQL
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                string img = member.Image == null ? "null" : $"'{member.Image}'";
+                string image = member.Image == null ? "null" : $"'{member.Image}'";
+                string Bday = $"{member.Dob.Year}-{member.Dob.Month}-{member.Dob.Day}";
+                int isA = member.IsAdmin == false ? 0 : 1;
                 string updStr = $"UPDATE Members SET " +
-                    $"(Name = '{member.Name}', PassWord = '{member.Password}', Address = '{member.Address}', Email = '{member.Email}', " +
-                    $"Phone = '{member.Phone}', Sex = '{member.Sex}', DoB = {member.Dob}, Bio = '{member.Bio}', Image = {img}, IsAdmin = {member.IsAdmin})" +
+                    $"Name = '{member.Name}', PassWord = '{member.Password}', Address = '{member.Address}', Email = '{member.Email}', " +
+                    $"Phone = '{member.Phone}', Sex = '{member.Sex}', DoB = '{Bday}', Bio = '{member.Bio}', Image = {image}, IsAdmin = {isA}" +
                     $" WHERE ID = {member.Id}";
                 return await NonReadQueryAsync(updStr);
             }
