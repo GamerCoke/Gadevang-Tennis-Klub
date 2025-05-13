@@ -57,7 +57,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL.Booking
 
         public async Task<List<ICourtBooking>> GetCourtBookingsByParticipantsAsync(int memberID)
         {
-            return await GetBookingsViaQueryAsync($"select CourtBookings.* from Partners join CourtBookings on CourtBookings.ID = Partners.BookingID where Partners.MemberID = {memberID} or CourtBookings.MemberID = {memberID};");
+            return await GetBookingsViaQueryAsync($"select CourtBookings.* from Partners right join CourtBookings on CourtBookings.ID = Partners.BookingID where Partners.MemberID = {memberID} or CourtBookings.MemberID = {memberID};");
         }
 
         public async Task<List<ICourtBooking>> GetCourtBookingsByTeamIDAsync(int teamID)
