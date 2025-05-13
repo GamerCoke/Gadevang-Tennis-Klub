@@ -40,18 +40,18 @@ CREATE TABLE Events (
     Title varchar(64) not null,
     Description varchar(1024) not null,
 	StartTime DATETIME not null,
-	Duration TIME not null,
+	EndTime TIME not null,
 	Location varchar(64) not null,
 	Capacity int
 );
 
 CREATE TABLE Activities (
-	ID int identity(1, 1) PRIMARY KEY not null,
+	ID int identity(0, 1) PRIMARY KEY not null,
 	EventID int not null,
 	Description varchar(512) not null,
 	Title varchar(32) not null,
-	StartTime DATETIME not null,
-	Duration TIME not null,
+	StartTime DATE not null,
+	EndTime DATE not null,
 
 	FOREIGN KEY (EventID) REFERENCES Events(ID)
 );
