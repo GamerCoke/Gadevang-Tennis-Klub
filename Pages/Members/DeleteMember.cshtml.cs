@@ -17,7 +17,6 @@ namespace Gadevang_Tennis_Klub.Pages.Members
 
         public IMemberDB _memberDB;
         public bool IsAdmin;
-        public bool IsDeleted;
         public DeleteMemberModel(IMemberDB memberDB)
         {
             _memberDB = memberDB;
