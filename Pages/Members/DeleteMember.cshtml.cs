@@ -9,10 +9,7 @@ namespace Gadevang_Tennis_Klub.Pages.Members
 {
     public class DeleteMemberModel : PageModel
     {
-        [BindProperty]
         public IMember? Member { get; set; }
-
-        [BindProperty]
         public IFormFile? Photo { get; set; }
 
         public IMemberDB _memberDB;
