@@ -63,12 +63,23 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Trainers/ReadAllTrainers">Trænere</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/CourtBookings/Members/CreateMemberBooking">Book en Bane</a>
-                        </li>
-                        @if (Context.Session.GetString("User") != null && bool.Parse(Context.Session.GetString("User").Split('|')[1]))
+                        @if (Context.Session.GetString("User") == null || !bool.Parse(Context.Session.GetString("User").Split('|')[1]))
                         {
-                            
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/CourtBookings/Members/CreateMemberBooking">Book en Bane</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/CourtBookings/Members/CreateMemberBooking">Book en Bane</a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/CourtBookings/">Book Baner for en Begivenhed</a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/CourtBookings/">Book Baner for et Hold</a>
+                            </li>
                         }
                     </ul>
                 </div>
