@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System.Drawing;
 using System.Globalization;
+using System.Reflection;
 
 namespace Gadevang_Tennis_Klub.Pages.Events
 {
@@ -15,6 +16,15 @@ namespace Gadevang_Tennis_Klub.Pages.Events
         private IActivityDB _activityDB;
         private IEventBookingDB _eventBookingDB;
 
+
+        public string? CurrentUser { get; private set; }
+
+
+        // For the message popup when successfully registering or unregistering
+        public string MessageSuccess { get; set; }
+        public string MessageDanger { get; set; }
+
+
         public int CurrentYear { get; set; }
         public int CurrentMonth { get; set; }
         public string MonthName { get; set; } = string.Empty;
@@ -23,6 +33,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
         public List<IEvent> Events { get; set; }
 
 
+        // For the Modal (event popup box)
         public IEvent? CurrentEvent { get; set; }
         public List<IActivity>? CurrentEventActivities { get; set; }
         public List<IEventBooking>? CurrentEventBookings { get; set; }
@@ -47,6 +58,8 @@ namespace Gadevang_Tennis_Klub.Pages.Events
         /// </summary>
         private async Task LoadCalendar(DateTime date)
         {
+            CurrentUser = HttpContext.Session.GetString("User");
+
             CurrentYear = date.Year;
             CurrentMonth = date.Month;
             GetMonthName();
@@ -71,6 +84,11 @@ namespace Gadevang_Tennis_Klub.Pages.Events
         private string CapitalizeFirstLetter(string str)
         {
             return char.ToUpper(str[0]) + str.Substring(1); // Make the first letter capital.
+        }
+        public async Task<IEventBooking?> GetMemberBooking(int eventID, int memberID)
+        {
+            CurrentEventBookings = await _eventBookingDB.GetEventBookingsByEventIDAsync(eventID);
+            return CurrentEventBookings.FirstOrDefault(e => e.MemberID == memberID);
         }
         #endregion
 
@@ -114,18 +132,59 @@ namespace Gadevang_Tennis_Klub.Pages.Events
             return Page(); // Reloads the same page, now with CurrentEvent & CurrentEventActivities populated
         }
 
-        public async Task OnPostEventRegister(int currentYear, int currentMonth, int eventID)
+        public async Task<IActionResult> OnPostEventRegister(int currentYear, int currentMonth, int eventID)
         {
+            CurrentUser = HttpContext.Session.GetString("User");
+            if (string.IsNullOrEmpty(CurrentUser))
+            {
+                return RedirectToPage(@"/User/Login");
+            }
+
+            int memberID = int.Parse(CurrentUser.Split('|')[0]); // Get the member id
+
             try
             {
-                int memberID = 0; // TEMP
+                IEvent ev = await _eventDB.GetEventByIDAsync(eventID);
+                List<IEventBooking> evBookings = await _eventBookingDB.GetEventBookingsByEventIDAsync(eventID);
 
-                // Make sure the member isn't already booked for this event before creating a new booking
-                CurrentEventBookings = await _eventBookingDB.GetEventBookingsByEventIDAsync(eventID);
-                IEventBooking? evBooking = CurrentEventBookings.FirstOrDefault(e => e.MemberID == memberID);
-                if (evBooking == null)
+                // Make sure the event isn't already fully booked
+                if (ev.Capacity > evBookings.Count)
                 {
-                    await _eventBookingDB.CreateEventBookingAsync(new EventBooking(memberID, eventID));
+                    // Make sure the member isn't already booked for this event before creating a new booking
+                    if (await GetMemberBooking(eventID, memberID) == null)
+                    {
+                        await _eventBookingDB.CreateEventBookingAsync(new EventBooking(memberID, eventID));
+
+                        MessageSuccess = $"Du er nu tilmeldt begivenheden: {ev.Title}";
+                    }
+                }
+                else MessageDanger = $"Der er ikke flere pladser tilbage til begivenheden: {ev.Title}";
+            }
+            catch (Exception ex)
+            {
+                ViewData["ErrorMessage"] = ex.Message;
+            }
+
+            await LoadCalendar(new DateTime(currentYear, currentMonth, 1));
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostEventUnregister(int currentYear, int currentMonth, int eventID)
+        {
+
+            CurrentUser = HttpContext.Session.GetString("User");
+            int memberID = int.Parse(CurrentUser.Split('|')[0]); // Get the member id
+
+            try
+            {
+                // Make sure the member is actually booked for this event before deleting the booking
+                IEventBooking? evBooking = await GetMemberBooking(eventID, memberID);
+                if (evBooking != null)
+                {
+                    await _eventBookingDB.DeleteEventBookingAsync(evBooking.ID);
+
+                    IEvent ev = await _eventDB.GetEventByIDAsync(eventID);
+                    MessageDanger = $"Du er nu afmeldt begivenheden: {ev.Title}";
                 }
             }
             catch (Exception ex)
@@ -134,6 +193,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
             }
 
             await LoadCalendar(new DateTime(currentYear, currentMonth, 1));
+            return Page();
         }
         #endregion
     }
