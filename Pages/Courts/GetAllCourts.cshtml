@@ -1,4 +1,62 @@
 ﻿@page
 @model Gadevang_Tennis_Klub.Pages.Courts.GetAllCourtsModel
 @{
+    ViewData["Title"] = "Baner";
 }
+
+<h1>Bane Overvisning</h1>
+<hr />
+
+<div class="row align-items-center mb-3">
+    <div class="col">
+        <p class="mb-0">Antal Medlemmer: @Model.Courts.Count</p>
+    </div>
+    @if (Model.IsAdmin)
+    {
+        <div class="col text-end">
+            <a asp-page="CreateCourt" class="btn btn-success" role="button">Opret ny bane</a>
+        </div>
+    }
+</div>
+
+<br />
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            @if(Model.IsAdmin)
+            {
+                <th>ID</th>
+            }
+            <th>Navn</th>
+            <th>Type</th>
+            @if(Model.IsAdmin)
+            {
+                <th>Handlinger</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var court in await Model._cbd.GetAllCourtsAsync())
+        {
+            <tr>
+                @if(Model.IsAdmin)
+                {
+                    <td>@court.ID</td>
+                }
+                <td>@court.Name</td>
+                <td>@court.Type</td>
+                @if (Model.IsAdmin)
+                {
+                    <td>
+                        <a asp-page="DeleteCourt" asp-route-courtID=@court.ID
+                           class="button">Slet</a>
+                        <br />
+                        <a asp-page="UpdateCourt" asp-route-courtID=@court.ID
+                           class="button">Updater</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
