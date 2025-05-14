@@ -5,43 +5,73 @@
     ViewData["Title"] = "Event";
 }
 
-<!-- Title & Return button -->
-<div class="d-flex justify-content-between align-items-center">
-    <div class="d-flex align-items-center gap-5">
-        <!-- Calendar-style date box with a red top and white bottom -->
-        <div style="width: 50px; border: 1px solid red; text-align: center; font-family: Arial, sans-serif;">
-            <!-- Month section in red -->
-            <div style="background-color: red; color: white; padding: 4px 0; font-size: 0.8em;">
-                @Model.Event.Start.ToString("MMM", new System.Globalization.CultureInfo("da-DK")).ToUpper()
-            </div>
-            <!-- Day section in white -->
-            <div style="background-color: white; color: black; padding: 6px 0; font-size: 1.2em; font-weight: bold;">
-                @Model.Event.Start.Day
-            </div>
-        </div>
-        <!-- Title (placed next to the calendar) -->
-        <h3 class="m-0">@Model.Event.Title</h3>
-    </div>
-    <a asp-page="GetAllEvents" class="btn btn-danger" role="button">Tilbage</a>
+<div class="text-end">
+<a class="btn btn-primary btn-sm" title="Redigér begivenhed" asp-page="UpdateEvent" asp-route-eventID=@Model.Event.ID><i class="fas fa-edit"></i></a>
+    <a class="btn btn-danger btn-sm" title="Slet begivenhed" asp-page="DeleteEvent" asp-route-eventID=@Model.Event.ID><i class="fas fa-trash"></i></a>
 </div>
 
-<hr />
+<div class="card p-3 mx-auto" style="width:65%">
+    <!-- Title & Return button -->
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-3">
+            <!-- Calendar-style date box with a red top and white bottom -->
+            <div style="width: 50px; border: 1px solid red; text-align: center; font-family: Arial, sans-serif;">
+                <!-- Month section in red -->
+                <div style="background-color: red; color: white; padding: 4px 0; font-size: 0.8em;">
+                    @Model.Event.Start.ToString("MMM", new System.Globalization.CultureInfo("da-DK")).ToUpper()
+                </div>
+                <!-- Day section in white -->
+                <div style="background-color: white; color: black; padding: 6px 0; font-size: 1.2em; font-weight: bold;">
+                    @Model.Event.Start.Day
+                </div>
+            </div>
+            <!-- Title (placed next to the calendar) -->
+            <h3 class="m-0">@Model.Event.Title</h3>
+        </div>
+        <a asp-page="GetAllEvents" class="btn btn-danger" role="button">Tilbage</a>
+    </div>
 
-<p>Beskrivelse: @Model.Event.Description</p>
-<p>Starttidspunkt:@Model.Event.Start</p>
-<p>Sluttidspunkt: @Model.Event.End</p>
-<p>Lokation: @Model.Event.Location</p>
-<p>Max tilmeldinger: @Model.Event.Capacity</p>
-
-<hr />
-
-<p>Activites:</p>
-<hr />
-@foreach (Activity activity in Model.Activities)
-{
-    <p>Titel: @activity.Title</p>
-    <p>Beskrivelse: @activity.Description</p>
-    <p>Starttidspunkt: @activity.Start</p>
-    <p>Sluttidspunkt: @activity.End</p>
     <hr />
-}
+
+    <!-- Event description -->
+    <br />
+    <div style="display: flex; align-items: flex-start; gap: 10px; margin-left: 15px;">
+        <i class="fa-solid fa-pen" style="width: 20px; display: block; margin-top: 5px;"></i>
+        <pre style="font-family: inherit; font-size: inherit; white-space: pre-wrap;">@Model.Event.Description</pre>
+    </div>
+    <br />
+
+    <!-- Event activities -->
+    @if (Model.Activities != null && Model.Activities.Count != 0)
+    {
+        <hr />
+
+        <p><strong>Aktiviteter:</strong></p>
+        @foreach (Activity activity in Model.Activities)
+        {
+            <div class="card p-3 mx-auto" style="width:90%">
+                <p class="m-0">@activity.Start.ToString("HH:mm")-@activity.End: <strong>@activity.Title</strong></p>
+                @if (!string.IsNullOrEmpty(activity.Description))
+                {
+                    <p class="m-0">@activity.Description</p>
+                }
+            </div>
+        }
+        <br />
+    }
+
+    <hr />
+
+    <!-- Time & location -->
+    <div style="margin-left: 15px;">
+        <div style="color: #555;"><i class="fas fa-clock text-center" style="width: 20px;"></i> @Model.Event.Start.ToString("HH:mm")-@Model.Event.End</div>
+        <div style="color: #555;"><i class="fa-solid fa-location-dot text-center" style="width: 20px;"></i> @Model.Event.Location</div>
+    </div>
+    <!-- Capacity display -->
+    @if (Model.Event.Capacity != null && Model.Event.Capacity != 0)
+    {
+        <div style="color: #888; font-size: 0.9em; align-self: flex-end; margin-left: auto;">
+            <i class="fa-solid fa-user text-center" style="width: 20px;"></i> @Model.EventBookings.Count / @Model.Event.Capacity tilmeldte
+        </div>
+    }
+</div>

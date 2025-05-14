@@ -1,0 +1,23 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.Trainers.DeleteTrainerModel
+@{
+    ViewData["Title"] = "Slet Træner";
+}
+
+<br />
+<label asp-for="@Model.Trainer.Id" class="control-label"></label>
+<input asp-for="@Model.Trainer.Id" class="form-control" disabled />
+<label asp-for="@Model.Trainer.Name" class="control-label"></label>
+<input asp-for="@Model.Trainer.Name" class="form-control" disabled />
+<label asp-for="@Model.Trainer.Phone" class="control-label"></label>
+<input asp-for="@Model.Trainer.Phone" class="form-control" disabled />
+<label asp-for="@Model.Trainer.Email" class="control-label"></label>
+<input asp-for="@Model.Trainer.Email" class="form-control" disabled />
+<form method="post">
+    <button type="submit" class="button">Slet</button>
+    <input type="hidden" name="trainerID" value="@Model.Trainer.Id" />
+</form>
+@if (Model.Message != null)
+{
+    <b class="text-danger">@Model.Message</b>
+}

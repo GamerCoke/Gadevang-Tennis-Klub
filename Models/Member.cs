@@ -17,18 +17,28 @@ namespace Gadevang_Tennis_Klub.Models
         [BindProperty]
         [Required(ErrorMessage = "Bio er påkrævet")]
         [StringLength(1024, ErrorMessage = "Bio må ikke være mere end 1024 karakterer lang")]
+        [RegularExpression(
+           "^[a-zA-Z0-9?!,. ]+$",
+            ErrorMessage = "Ugyldigt tegn fundet i Bio, gyldige er: a-z A-Z 0-9 ? ! , ."
+        )]
         public string Bio { get; set; }
 
         [BindProperty]
         [Required(ErrorMessage = "Adresse er påkrævet")]
         [StringLength(256, ErrorMessage = "Adresse må ikke være mere end 256 karakterer lang")]
+        [RegularExpression(
+           "^[a-zA-Z0-9 ]+$",
+            ErrorMessage = "Ugyldigt tegn fundet i Adresse"
+        )]
         public string Address { get; set; }
 
         [BindProperty]
         [Required(ErrorMessage = "Kodeord er påkrævet")]
         [StringLength(256, ErrorMessage = "Kodeord må ikke være mere end 256 karakterer lang")]
         public string Password { get; set; }
-
+        [BindProperty]
+        [Required(ErrorMessage = "Fødsels dag er påkrævet")]
+        [DataType(DataType.Date)]
         public DateOnly Dob { get; set; }
 
         public Member() : base()

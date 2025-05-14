@@ -9,12 +9,12 @@ namespace Gadevang_Tennis_Klub.Services.SQL
     public class ActivityDB_SQL : IActivityDB
     {
         private readonly string _connectionString = Secret.ConnectionString;
-        private readonly string _getAllActivitiesSql = "select ID, EventID, Description, Title, StartTime, Duration FROM Activities";
-        private readonly string _getAllActivitiesByEventSql = "select ID, EventID, Description, Title, StartTime, Duration FROM Activities WHERE EventID = @EventID";
-        private readonly string _insertSql = "insert INTO Activities Values(@EventID, @Description, @Title, @StartTime, @Duration)";
+        private readonly string _getAllActivitiesSql = "select ID, EventID, Description, Title, StartTime, EndTime FROM Activities";
+        private readonly string _getAllActivitiesByEventSql = "select ID, EventID, Description, Title, StartTime, EndTime FROM Activities WHERE EventID = @EventID";
+        private readonly string _insertSql = "insert INTO Activities Values(@EventID, @Description, @Title, @StartTime, @EndTime)";
         private readonly string _deleteSql = "delete FROM Activities WHERE EventID = @EventID AND ID = @ID";
-        private readonly string _updateEventSql = "update Activities SET Description = @Description, Title = @Title, StartTime = @StartTime, Duration = @Duration WHERE ID = @ID";
-        private readonly string _getActivityByIDSql = "select ID, EventID, Description, Title, StartTime, Duration FROM Activities WHERE EventID = @EvID AND ID = @ID";
+        private readonly string _updateEventSql = "update Activities SET Description = @Description, Title = @Title, StartTime = @StartTime, EndTime = @EndTime WHERE ID = @ID";
+        private readonly string _getActivityByIDSql = "select ID, EventID, Description, Title, StartTime, EndTime FROM Activities WHERE EventID = @EvID AND ID = @ID";
 
         public async Task<List<IActivity>> GetAllActivitiesAsync()
         {
@@ -34,7 +34,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                         string description = reader.GetString("Description");
                         string title = reader.GetString("Title");
                         DateTime startTime = reader.GetDateTime("StartTime");
-                        TimeOnly endTime = reader.GetFieldValue<TimeOnly>("Duration");
+                        TimeOnly endTime = reader.GetFieldValue<TimeOnly>("EndTime");
 
                         IActivity activity = new Activity(id, evID, title, description, startTime, endTime);
                         activities.Add(activity);
@@ -68,7 +68,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                     command.Parameters.AddWithValue("@Description", activity.Description);
                     command.Parameters.AddWithValue("@Title", activity.Title);
                     command.Parameters.AddWithValue("@StartTime", activity.Start);
-                    command.Parameters.AddWithValue("@Duration", activity.End);
+                    command.Parameters.AddWithValue("@EndTime", activity.End);
 
                     int noOfRows = await command.ExecuteNonQueryAsync();
                     Console.WriteLine($"Antal indsatte i tabellen {noOfRows}");
@@ -135,7 +135,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                     command.Parameters.AddWithValue("@Description", activity.Description);
                     command.Parameters.AddWithValue("@Title", activity.Title);
                     command.Parameters.AddWithValue("@StartTime", activity.Start);
-                    command.Parameters.AddWithValue("@Duration", activity.End);
+                    command.Parameters.AddWithValue("@EndTime", activity.End);
 
                     await command.Connection.OpenAsync();
 
@@ -179,7 +179,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                         string description = reader.GetString("Description");
                         string title = reader.GetString("Title");
                         DateTime startTime = reader.GetDateTime("StartTime");
-                        TimeOnly endTime = reader.GetFieldValue<TimeOnly>("Duration");
+                        TimeOnly endTime = reader.GetFieldValue<TimeOnly>("EndTime");
 
                         activity = new Activity(id, evID, title, description, startTime, endTime);
                     }
@@ -218,7 +218,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                         string description = reader.GetString("Description");
                         string title = reader.GetString("Title");
                         DateTime startTime = reader.GetDateTime("StartTime");
-                        TimeOnly endTime = reader.GetFieldValue<TimeOnly>("Duration");
+                        TimeOnly endTime = reader.GetFieldValue<TimeOnly>("EndTime");
 
                         IActivity activity = new Activity(id, evID, title, description, startTime, endTime);
                         activities.Add(activity);

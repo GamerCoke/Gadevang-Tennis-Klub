@@ -1,48 +1,69 @@
+using Gadevang_Tennis_Klub.Interfaces.Models;
 using Gadevang_Tennis_Klub.Interfaces.Services;
 using Gadevang_Tennis_Klub.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 using System.Drawing;
 using System.Globalization;
+using System.Reflection;
 
 namespace Gadevang_Tennis_Klub.Pages.Events
 {
     public class CalendarModel : PageModel
     {
         private IEventDB _eventDB;
+        private IActivityDB _activityDB;
+        private IEventBookingDB _eventBookingDB;
 
-        public List<Event> Events { get; set; }
+
+        public string? CurrentUser { get; private set; }
+
+
+        // For the message popup when successfully registering or unregistering
+        public string MessageSuccess { get; set; }
+        public string MessageDanger { get; set; }
+
 
         public int CurrentYear { get; set; }
         public int CurrentMonth { get; set; }
         public string MonthName { get; set; } = string.Empty;
 
 
-        public CalendarModel(IEventDB eventDB)
+        public List<IEvent> Events { get; set; }
+
+
+        // For the Modal (event popup box)
+        public IEvent? CurrentEvent { get; set; }
+        public List<IActivity>? CurrentEventActivities { get; set; }
+        public List<IEventBooking>? CurrentEventBookings { get; set; }
+
+
+        public CalendarModel(IEventDB eventDB, IActivityDB activityDB, IEventBookingDB eventBookingDB)
         {
             _eventDB = eventDB;
+            _activityDB = activityDB;
+            _eventBookingDB = eventBookingDB;
         }
 
-        public void OnGet(int? year, int? month)
+        #region Initializement Methods
+        public async Task OnGetAsync(int? year, int? month)
         {
             DateTime displayDate = (year.HasValue && month.HasValue) ? new DateTime(year.Value, month.Value, 1) : DateTime.Now;
-            LoadCalendar(displayDate);
+            await LoadCalendar(displayDate);
         }
 
         /// <summary>
-        /// Sets the current year and month, updates the month name, and generates mock event data.
+        /// Sets the current year and month, updates the month name, and gets event data.
         /// </summary>
-        private void LoadCalendar(DateTime date)
+        private async Task LoadCalendar(DateTime date)
         {
+            CurrentUser = HttpContext.Session.GetString("User");
+
             CurrentYear = date.Year;
             CurrentMonth = date.Month;
             GetMonthName();
-            GetEventData();
-        }
-
-        private async Task GetEventData()
-        {
-            Events = (await _eventDB.GetAllEventsAsync()).Cast<Event>().ToList();
+            await GetEventData();
         }
 
         /// <summary>
@@ -52,35 +73,128 @@ namespace Gadevang_Tennis_Klub.Pages.Events
         {
             MonthName = CapitalizeFirstLetter(new CultureInfo("da-DK").DateTimeFormat.GetMonthName(CurrentMonth));
         }
+
+        private async Task GetEventData()
+        {
+            Events = await _eventDB.GetAllEventsAsync();
+        }
+        #endregion
+
+        #region Helper Methods
         private string CapitalizeFirstLetter(string str)
         {
             return char.ToUpper(str[0]) + str.Substring(1); // Make the first letter capital.
         }
+        public async Task<IEventBooking?> GetMemberBooking(int eventID, int memberID)
+        {
+            CurrentEventBookings = await _eventBookingDB.GetEventBookingsByEventIDAsync(eventID);
+            return CurrentEventBookings.FirstOrDefault(e => e.MemberID == memberID);
+        }
+        #endregion
 
-        public void OnPostPrevious(int year, int month)
+        #region OnPost Methods (Invoked by buttons)
+        public async Task OnPostPrevious(int year, int month)
         {
             DateTime currentMonth = new DateTime(year, month, 1);
             DateTime previous = currentMonth.AddMonths(-1);
-            LoadCalendar(previous);
+            await LoadCalendar(previous);
         }
 
-        public void OnPostNext(int year, int month)
+        public async Task OnPostNext(int year, int month)
         {
             DateTime currentMonth = new DateTime(year, month, 1);
             DateTime next = currentMonth.AddMonths(1);
-            LoadCalendar(next);
+            await LoadCalendar(next);
         }
 
-        public void OnPostToday()
+        public async Task OnPostToday()
         {
-            LoadCalendar(DateTime.Now);
+            await LoadCalendar(DateTime.Now);
         }
 
-        public void OnPostEventRegister(string title, DateTime startDate, DateTime endDate, int currentYear, int currentMonth)
+        public async Task<IActionResult> OnPostOpenEventModal(int year, int month, int eventID)
         {
-            // Some logic to handle the event register? 
+            await LoadCalendar(new DateTime(year, month, 1));
 
-            LoadCalendar(new DateTime(currentYear, currentMonth, 1));
+            try
+            {
+                IEvent ev = Events.First(e => e.ID == eventID); // Throws if no event could be found
+
+                CurrentEvent = ev;
+                CurrentEventActivities = await _activityDB.GetActivitiesByEventAsync(eventID);
+                CurrentEventBookings = await _eventBookingDB.GetEventBookingsByEventIDAsync(eventID);
+            }
+            catch (Exception ex)
+            {
+                ViewData["ErrorMessage"] = ex.Message;
+            }
+
+            return Page(); // Reloads the same page, now with CurrentEvent & CurrentEventActivities populated
         }
+
+        public async Task<IActionResult> OnPostEventRegister(int currentYear, int currentMonth, int eventID)
+        {
+            CurrentUser = HttpContext.Session.GetString("User");
+            if (string.IsNullOrEmpty(CurrentUser))
+            {
+                return RedirectToPage(@"/User/Login");
+            }
+
+            int memberID = int.Parse(CurrentUser.Split('|')[0]); // Get the member id
+
+            try
+            {
+                IEvent ev = await _eventDB.GetEventByIDAsync(eventID);
+                List<IEventBooking> evBookings = await _eventBookingDB.GetEventBookingsByEventIDAsync(eventID);
+
+                // Make sure the event isn't already fully booked
+                if (ev.Capacity > evBookings.Count)
+                {
+                    // Make sure the member isn't already booked for this event before creating a new booking
+                    if (await GetMemberBooking(eventID, memberID) == null)
+                    {
+                        await _eventBookingDB.CreateEventBookingAsync(new EventBooking(memberID, eventID));
+
+                        MessageSuccess = $"Du er nu tilmeldt begivenheden: {ev.Title}";
+                    }
+                }
+                else MessageDanger = $"Der er ikke flere pladser tilbage til begivenheden: {ev.Title}";
+            }
+            catch (Exception ex)
+            {
+                ViewData["ErrorMessage"] = ex.Message;
+            }
+
+            await LoadCalendar(new DateTime(currentYear, currentMonth, 1)); 
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostEventUnregister(int currentYear, int currentMonth, int eventID)
+        {
+
+            CurrentUser = HttpContext.Session.GetString("User");
+            int memberID = int.Parse(CurrentUser.Split('|')[0]); // Get the member id
+
+            try
+            {
+                // Make sure the member is actually booked for this event before deleting the booking
+                IEventBooking? evBooking = await GetMemberBooking(eventID, memberID);
+                if (evBooking != null)
+                {
+                    await _eventBookingDB.DeleteEventBookingAsync(evBooking.ID);
+
+                    IEvent ev = await _eventDB.GetEventByIDAsync(eventID);
+                    MessageDanger = $"Du er nu afmeldt begivenheden: {ev.Title}";
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewData["ErrorMessage"] = ex.Message;
+            }
+
+            await LoadCalendar(new DateTime(currentYear, currentMonth, 1));
+            return Page();
+        }
+        #endregion
     }
 }

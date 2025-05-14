@@ -15,7 +15,7 @@ namespace Gadevang_Tennis_Klub.Interfaces.Services
         /// </summary>
         /// <param name="ev">The event to be inserted</param>
         /// <returns>True if the insert was successfull, otherwise false</returns>
-        Task<bool> CreateEventAsync(IEvent ev);
+        Task<int?> CreateEventAsync(IEvent ev);
 
         /// <summary>
         /// Deletes an event from the database
@@ -51,5 +51,12 @@ namespace Gadevang_Tennis_Klub.Interfaces.Services
         /// <param name="eventID">The ID of the event to retrieve capacity from</param>
         /// <returns>The max capacity of the event</returns>
         Task<int?> GetEventCapacityAsync(int eventID);
+
+        /// <summary>
+        /// Sorts the list of events by date
+        /// </summary>
+        /// <param name="listToSort">The list of events to sort</param>
+        /// <returns>The sorted list of events</returns>
+        List<IEvent> SortEventsByDate(List<IEvent> listToSort);
     }
 }

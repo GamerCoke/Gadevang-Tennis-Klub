@@ -1,4 +1,5 @@
 ﻿@page
+@using Gadevang_Tennis_Klub.Interfaces.Models
 @using Gadevang_Tennis_Klub.Models
 @model Gadevang_Tennis_Klub.Pages.Events.CalendarModel
 @functions 
@@ -9,7 +10,7 @@
         DateTime today = DateTime.Today;
         bool isToday = (day == today.Day && month == today.Month && year == today.Year);
 
-        string cellColor = isToday ? "background-color: #fcdbae;" : (!isCurrentMonth ? "background-color: #eeeeee;" : "");
+        string cellColor = isToday ? "background-color: #fcdbae;" : (!isCurrentMonth ? "background-color: #eeeeee;" : ""); // Cell color for today: orange, for other months: gray.
         string textColor = isCurrentMonth ? "" : "text-muted"; // Faded text style for other months than the current.
 
         var eventsForThisDay = Model.Events.Where(e => e.Start.Day == day 
@@ -23,10 +24,11 @@
 
                 @foreach (Event ev in eventsForThisDay)
                 {
-                    <button type="button"
-                    class="card mt-2 p-0 text-start"
-                    style="background-color: #87d49a; width:100%; color:@(isCurrentMonth ? "black" : "dimgray");"
-                    title="@ev.Title">
+                    <button type="submit" class="card mt-2 p-0 text-start"
+                            style="background-color: #87d49a; width:100%; color:@(isCurrentMonth ? "black" : "dimgray");"
+                            name="eventID"
+                            value="@ev.ID"
+                            title="@ev.Title">
                         <span class="small ps-1">@ev.Title</span>
                     </button>
                 }
@@ -59,16 +61,33 @@
 
 <style>
     .date-number {
-        position: absolute;
-        top: 0rem;   /* Distance from top */
-        right: 0.1rem; /* Distance from right */
-        font-size: 12px;
+    position: absolute;
+    top: 0rem;   /* Distance from top */
+    right: 0.1rem; /* Distance from right */
+    font-size: 12px;
     }
 </style>
 
-@* <h1 class="text-center">Kalender</h1> *@
-<h3 class="text-center">@Model.MonthName @Model.CurrentYear</h3>
 
+<!-- Popup messages to show successfull event register & unregister -->
+@{
+    if (!string.IsNullOrEmpty(@Model.MessageSuccess))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button>
+            @Model.MessageSuccess
+        </div>
+    }
+    if (!string.IsNullOrEmpty(@Model.MessageDanger))
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button>
+            @Model.MessageDanger
+        </div>
+    }
+}
+
+<h3 class="text-center">@Model.MonthName @Model.CurrentYear</h3>
 <!-- Hidden fields for current month and year -->
 <input asp-for="@Model.CurrentMonth" hidden/>
 <input asp-for="@Model.CurrentYear" hidden/>
@@ -89,29 +108,146 @@
 </div>
 
 <!-- Calendar table data -->
-<table class="table table-bordered mt-3" style="table-layout: fixed; width: 100%;">
-    <tr>
-        @for (int i = 0; i < _totalCells; i++)
-        {
-            if (i % 7 == 0 && i != 0)
+<form method="post" asp-page-handler="OpenEventModal" asp-route-year="@Model.CurrentYear" asp-route-month="@Model.CurrentMonth">
+    <table class="table table-bordered mt-3" style="table-layout: fixed; width: 100%;">
+        <tr>
+            @for (int i = 0; i < _totalCells; i++)
             {
-                <!-- Make a new row every time we get to a monday -->
-                @:</tr><tr> 
-            }
+                if (i % 7 == 0 && i != 0)
+                {
+                    <!-- Make a new row every time we get to a monday -->
+                    @:</tr><tr> 
+                }
 
-            // Making the cells:
-            if (i < _startDayOfWeekCurrentMonth) // Previous month
-            {
-                RenderDayCell(_previousMonthStart + i, _previousMonth.Month, _previousMonth.Year, false);
+                // Making the cells:
+                if (i < _startDayOfWeekCurrentMonth) // Previous month
+                {
+                    RenderDayCell(_previousMonthStart + i, _previousMonth.Month, _previousMonth.Year, false);
+                }
+                else if (i < _startDayOfWeekCurrentMonth + _daysInCurrentMonth) // Current month
+                {
+                    RenderDayCell(_currentDay++, Model.CurrentMonth, Model.CurrentYear, true);
+                }
+                else // Next month
+                {
+                    RenderDayCell(_nextMonthsCurrentDay++, _nextMonth.Month, _nextMonth.Year, false);
+                }
             }
-            else if (i < _startDayOfWeekCurrentMonth + _daysInCurrentMonth) // Current month
-            {
-                RenderDayCell(_currentDay++, Model.CurrentMonth, Model.CurrentYear, true);
-            }
-            else // Next month
-            {
-                RenderDayCell(_nextMonthsCurrentDay++, _nextMonth.Month, _nextMonth.Year, false);
-            }
-        }
-    </tr>
-</table>
+        </tr>
+    </table>
+</form>
+
+<!-- The modal (popup box) -->
+@if (Model.CurrentEvent != null)
+{
+    <div class="modal" id="eventModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form method="post">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <div class="d-flex align-items-center gap-3">
+                            <!-- Calendar-style date box with a red top and white bottom -->
+                            <div style="width: 50px; border: 1px solid red; text-align: center; font-family: Arial, sans-serif;">
+                                <!-- Month section in red -->
+                                <div style="background-color: red; color: white; padding: 4px 0; font-size: 0.8em;">
+                                    @Model.CurrentEvent.Start.ToString("MMM", new System.Globalization.CultureInfo("da-DK")).ToUpper()
+                                </div>
+                                <!-- Day section in white -->
+                                <div style="background-color: white; color: black; padding: 6px 0; font-size: 1.2em; font-weight: bold;">
+                                    @Model.CurrentEvent.Start.Day
+                                </div>
+                            </div>
+                            <!-- Title (placed next to the calendar) -->
+                            <h3 class="m-0">@Model.CurrentEvent.Title</h3>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+
+                        <!-- Event description -->
+                        <br />
+                        <div style="display: flex; align-items: flex-start; gap: 10px;">
+                            <i class="fa-solid fa-pen" style="width: 20px; display: block; margin-top: 5px;"></i>
+                            <pre style="font-family: inherit; font-size: inherit; white-space: pre-wrap;">@Model.CurrentEvent.Description</pre>
+                        </div>
+                        <br />
+
+                        <!-- Event activities -->
+                        @if (Model.CurrentEventActivities != null && Model.CurrentEventActivities.Count != 0)
+                        {
+                            <hr />
+
+                            <p><strong>Aktiviteter:</strong></p>
+                            @foreach (Activity activity in Model.CurrentEventActivities)
+                            {
+                                <div class="card p-3 mx-auto" style="width:90%">
+                                    <p class="m-0">@activity.Start.ToString("HH:mm")-@activity.End: <strong>@activity.Title</strong></p>
+                                    @if (!string.IsNullOrEmpty(activity.Description))
+                                    {
+                                        <p class="m-0">@activity.Description</p>
+                                    }
+                                </div>
+                            }
+                            <br />
+                        }
+
+                        <hr />
+
+                        <!-- Time & location -->
+                        <div>
+                            <div style="color: #555;"><i class="fas fa-clock text-center" style="width: 20px;"></i> @Model.CurrentEvent.Start.ToString("HH:mm")-@Model.CurrentEvent.End</div>
+                            <div style="color: #555;"><i class="fa-solid fa-location-dot text-center" style="width: 20px;"></i> @Model.CurrentEvent.Location</div>
+                        </div>
+                        <!-- Capacity display -->
+                        @if (Model.CurrentEvent.Capacity != null && Model.CurrentEvent.Capacity != 0)
+                        {
+                            <div style="display: flex; justify-content: flex-end;">
+                                <div style="color: #888; font-size: 0.9em; align-self: flex-end; margin-left: auto;">
+                                    <i class="fa-solid fa-user text-center" style="width: 20px;"></i> @(Model.CurrentEventBookings.Count) / @(Model.CurrentEvent.Capacity) tilmeldte
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Hidden fields for current month, current year & eventID-->
+                    <input type="hidden" name="currentMonth" value="@Model.CurrentMonth" />
+                    <input type="hidden" name="currentYear" value="@Model.CurrentYear" />
+                    <input type="hidden" name="eventID" value="@Model.CurrentEvent.ID" />
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        @if (Model.CurrentEvent.Capacity != null && Model.CurrentEvent.Capacity > 0)
+                        {
+                            // If a user is logged in and is booked for the event -> show option to unregister from the event.
+                            @if ((!string.IsNullOrEmpty(Model.CurrentUser)) && (await Model.GetMemberBooking(Model.CurrentEvent.ID, int.Parse(Model.CurrentUser.Split('|')[0])) != null))
+                            {
+                                <button type="submit" class="btn btn-danger" asp-page-handler="EventUnregister">Afmeld</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-success" asp-page-handler="EventRegister">Tilmeld</button>
+                            }    
+                        }
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- JavaScript function to help open the Modal (popup box) -->
+@if (Model.CurrentEvent != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () 
+        {
+            var myModal = new bootstrap.Modal(document.getElementById('eventModal'));
+            myModal.show();
+        });
+    </script>
+}

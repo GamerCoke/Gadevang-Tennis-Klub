@@ -9,11 +9,11 @@ namespace Gadevang_Tennis_Klub.Services.SQL
     public class EventDB_SQL : IEventDB
     {
         private readonly string _connectionString = Secret.ConnectionString;
-        private readonly string _getAllEventsSql = "select ID, Title, Description, StartTime, Duration, Location, Capacity FROM Events";
-        private readonly string _insertSql = "insert INTO Events Values(@Title, @Description, @StartTime, @Duration, @Location, @Capacity)";
+        private readonly string _getAllEventsSql = "select ID, Title, Description, StartTime, EndTime, Location, Capacity FROM Events";
+        private readonly string _insertSql = "insert into Events (Title, Description, StartTime, EndTime, Location, Capacity) OUTPUT INSERTED.ID VALUES (@Title, @Description, @StartTime, @EndTime, @Location, @Capacity);";
         private readonly string _deleteSql = "delete FROM Events WHERE ID = @ID";
-        private readonly string _updateEventSql = "update Events SET Title = @Title, Description = @Description, StartTime = @StartTime, Duration = @Duration, Location = @Location, Capacity = @Capacity WHERE ID = @ID";
-        private readonly string _getEventByIDSql = "select ID, Title, Description, StartTime, Duration, Location, Capacity FROM Events WHERE ID = @ID";
+        private readonly string _updateEventSql = "update Events SET Title = @Title, Description = @Description, StartTime = @StartTime, EndTime = @EndTime, Location = @Location, Capacity = @Capacity WHERE ID = @ID";
+        private readonly string _getEventByIDSql = "select ID, Title, Description, StartTime, EndTime, Location, Capacity FROM Events WHERE ID = @ID";
         private readonly string _getEventsByDateSql = "select * from Events WHERE CAST(StartTime AS DATE) = @Start";
 
         public async Task<List<IEvent>> GetAllEventsAsync()
@@ -32,7 +32,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                         string title = reader.GetString("Title");
                         string desc = reader.GetString("Description");
                         DateTime startTime = reader.GetDateTime("StartTime");
-                        TimeOnly endTime = reader.GetFieldValue<TimeOnly>("Duration");
+                        TimeOnly endTime = reader.GetFieldValue<TimeOnly>("EndTime");
                         string location = reader.GetString("Location");
                         int? capacity = reader.IsDBNull("Capacity") ? null : reader.GetInt32("Capacity");
 
@@ -55,7 +55,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
             return events;
         }
 
-        public async Task<bool> CreateEventAsync(IEvent ev)
+        public async Task<int?> CreateEventAsync(IEvent ev)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -67,14 +67,12 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                     command.Parameters.AddWithValue("@Title", ev.Title);
                     command.Parameters.AddWithValue("@Description", ev.Description);
                     command.Parameters.AddWithValue("@StartTime", ev.Start);
-                    command.Parameters.AddWithValue("@Duration", ev.End);
+                    command.Parameters.AddWithValue("@EndTime", ev.End);
                     command.Parameters.AddWithValue("@Location", ev.Location);
-                    command.Parameters.AddWithValue("@Capacity", ev.Capacity);
+                    command.Parameters.AddWithValue("@Capacity", ev.Capacity ?? (object)DBNull.Value);
 
-                    int noOfRows = await command.ExecuteNonQueryAsync();
-                    Console.WriteLine($"Antal indsatte i tabellen {noOfRows}");
-
-                    if (noOfRows == 1) return true;
+                    object result = await command.ExecuteScalarAsync(); // Tries to retrieve the event id it got from the database.
+                    return result != null ? Convert.ToInt32(result) : null;
                 }
                 catch (SqlException sqlEx)
                 {
@@ -87,7 +85,6 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                     throw ex;
                 }
             }
-            return false;
         }
 
         public async Task<bool> DeleteEventAsync(int eventId)
@@ -134,9 +131,9 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                     command.Parameters.AddWithValue("@Title", ev.Title);
                     command.Parameters.AddWithValue("@Description", ev.Description);
                     command.Parameters.AddWithValue("@StartTime", ev.Start);
-                    command.Parameters.AddWithValue("@Duration", ev.End);
+                    command.Parameters.AddWithValue("@EndTime", ev.End);
                     command.Parameters.AddWithValue("@Location", ev.Location);
-                    command.Parameters.AddWithValue("@Capacity", ev.Capacity);
+                    command.Parameters.AddWithValue("@Capacity", ev.Capacity ?? (object)DBNull.Value);
 
                     await command.Connection.OpenAsync();
 
@@ -178,7 +175,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                         string title = reader.GetString("Title");
                         string desc = reader.GetString("Description");
                         DateTime startTime = reader.GetDateTime("StartTime");
-                        TimeOnly endTime = reader.GetFieldValue<TimeOnly>("Duration");
+                        TimeOnly endTime = reader.GetFieldValue<TimeOnly>("EndTime");
                         string location = reader.GetString("Location");
                         int? capacity = reader.IsDBNull("Capacity") ? null : reader.GetInt32("Capacity");
 
@@ -227,7 +224,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                         string title = reader.GetString("Title");
                         string desc = reader.GetString("Description");
                         DateTime startTime = reader.GetDateTime("StartTime");
-                        TimeOnly endTime = reader.GetFieldValue<TimeOnly>("Duration");
+                        TimeOnly endTime = reader.GetFieldValue<TimeOnly>("EndTime");
                         string location = reader.GetString("Location");
                         int? capacity = reader.IsDBNull("Capacity") ? null : reader.GetInt32("Capacity");
 
@@ -248,6 +245,14 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                 }
             }
             return events;
+        }
+
+        public List<IEvent> SortEventsByDate(List<IEvent> listToSort)
+        {
+            List<IEvent> sortedList = listToSort;
+            sortedList.Sort((d1, d2) => d1.Start.CompareTo(d2.Start));
+
+            return sortedList;
         }
     }
 }
