@@ -3,30 +3,26 @@ using Gadevang_Tennis_Klub.Interfaces.Services;
 using Gadevang_Tennis_Klub.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Reflection;
 
-namespace Gadevang_Tennis_Klub.Pages.CourtBookings.Teams
+namespace Gadevang_Tennis_Klub.Pages.CourtBookings.Events
 {
-    public class AddTeamCourtBookingsModel : PageModel
+    public class AddEventCourtBookingsModel : PageModel
     {
         public ICourtBookingDB CourtBookingDB { get; set; }
         public ICourtDB CourtDB { get; set; }
-        public ITeamDB TeamDB { get; set; }
+        public IEventDB EventDB { get; set; }
         public string? Message { get; set; }
-        #region Booking Values
-        [BindProperty]
-        public DateOnly Date { get; set; }
-        #endregion
         public int CourtId { get; set; }
-        public int TeamId { get; set; }
+        public int EventId { get; set; }
         public int Timeslot { get; set; }
-        public AddTeamCourtBookingsModel(ICourtBookingDB courtBookingDB, ICourtDB courtDB, ITeamDB teamDB)
+        public AddEventCourtBookingsModel(ICourtBookingDB courtBookingDB, ICourtDB courtDB, IEventDB eventDB)
         {
             CourtBookingDB = courtBookingDB;
             CourtDB = courtDB;
-            TeamDB = teamDB;
+            EventDB = eventDB;
             CourtId = -1;
-            TeamId = -1;
-            Date = DateOnly.FromDateTime(DateTime.Now);
+            EventId = -1;
         }
 
         public IActionResult OnGet()
@@ -40,12 +36,12 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings.Teams
             return Page();
         }
 
-        public async Task<IActionResult> OnPost(int teamId, int courtId, int timeslot)
+        public async Task<IActionResult> OnPost(int eventId, int courtId, int timeslot)
         {
             CourtId = courtId;
-            TeamId = teamId;
+            EventId = eventId;
             Timeslot = timeslot;
-            ICourtBooking booking = new CourtBooking(0, courtId, Date, timeslot, teamId, null, null);
+            ICourtBooking booking = new CourtBooking(0, courtId, DateOnly.FromDateTime((await EventDB.GetEventByIDAsync(eventId)).Start), timeslot, null, null, eventId);
 
             try
             {
@@ -58,7 +54,8 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings.Teams
                 return Page();
             }
 
-            return RedirectToPage(@"/CourtBookings/Teams/ViewTeamCourtBookings");
+            return RedirectToPage(@"/CourtBookings/Events/ViewEventCourtBookings");
         }
     }
 }
+

@@ -4,9 +4,9 @@
     ViewData["Title"] = "Hold-Bookede-Baner";
 }
 
-<h1>Alle Hold-Bookede baner</h1>
+<h1>Alle Hold-Bookede Baner</h1>
 
-<a asp-page="/CourtBookings/Teams/AddTeamCourtBookings">Book en bane for en periode for et hold</a>
+<a asp-page="/CourtBookings/Teams/AddTeamCourtBookings">Book en bane for et Hold</a>
 
 <ul>
     @foreach (var booking in await Model.GetAllTeamCourtBookingsAsync())

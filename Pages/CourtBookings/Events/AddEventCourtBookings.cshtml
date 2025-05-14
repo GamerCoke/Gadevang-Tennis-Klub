@@ -1,0 +1,84 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.CourtBookings.Events.AddEventCourtBookingsModel
+@{
+    ViewData["Title"] = "Begivenhed-Book-Baner";
+}
+
+<form method="post">
+    <table>
+        <tr>
+            <label for="eventId">Vælg en Begivenhed:</label>
+            <br />
+            <select name="eventId" id="eventId">
+                @foreach (var Event in await Model.EventDB.GetAllEventsAsync())
+                {
+                    @if (Event.ID == Model.EventId)
+                    {
+                        <option value="@Event.ID" selected>
+                            @($"Hold ({Event.ID}): {Event.Title}, Dag: {DateOnly.FromDateTime(Event.Start)}")
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="@Event.ID">
+                            @($"Hold ({Event.ID}): {Event.Title}, Dag: {DateOnly.FromDateTime(Event.Start)}")
+                        </option>
+                    }
+                }
+            </select>
+        </tr>
+        <br />
+        <tr>
+            <label for="courtId">Vælg en bane:</label>
+            <br />
+            <select name="courtId" id="courtId">
+                @foreach (var court in await Model.CourtDB.GetAllCourtsAsync())
+                {
+                    @if (court.ID == Model.CourtId)
+                    {
+                        <option value="@court.ID" selected>
+                            @($"Bane ({court.ID}): {court.Name}, Type: {court.Type}")
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="@court.ID">
+                            @($"Bane ({court.ID}): {court.Name}, Type: {court.Type}")
+                        </option>
+                    }
+                }
+            </select>
+            <br />
+        </tr>
+        <tr>
+            <label for="timeslot" class="control-label">Tidsslot</label>
+            <br />
+            <select name="timeslot" id="timeslot">
+                @for (int i = 0; i < 18; i++)
+                {
+                    @if (i == Model.Timeslot)
+                    {
+                        <option value="@i" selected>
+                            @($"{i + 6}.00 - {i + 7}.00")
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="@i">
+                            @($"{i + 6}.00 - {i + 7}.00")
+                        </option>
+                    }
+                }
+            </select>
+            <br />
+        </tr>
+        <tr>
+            @if (Model.Message != null)
+            {
+                <p class="text-danger">@Model.Message</p>
+            }
+            <td>&nbsp</td>
+            <td><Input type="submit" value="Opret" /></td>
+        </tr>
+    </table>
+</form>

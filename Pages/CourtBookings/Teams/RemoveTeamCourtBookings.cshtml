@@ -6,7 +6,7 @@
 <h1>Er du sikker på at du vil fjerne denne booking?</h1>
 @{
     var booking = await Model.GetBookingAsync();
-    var team = await Model.GetTeamAsync(booking.ID);
+    var team = await Model.GetTeamAsync((int)booking.Team_ID);
     <h3>
         @($"Bane #{booking.Court_ID} booket af Hold #{booking.Team_ID} {team.Name} på {booking.Date} fra {booking.Timeslot + 6}.00 til {booking.Timeslot + 7}.00")
     </h3>

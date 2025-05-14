@@ -3,17 +3,17 @@ using Gadevang_Tennis_Klub.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Gadevang_Tennis_Klub.Pages.CourtBookings.Teams
+namespace Gadevang_Tennis_Klub.Pages.CourtBookings.Events
 {
-    public class RemoveTeamCourtBookingsModel : PageModel
+    public class RemoveEventCourtBookingsModel : PageModel
     {
         public int BookingId { get; set; }
         private ICourtBookingDB _courtBookingDB;
-        private ITeamDB _teamDB;
-        public RemoveTeamCourtBookingsModel(ICourtBookingDB courtBookingDB, ITeamDB teamDB)
+        private IEventDB _eventDB;
+        public RemoveEventCourtBookingsModel(ICourtBookingDB courtBookingDB, IEventDB eventDB)
         {
             _courtBookingDB = courtBookingDB;
-            _teamDB = teamDB;
+            _eventDB = eventDB;
         }
         public IActionResult OnGet(int bookingId)
         {
@@ -31,15 +31,15 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings.Teams
             BookingId = bookingId;
             await _courtBookingDB.DeleteCourtBookingAsync(BookingId);
 
-            return RedirectToPage(@"/CourtBookings/Teams/ViewTeamCourtBookings");
+            return RedirectToPage(@"/CourtBookings/Events/ViewEventCourtBookings");
         }
         public async Task<ICourtBooking> GetBookingAsync()
         {
             return await _courtBookingDB.GetCourtBookingByIDAsync(BookingId);
         }
-        public async Task<ITeam> GetTeamAsync(int teamId)
+        public async Task<IEvent> GetEventAsync(int eventId)
         {
-            return await _teamDB.GetTeamByIDAsync(teamId);
+            return await _eventDB.GetEventByIDAsync(eventId);
         }
     }
 }
