@@ -17,9 +17,8 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings.Members
         public DateOnly Date { get; set; }
         [BindProperty]
         public int CourtId { get; set; }
-        [BindProperty]
-        public int Timeslot { get; set; }
         #endregion
+        public int Timeslot { get; set; }
 
         public CreateMemberBookingModel(ICourtBookingDB courtBookingDB, ICourtDB courtDB)
         {
@@ -48,10 +47,12 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings.Members
             else
                 return Page();
         }
-        public async Task<IActionResult> OnPost(int courtId)
+        public async Task<IActionResult> OnPost(int courtId, int timeslot)
         {
             Id = int.Parse(HttpContext.Session.GetString("User").Split('|')[0]);
-            ICourtBooking Booking = new CourtBooking(0, courtId, Date, Timeslot, null, Id, null);
+            CourtId = courtId;
+            Timeslot = timeslot;
+            ICourtBooking Booking = new CourtBooking(0, courtId, Date, timeslot, null, Id, null);
 
             if (Booking.Timeslot < 0 || Booking.Timeslot > 17)
             {
@@ -70,7 +71,7 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings.Members
                 return Page();
             }
 
-            return RedirectToPage("/Courts/GetAllCourts");
+            return RedirectToPage("/User/MyPage");
         }
     }
 }

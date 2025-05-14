@@ -1,9 +1,8 @@
 ﻿@page
-@model Gadevang_Tennis_Klub.Pages.CourtBookings.Members.CreateMemberBookingModel
+@model Gadevang_Tennis_Klub.Pages.CourtBookings.Teams.AddTeamCourtBookingsModel
 @{
-    ViewData["Title"] = "Book Bane";
+    ViewData["Title"] = "Hold-Book-Baner";
 }
-<h1>Book en Bane</h1>
 
 <form method="post">
     <table>
@@ -16,7 +15,7 @@
             </div>
         </tr>
         <tr>
-            <label asp-for="@Model.Timeslot" class="control-label">Tidsslot</label>
+            <label for="timeslot" class="control-label">Tidsslot</label>
             <br />
             <select name="timeslot" id="timeslot">
                 @for (int i = 0; i < 18; i++)
@@ -37,6 +36,28 @@
             </select>
             <br />
         </tr>
+        <tr>
+            <label for="teamId">Vælg et hold:</label>
+            <br />
+            <select name="teamId" id="teamId">
+                @foreach (var team in await Model.TeamDB.GetAllTeamAsync())
+                {
+                    @if (team.ID == Model.TeamId)
+                    {
+                        <option value="@team.ID" selected>
+                            @($"Hold ({team.ID}): {team.Name}, Dag: {team.ActiveDay}")
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="@team.ID">
+                            @($"Hold ({team.ID}): {team.Name}, Dag: {team.ActiveDay}")
+                        </option>
+                    }
+                }
+            </select>
+        </tr>
+        <br />
         <tr>
             <label for="courtId">Vælg en bane:</label>
             <br />

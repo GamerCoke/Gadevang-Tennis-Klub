@@ -14,8 +14,9 @@ namespace Gadevang_Tennis_Klub.Services.SQL.Booking
             string teamId = courtBooking.Team_ID == null ? "null" : courtBooking.Team_ID.ToString();
             string memberId = courtBooking.Member_ID == null ? "null" : courtBooking.Member_ID.ToString();
             string eventId = courtBooking.Event_ID == null ? "null" : courtBooking.Event_ID.ToString();
+            string stringDate = $"{courtBooking.Date.Year}-{courtBooking.Date.Month}-{courtBooking.Date.Day}";
             string query = "insert into CourtBookings values (" +
-                $"'{courtBooking.Date.ToString()}', " +//Date
+                $"'{stringDate}', " +//Date
                 $"{courtBooking.Court_ID}, " +//Court
                 $"{courtBooking.Timeslot}, " +//Timeslot
                 $"{teamId}, " +//Team
@@ -191,12 +192,6 @@ namespace Gadevang_Tennis_Klub.Services.SQL.Booking
                 booking.Participants = participants;
                 reader.Close();
             }
-        }
-
-        public async Task<bool> RemovePartisipant(int memberID)
-        {
-            throw new NotImplementedException();
-
         }
     }
 }
