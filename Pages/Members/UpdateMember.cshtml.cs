@@ -34,11 +34,6 @@ namespace Gadevang_Tennis_Klub.Pages.Members
             else if (!(bool.Parse(user.Split('|')[1]) || memberID == int.Parse(user.Split('|')[0])))
                 return RedirectToPage(@"/Members/GetAllMembers");
 
-            if (user == null)
-                return RedirectToPage(@"/User/Login");
-            else if (user != null)
-                IsAdmin = bool.Parse(user.Split('|')[1]);
-
             if (!(IsAdmin || memberID == int.Parse(user.Split('|')[0])))
                 return RedirectToPage(@"/Members/GetAllMembers");
 

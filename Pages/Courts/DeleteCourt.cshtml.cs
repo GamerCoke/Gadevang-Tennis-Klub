@@ -16,7 +16,6 @@ namespace Gadevang_Tennis_Klub.Pages.Courts
         }
         public IActionResult OnGet()
         {
-            IsAdmin = false;
             string? user = HttpContext.Session.GetString("User");
             if (user == null)
                 return RedirectToPage(@"/User/Login");
