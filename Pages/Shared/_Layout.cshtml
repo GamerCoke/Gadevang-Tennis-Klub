@@ -10,6 +10,33 @@
 
     <!-- To use the icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        .custom-navbar-css {
+        background-color: #69841A !important; /* The color of the navbar */
+        }
+
+        /*body {
+        background-color: #fffdfa; /* The color of the background */
+        /*}*/
+
+        thead th {
+        border-bottom: 0 !important;
+        background-color: #ededed !important; /* The color of all tables */
+        }
+
+        .nav-link {
+        white-space: nowrap; /* Makes sure the menu titles stay in a single line (no wrapping) */
+        }
+
+        .nav-link::first-letter {
+        font-size: 1.1em; /* Makes the first letter in the menu titles bigger */
+        }
+
+        .dropdown-toggle::after {
+        color: white !important; /* Set login button arrows color to white */
+        }
+    </style>
 </head>
 <body>
     @if (ViewData["ErrorMessage"] != null)
@@ -17,76 +44,90 @@
         <script type="text/javascript">
             window.onload = function ()
             {
-                alert("@ViewData["ErrorMessage"]");
+            alert("@ViewData["ErrorMessage"]");
             };
         </script>
         ViewData["ErrorMessage"] = null;
     }
 
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Gadevang_Tennis_Klub</a>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 custom-navbar-css" style="margin:0; padding-top:0; padding-bottom:0; padding-right:10px;">
+            <div class="container-fluid p-0 m-0">
+                <!-- #region navbar logo -->
+                <a class="navbar-brand" asp-area="" asp-page="/Index" style="margin:0; padding:0;">
+                    <img src="@Url.Content("~/Images/GadevangTennisklub2.png")" alt="Logo" style="min-width: 110px; max-width:300px; width:100%; height:auto;">
+                </a>
+                <!-- #endregion -->
+                @*                 <a class="navbar-brand" asp-area="" asp-page="/Index">Gadevang Tennisklub</a> *@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        @if (Context.Session.GetString("User") == null)
+                    <ul class="navbar-nav ms-auto text-uppercase">
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-page="/Informations/AboutUs">Om Klubben</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-page="/Events/Calendar">Kalender</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-page="/CourtBookings/Members/CreateMemberBooking">Banebooking</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-page="/Informations/Rules">Tennisregler</a>
+                        </li>
+                        @if (string.IsNullOrEmpty(Context.Session.GetString("User")))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/User/Login">Login</a>
-                            </li>
+                            <a class="btn rounded-pill ms-3" asp-area="" asp-page="/User/Login"
+                            style="background-color: #1b2e1b; padding: 10px 20px;">
+                                <span class="text-light">Login</span>
+                            </a>
                         }
                         else
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/User/MyPage">Mig</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/User/Logout">Logout</a>
-                            </li>
-                        }
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Events/GetAllEvents">Begivenheder (Admin)</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Events/Calendar">Kalender</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Trainers/ReadAllTrainers">Trænere</a>
-                        </li>
-                        @if (Context.Session.GetString("User") == null || !bool.Parse(Context.Session.GetString("User").Split('|')[1]))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/CourtBookings/Members/CreateMemberBooking">Book en Bane</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link text-dark dropdown-toggle" href="#" id="myDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Bookinger</a>
-                                <ul class="dropdown-menu" aria-labelledby="myDropdown">
+                            <div class="dropdown">
+                                <button type="button" class="btn rounded-pill dropdown-toggle ms-3" data-bs-toggle="dropdown"
+                                style="background-color: #1b2e1b; padding: 10px 20px;">
+                                    <span class="text-light">@Context.Session.GetString("User").Split('|')[2]</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
-                                        <a class="nav-link text-dark" asp-area="" asp-page="/CourtBookings/Members/CreateMemberBooking">Book en Bane</a>
+                                        <a asp-area="" asp-page="/User/MyPage" class="dropdown-item" style="text-transform: none;">Mig</a>
+                                    </li>
+                                    @if (bool.Parse(Context.Session.GetString("User").Split('|')[1]))
+                                    {
+                                        <li>
+                                            <hr class="dropdown-divider"></hr>
+                                        </li>
+                                        <li>
+                                            <a asp-area="" asp-page="/Members/GetAllMembers" class="dropdown-item" style="text-transform: none;">Medlemmer</a>
+                                        </li>
+                                        <li>
+                                            <a asp-area="" asp-page="/Courts/GetAllCourts" class="dropdown-item" style="text-transform: none;">Baner</a>
+                                        </li>
+                                        <li>
+                                            <a asp-area="" asp-page="/Trainers/ReadAllTrainers" class="dropdown-item" style="text-transform: none;">Trænere</a>
+                                        </li>
+                                        <li>
+                                            <a asp-area="" asp-page="/Events/GetAllEvents" class="dropdown-item" style="text-transform: none;">Begivenheder</a>
+                                        </li>
+                                        <li>
+                                            <a asp-area="" asp-page="/CourtBookings/" class="dropdown-item" style="text-transform: none;">Book Baner for en Begivenhed</a>
+                                        </li>
+                                        <li>
+                                            <a asp-area="" asp-page="/CourtBookings/" class="dropdown-item" style="text-transform: none;">Book Baner for et Hold</a>
+                                        </li>
+                                    }
+                                    <li>
+                                        <hr class="dropdown-divider"></hr>
                                     </li>
                                     <li>
-                                        <a class="nav-link text-dark" asp-area="" asp-page="/CourtBookings/">Book Baner for en Begivenhed</a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link text-dark" asp-area="" asp-page="/CourtBookings/">Book Baner for et Hold</a>
+                                        <a asp-area="" asp-page="/User/Logout" class="dropdown-item" style="text-transform: none;">Logout</a>
                                     </li>
                                 </ul>
-                            </li>
-                            
+                            </div>
                         }
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Members/GetAllMembers">Medlemmer</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Courts/GetAllCourts">Baner</a>
-                        </li>
                     </ul>
                 </div>
             </div>

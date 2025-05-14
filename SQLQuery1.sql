@@ -46,7 +46,7 @@ CREATE TABLE Events (
 );
 
 CREATE TABLE Activities (
-	ID int identity(0, 1) PRIMARY KEY not null,
+	ID int identity(1, 1) PRIMARY KEY not null,
 	EventID int not null,
 	Description varchar(512) not null,
 	Title varchar(32) not null,
