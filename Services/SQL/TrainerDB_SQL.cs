@@ -85,5 +85,47 @@ namespace Gadevang_Tennis_Klub.Services.SQL
 
             return trainer;
         }
+
+        public async Task<ITrainer?> GetTrainerByTeamIDAsync(int teamID)
+        {
+            string query = @"
+        SELECT m.ID, m.Name, m.Phone, m.Email, m.Image
+        FROM Teams t
+        INNER JOIN Members m ON t.TrainerID = m.ID
+        WHERE t.ID = @TeamID";
+
+            using SqlConnection connection = new SqlConnection(Secret.ConnectionString);
+            using SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@TeamID", teamID);
+
+            try
+            {
+                await connection.OpenAsync();
+                using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync())
+                {
+                    return new Trainer
+                    {
+                        Id = reader.GetInt32(0),
+                        Name = reader.GetString(1),
+                        Phone = reader.GetString(2),
+                        Email = reader.GetString(3),
+                        Image = reader.IsDBNull(4) ? null : reader.GetString(4)
+                    };
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("SQL Error (GetTrainerByTeamIDAsync): " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error (GetTrainerByTeamIDAsync): " + ex.Message);
+            }
+
+            return null;
+        }
+
     }
 }
