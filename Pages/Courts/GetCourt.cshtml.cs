@@ -1,3 +1,4 @@
+using Gadevang_Tennis_Klub.Interfaces.Models;
 using Gadevang_Tennis_Klub.Interfaces.Services;
 using Gadevang_Tennis_Klub.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -14,16 +15,24 @@ namespace Gadevang_Tennis_Klub.Pages.Courts
         {
             _cbd = courtdb;
         }
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGetAsync(int courtID)
         {
-            IsAdmin = false;
-            string? user = HttpContext.Session.GetString("User");
-            if (user == null)
-                return RedirectToPage(@"/User/Login");
-            else if (user != null)
-                IsAdmin = bool.Parse(user.Split('|')[1]);
+            try
+            {
+                Court = (Court)await _cbd.GetCourtByIDAsync(courtID);
+                IsAdmin = false;
+                string? user = HttpContext.Session.GetString("User");
+                if (user != null)
+                    IsAdmin = bool.Parse(user.Split('|')[1]);
 
-            return Page();
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                Court = new Court();
+                ViewData["ErrorMessage"] = ex.Message;
+            }
+            return RedirectToPage("/Index");
         }
     }
 }

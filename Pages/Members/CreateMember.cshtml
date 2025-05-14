@@ -86,12 +86,12 @@
         <br />
 
         <!-- Valg af oprettelse af ny admin ja/nej (nej er default)-->
-        <tr>
+        <div>
             <label asp-for="@Model.Member.IsAdmin" class="control-label">Er Admin</label>
             <br />
             <span asp-validation-for="@Model.Member.IsAdmin" class="text-danger"></span>
             <input asp-for="@Model.Member.IsAdmin" class="form-check-input" type="checkbox" />
-        </tr>
+        </div>
 
         <br />
 

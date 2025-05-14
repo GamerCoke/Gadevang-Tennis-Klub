@@ -15,7 +15,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 string name = court.Name == null ? "null" : $"'{court.Name}'";
-                string insStr = $"INSERT INTO Courts VALUES ('{court.Type}', {court.Name})";
+                string insStr = $"INSERT INTO Courts VALUES ('{court.Type}', {name});";
                 return await NonReadQueryAsync(insStr);
             }
         }
@@ -65,10 +65,10 @@ namespace Gadevang_Tennis_Klub.Services.SQL
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                SqlCommand delQue = new SqlCommand(que, con);
+                SqlCommand queCon = new SqlCommand(que, con);
 
                 await con.OpenAsync();
-                int nOR = await delQue.ExecuteNonQueryAsync();
+                int nOR = await queCon.ExecuteNonQueryAsync();
                 return nOR > 0;
             }
         }

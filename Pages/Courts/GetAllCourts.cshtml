@@ -39,7 +39,7 @@
     <tbody>
         @foreach (var court in await Model._cbd.GetAllCourtsAsync())
         {
-            <tr>
+            <tr onclick ="window.location.href='@Url.Page("GetCourt", new { courtID = court.ID })'" style="cursor:pointer; border-bottom: 1px solid #ccc;">
                 @if(Model.IsAdmin)
                 {
                     <td>@court.ID</td>

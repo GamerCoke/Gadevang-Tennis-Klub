@@ -10,17 +10,19 @@ namespace Gadevang_Tennis_Klub.Models
         [Required(ErrorMessage = "Type er påkrævet")]
         [StringLength(32, ErrorMessage = "Type må ikke være mere end 32 karakterer lang")]
         public string Type { get; set; }
-        public int? ID { get; set; }
+        public int ID { get; set; }
         [BindProperty]
-        [Required(ErrorMessage = "Navn er påkrævet")]
         [StringLength(32, ErrorMessage = "Navn må ikke være mere end 32 karakterer lang")]
         public string? Name { get; set; }
 
         public Court()
-        { 
+        {
+            ID = 0;
+            Type = string.Empty;
+            Name = string.Empty;
         }
 
-        public Court(int? id, string type, string? name)
+        public Court(int id, string type, string? name)
         {
             ID = id;
             Type = type;
