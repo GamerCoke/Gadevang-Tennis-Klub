@@ -9,5 +9,6 @@ namespace Gadevang_Tennis_Klub.Interfaces.Services
         Task<bool> DeleteTrainerAsync(int trainerID);
         Task<bool> UpdateTrainerAsync(ITrainer trainer);
         Task<ITrainer> GetTrainerByIDAsync(int trainerID);
+        Task<ITrainer> GetTrainerByTeamIDAsync(int teamID);
     }
 }
