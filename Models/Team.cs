@@ -11,7 +11,7 @@ namespace Gadevang_Tennis_Klub.Models
         [BindProperty]
         public string Description { get; set; }
         [BindProperty]
-        public ITrainer? Trainer { get; set; }
+        public Trainer Trainer { get; set; }
         [BindProperty]
         public int Capacity { get; set; }
         [BindProperty]
@@ -25,12 +25,12 @@ namespace Gadevang_Tennis_Klub.Models
             ID = 0;
             Name = string.Empty;
             Description = string.Empty;
-            Trainer = null;
+            Trainer = new Trainer();
             Capacity = 0;
             Price = 0;
             ActiveDay = string.Empty;
         }
-        public Team(int iD, string name, string description, ITrainer trainer, int capacity, int price, string activeDay)
+        public Team(int iD, string name, string description, Trainer trainer, int capacity, int price, string activeDay)
         {
             ID = iD;
             Name = name;

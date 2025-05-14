@@ -35,14 +35,17 @@ namespace Gadevang_Tennis_Klub.Models
             UploadTime = DateTime.Now;
             Type = string.Empty;
         }
-        public Announcement(int id, string title, string text, string uploadTime, string type, IMember announcer)
+        public Announcement(int id, string title, string text, DateTime uploadTime, string type, IMember announcer)
         {
             Announcer = announcer;
             Id = id;
             Title = title;
             Text = text;
-            UploadTime = DateTime.Parse(uploadTime);
+            UploadTime = uploadTime;
             Type = type;
         }
+
+        public Announcement() { }
+
     }
 }

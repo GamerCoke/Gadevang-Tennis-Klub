@@ -25,6 +25,11 @@ namespace Gadevang_Tennis_Klub.Services.IEnumerable
             throw new NotImplementedException();
         }
 
+        public Task<ITrainer> GetTrainerByTeamIDAsync(int teamID)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<bool> UpdateTrainerAsync(ITrainer trainer)
         {
             throw new NotImplementedException();
