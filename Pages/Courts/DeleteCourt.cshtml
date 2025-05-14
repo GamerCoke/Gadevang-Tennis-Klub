@@ -1,4 +1,36 @@
 ﻿@page
 @model Gadevang_Tennis_Klub.Pages.Courts.DeleteCourtModel
 @{
+    ViewData["Title"] = "Slet bane";
 }
+
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Slet en Bane</h1>
+    <a asp-page="GetAllCours" class="btn btn-danger" role="button">Tilbage</a>
+</div>
+<p>Er du sikker på at du ønsker at slette følgende bane:</p>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Navn</th>
+            <th>Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.Court.ID</td>
+            <td>@Model.Court.Name</td>
+            <td>@Model.Court.Type</td>
+        </tr>
+    </tbody>
+</table>
+
+<br />
+
+<form method="post">
+    <button class="btn btn-success"> Delete </button>
+    <input type="hidden" name="CourtID" value=@Model.Court.ID />
+</form>
+

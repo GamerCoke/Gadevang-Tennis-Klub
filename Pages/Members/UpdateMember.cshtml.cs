@@ -31,15 +31,9 @@ namespace Gadevang_Tennis_Klub.Pages.Members
             string? user = HttpContext.Session.GetString("User");
             if (user == null)
                 return RedirectToPage(@"/User/Login");
-            else if (!(bool.Parse(user.Split('|')[1]) || memberID == int.Parse(user.Split('|')[0])))
-                return RedirectToPage(@"/Members/GetAllMembers");
-
-            if (user == null)
-                return RedirectToPage(@"/User/Login");
-            else if (user != null)
-                IsAdmin = bool.Parse(user.Split('|')[1]);
-
-            if (!(IsAdmin || memberID == int.Parse(user.Split('|')[0])))
+            if (bool.Parse(user.Split('|')[1]))
+                IsAdmin = true;
+            else if (!IsAdmin || memberID == int.Parse(user.Split('|')[0]))
                 return RedirectToPage(@"/Members/GetAllMembers");
 
             try
