@@ -1,4 +1,42 @@
 ﻿@page
 @model Gadevang_Tennis_Klub.Pages.Courts.CreateCourtModel
 @{
+    ViewData["Title"] = "Opret Bane";
+}
+
+<title>Opret Bane</title>
+<form asp-page-handler="Create" method="post" enctype="multipart/form-data">
+    <table>
+        <div>
+            <label asp-for="@Model.Court.Type" class="control-label">Type</label>
+            <br />
+            <span asp-validation-for="@Model.Court.Type" class="text-danger"></span>
+            <select asp-for="@Model.Court.Type" class="form-control">
+                <option value="Indendørs Tennis">Indendørs Tennis</option>
+                <option value="Udendørs Tennis">Udendørs Tennis</option>
+                <option value="Indendørs Padel">Indendørs Padel</option>
+                <option value="Udendørs Padel">Udendørs Padel</option>
+            </select>
+        </div>
+
+        <br />
+
+        <div>
+            <label asp-for="@Model.Court.Name" class="control-label">Navn</label>
+            <br />
+            <span asp-validation-for="@Model.Court.Name" class="text-danger"></span>
+            <input asp-for="@Model.Court.Name" class="form-control" />
+        </div>
+
+        <br />
+
+        <div>
+        <td>&nbsp</td>
+        <td><Input type="submit" value="Opret" /></td>
+        </div>
+    </table>
+</form>
+@if (Model.Message != null)
+{
+    <b class="text-danger">@Model.Message</b>
 }

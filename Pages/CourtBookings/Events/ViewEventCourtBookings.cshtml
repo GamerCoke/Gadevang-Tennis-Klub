@@ -1,0 +1,22 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.CourtBookings.Events.ViewEventCourtBookingsModel
+@{
+    ViewData["Title"] = "Begivenhed-Bookede-Baner";
+}
+
+<h1>Alle Begivenhed-Bookede Baner</h1>
+
+<a asp-page="/CourtBookings/Events/AddEventCourtBookings">Book en Bane for en Begivenhed</a>
+
+<ul>
+    @foreach (var booking in await Model.GetAllEventCourtBookingsAsync())
+    {
+        <li>
+            <p>
+                @($"Bane #{booking.Court_ID} booket for Begivenhed #{booking.Event_ID} {(await Model.GetEventAsync((int)booking.Event_ID)).Title} på {booking.Date} fra {booking.Timeslot + 6}.00 til {booking.Timeslot + 7}.00")
+                <a asp-page="/CourtBookings/Events/RemoveEventCourtBookings" asp-route-bookingId=@booking.ID>
+                    @(" Fjern?")
+                </a>
+            </p>
+        </li>
+    }

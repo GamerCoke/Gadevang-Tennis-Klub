@@ -1,0 +1,17 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.CourtBookings.Events.RemoveEventCourtBookingsModel
+@{
+    ViewData["Title"] = "Fjern-Begivenhed-Bane-Booking";
+}
+<h1>Er du sikker på at du vil fjerne denne booking?</h1>
+@{
+    var booking = await Model.GetBookingAsync();
+    var @event = await Model.GetEventAsync((int)booking.Event_ID);
+    <h3>
+        @($"Bane #{booking.Court_ID} booket af Begivenhed #{booking.Event_ID} {@event.Title} på {booking.Date} fra {booking.Timeslot + 6}.00 til {booking.Timeslot + 7}.00")
+    </h3>
+}
+<form method="post">
+    <input hidden value="@Model.BookingId" id="bookingId" />
+    <input type="submit" class="button" value="Fjern" />
+</form>

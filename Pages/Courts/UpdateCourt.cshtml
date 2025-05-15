@@ -1,4 +1,50 @@
 ﻿@page
 @model Gadevang_Tennis_Klub.Pages.Courts.UpdateCourtModel
 @{
+    ViewData["Title"] = "Opdater Bane";
+}
+
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Opdater Bane</h1>
+    <a asp-page="GetAllCours" class="btn btn-danger" role="button">Tilbage</a>
+</div>
+
+<form method="post" enctype="multipart/form-data">
+    <table>
+        <div>
+            <label asp-for="@Model.Court.ID" class="control-label">ID</label>
+            <input asp-for="@Model.Court.ID" class="form-control" readonly />
+        </div>
+        <div>
+            <label asp-for="@Model.Court.Name" class="control-label">Navn</label>
+            <br />
+            <span asp-validation-for="@Model.Court.Name" class="text-danger"></span>
+            <input asp-for="@Model.Court.Name" class="form-control" />
+        </div>
+
+        <br />
+
+        <!-- Dropdown menu for valg af Sex (default er 'Mand')-->
+        <div>
+            <label asp-for="@Model.Court.Type" class="control-label">Type</label>
+            <br />
+            <span asp-validation-for="@Model.Court.Type" class="text-danger"></span>
+            <select asp-for="@Model.Court.Type" class="form-control">
+                <option value="Indendørs Tennis">Indendørs Tennis</option>
+                <option value="Udendørs Tennis">Udendørs Tennis</option>
+                <option value="Indendørs Padel">Indendørs Padel</option>
+                <option value="Udendørs Padel">Udendørs Padel</option>
+            </select>
+        </div>
+
+        <br />
+
+        <td>&nbsp</td>
+        <td><Input type="submit" value="Opdater" /></td>
+    </table>
+</form>
+
+@if (Model.Message != null)
+{
+    <b class="text-danger">@Model.Message</b>
 }
