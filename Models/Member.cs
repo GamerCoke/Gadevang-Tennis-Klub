@@ -18,7 +18,7 @@ namespace Gadevang_Tennis_Klub.Models
         [Required(ErrorMessage = "Bio er påkrævet")]
         [StringLength(1024, ErrorMessage = "Bio må ikke være mere end 1024 karakterer lang")]
         [RegularExpression(
-           "^[a-zA-Z0-9?!,. ]+$",
+           "^[a-zA-Z0-9?!,. ]*$",
             ErrorMessage = "Ugyldigt tegn fundet i Bio, gyldige er: a-z A-Z 0-9 ? ! , ."
         )]
         public string Bio { get; set; }

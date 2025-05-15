@@ -65,11 +65,14 @@ CREATE TABLE Announcements (
     Type varchar(16) NOT NULL,
     Actual BIT NULL,
 
-    CONSTRAINT typeConstraint
-    CHECK (Type IN ('Service', 'Partner', 'General')),
+    -- Single-column CHECK: Fine inline
+    CONSTRAINT typeConstraint CHECK (Type IN ('Service', 'Partner', 'General')),
 
+    -- Multi-column CHECK: Must be at table level
     CONSTRAINT CK_Announcements_Actual_OnlyForService
-    CHECK (Actual IS NULL OR Type = 'Service'),
+        CHECK (
+            Actual IS NULL OR Type = 'Service'
+        ),
 
     FOREIGN KEY (MemberID) REFERENCES Members(ID)
 );

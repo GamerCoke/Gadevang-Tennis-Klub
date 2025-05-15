@@ -11,6 +11,10 @@ namespace Gadevang_Tennis_Klub.Models
         [BindProperty]
         [Required(ErrorMessage = "Navn er påkrævet")]
         [StringLength(256, ErrorMessage = "Navn må ikke være mere end 256 karakterer lang")]
+        [RegularExpression(
+           "^[a-zA-Z ]*$",
+            ErrorMessage = "Ugyldigt tegn fundet i Navn, gyldige er: a-z A-Z og mellemrum"
+        )]
         public string Name { get; set; }
 
         [BindProperty]
