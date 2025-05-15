@@ -57,18 +57,24 @@ CREATE TABLE Activities (
 );
 
 CREATE TABLE Announcements (
-	ID int identity(0, 1) PRIMARY KEY not null,
-	MemberID int not null,
-	Title varchar(32) not null,
-	Text varchar(1024) not null,
-	Upload DATE not null,
-	Type varchar(16) not null,
+    ID int identity(0, 1) PRIMARY KEY NOT NULL,
+    MemberID int NOT NULL,
+    Title varchar(32) NOT NULL,
+    Text varchar(1024) NOT NULL,
+    Upload DATE NOT NULL,
+    Type varchar(16) NOT NULL,
+    Actual BIT NULL,
 
-	CONSTRAINT typeConstraint
-	CHECK(Type in ('Service','Partner','General')),
+    CONSTRAINT typeConstraint
+    CHECK (Type IN ('Service', 'Partner', 'General')),
 
-	FOREIGN KEY (MemberID) REFERENCES Members(ID)
+    CONSTRAINT CK_Announcements_Actual_OnlyForService
+    CHECK (Actual IS NULL OR Type = 'Service'),
+
+    FOREIGN KEY (MemberID) REFERENCES Members(ID)
 );
+
+
 
 CREATE TABLE Trainers (
 	ID int identity(0, 1) PRIMARY KEY not null,
@@ -225,11 +231,11 @@ INSERT INTO Activities
 VALUES(6, 'Der skal spises flødeboller', 'Flødebolleædning', '2025-06-18 11:00:00', '2025-06-18 14:00:00')
 
 INSERT INTO Announcements
-VALUES (0, 'Søger Partner', 'Vil gerne spille noget tennis på tirsdag, er der nogen der er interesseret?', '2024-01-03', 'Partner')
+VALUES (0, 'Søger Partner', 'Vil gerne spille noget tennis på tirsdag, er der nogen der er interesseret?', '2024-01-03', 'Partner',null)
 INSERT INTO Announcements
-VALUES (2, 'Help', 'Jeg er ikke sikker på hvad jeg skal gøre.', '0001-01-02', 'General')
+VALUES (2, 'Help', 'Jeg er ikke sikker på hvad jeg skal gøre.', '0001-01-02', 'General', null)
 INSERT INTO Announcements
-VALUES (2, '???', 'Mortalis es fatum. Nalyë, caurelye istya.', '2025-04-29', 'General')
+VALUES (2, '???', 'Mortalis es fatum. Nalyë, caurelye istya.', '2025-04-29', 'General', null)
 
 INSERT INTO Trainers
 VALUES ('Kenneth', '12332165', 'Kenneth@mail.dk', null)

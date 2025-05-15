@@ -25,6 +25,7 @@ namespace Gadevang_Tennis_Klub.Models
         [StringLength(16, ErrorMessage = "Type må ikke være mere end 16 karakterer lang")]
         public string Type { get; set; }
         public IMember Announcer { get; set; }
+        public bool Actual {get; set;} 
 
         public Announcement(IMember announcer)
         {

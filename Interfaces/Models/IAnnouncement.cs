@@ -8,5 +8,6 @@
         public DateTime UploadTime { get; set; }
         public string Type { get; set; }
         public IMember Announcer { get; set; }
+        public bool Actual { get; set; }
     }
 }

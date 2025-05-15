@@ -1,0 +1,40 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.Teams.GetAllTeamsModel
+@{
+    ViewData["Title"] = "All Teams";
+}
+
+<h1>All Teams</h1>
+
+@if (Model.Teams?.Any() == true)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Trainer</th>
+                <th>Capacity</th>
+                <th>Price</th>
+                <th>Active Day</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var team in Model.Teams)
+            {
+                <tr>
+                    <td>@team.Name</td>
+                    <td>@team.Description</td>
+                    <td>@(team.Trainer?.Name ?? "N/A")</td>
+                    <td>@team.Capacity</td>
+                    <td>@team.Price</td>
+                    <td>@team.ActiveDay</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No teams found.</p>
+}
