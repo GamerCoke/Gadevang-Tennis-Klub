@@ -36,6 +36,17 @@
         .dropdown-toggle::after {
         color: white !important; /* Set login button arrows color to white */
         }
+
+        /* Fixing the footer */
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        body > .container {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
@@ -144,7 +155,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - Gadevang_Tennis_Klub - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2025 - Gadevang Tennisklub - Gadevangsvej 145B - 3400 Hillerød @*  <a asp-area="" asp-page="/Privacy">Privacy *@</a>
         </div>
     </footer>
 
