@@ -1,0 +1,83 @@
+﻿@page
+@model GetAllAnnouncementsModel
+@{
+    ViewData["Title"] = "All Announcements";
+}
+
+<h1>All Announcements</h1>
+
+@* ---------------- Service Announcements ---------------- *@
+<h2>Service Beskeder</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Text</th>
+            <th>Upload</th>
+            <th>Actual</th>
+            <th>Announcer</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var announcement in Model.ServiceAnnouncements)
+        {
+            <tr>
+                <td>@announcement.Title</td>
+                <td>@announcement.Text</td>
+                <td>@announcement.UploadTime.ToShortDateString()</td>
+                <td>
+                    <input type="checkbox" disabled @(announcement.Actual == true ? "checked" : "") />
+                </td>
+                <td>@announcement.Announcer?.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@* ---------------- Partner Announcements ---------------- *@
+<h2>Søger Partner</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Text</th>
+            <th>Upload</th>
+            <th>Announcer</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var announcement in Model.PartnerAnnouncements)
+        {
+            <tr>
+                <td>@announcement.Title</td>
+                <td>@announcement.Text</td>
+                <td>@announcement.UploadTime.ToShortDateString()</td>
+                <td>@announcement.Announcer?.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@* ---------------- General Announcements ---------------- *@
+<h2>Generele Fora</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Text</th>
+            <th>Upload</th>
+            <th>Announcer</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var announcement in Model.GeneralAnnouncements)
+        {
+            <tr>
+                <td>@announcement.Title</td>
+                <td>@announcement.Text</td>
+                <td>@announcement.UploadTime.ToShortDateString()</td>
+                <td>@announcement.Announcer?.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
