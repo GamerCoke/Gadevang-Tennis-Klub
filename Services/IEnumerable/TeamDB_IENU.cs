@@ -16,7 +16,7 @@ namespace Gadevang_Tennis_Klub.Services.IEnumerable
             throw new NotImplementedException();
         }
 
-        public Task <List<ITeam>> GetAllTeamAsync()
+        public Task <List<ITeam>> GetAllTeamsAsync()
         {
             throw new NotImplementedException();
         }

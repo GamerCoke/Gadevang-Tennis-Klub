@@ -4,7 +4,7 @@ namespace Gadevang_Tennis_Klub.Interfaces.Services
 {
     public interface ITeamDB
     {
-        public Task <List<ITeam>> GetAllTeamAsync();
+        public Task <List<ITeam>> GetAllTeamsAsync();
         public Task <bool> CreateTeamAsync(ITeam team);
         public Task <bool> DeleteTeamAsync(int teamID);
         public Task<bool> UpdateTeamAsync(ITeam team);

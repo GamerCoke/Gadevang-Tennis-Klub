@@ -73,7 +73,7 @@ public class TeamDB_SQL : ITeamDB
         }
     }
 
-    public async Task<List<ITeam>> GetAllTeamAsync()
+    public async Task<List<ITeam>> GetAllTeamsAsync()
     {
         List<ITeam> teams = new();
         using SqlConnection connection = new SqlConnection(_connectionString);
