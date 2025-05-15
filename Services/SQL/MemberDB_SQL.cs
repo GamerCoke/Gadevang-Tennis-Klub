@@ -36,6 +36,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                 com.Parameters.AddWithValue("@IsAdmin", int isA = member.IsAdmin == false ? 0 : 1);
                 com.Parameters.AddWithValue("@Image", string image = member.Image == null ? "null" : member.Image);
                  */
+
                 string image = member.Image == null ? "null" : $"'{member.Image}'";
                 string Bday = $"{member.Dob.Year}-{member.Dob.Month}-{member.Dob.Day}";
                 int isA = member.IsAdmin == false ? 0 : 1;
