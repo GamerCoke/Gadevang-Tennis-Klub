@@ -98,6 +98,9 @@
                                     <li>
                                         <a asp-area="" asp-page="/User/MyPage" class="dropdown-item" style="text-transform: none;">Mig</a>
                                     </li>
+                                    <li>
+                                        <a asp-area="" asp-page="/Teams/GetAllTeams" class="dropdown-item" style="text-transform: none;">Hold</a>
+                                    </li>
                                     @if (bool.Parse(Context.Session.GetString("User").Split('|')[1]))
                                     {
                                         <li>
@@ -111,9 +114,6 @@
                                         </li>
                                         <li>
                                             <a asp-area="" asp-page="/Trainers/ReadAllTrainers" class="dropdown-item" style="text-transform: none;">Trænere</a>
-                                        </li>
-                                        <li>
-                                            <a asp-area="" asp-page="/Teams/GetAllTeams" class="dropdown-item" style="text-transform: none;">Hold</a>
                                         </li>
                                         <li>
                                             <a asp-area="" asp-page="/Events/GetAllEvents" class="dropdown-item" style="text-transform: none;">Begivenheder</a>
