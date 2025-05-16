@@ -1,4 +1,193 @@
 ﻿@page
+@using Gadevang_Tennis_Klub.Interfaces.Models
 @model Gadevang_Tennis_Klub.Pages.CourtBookings.CourtBookingTESTModel
 @{
+    ViewData["Title"] = "Booking";
+
+    string _red = "red";
+    string _green = "#87d49a";
+    string _gray = "gray";
 }
+
+<style>
+    .btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Horizontal centering */
+    align-items: center; /* Vertical centering */
+    }
+
+    .booking-btn {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #eeeeee;
+    border-radius: 5px; /* 👈 This adds rounded corners */
+    }
+
+    .court-btn {
+    width: 20px;
+    height: 20px;
+    border: none;
+    background: none;
+    pointer-events: none; /* Prevent any interactions (clicking) */
+    }
+
+    td {
+    padding: 0px !important; /* The padding inside each column in the body rows */
+    }
+
+    .custom-date-text {
+    font-size: 14px;
+    text-align: center;
+    } 
+</style>
+
+<h1 class="text-center">Banebooking</h1>
+
+<br />
+
+<!-- Section for choosing area & precise dates -->
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <!-- Column for choosing area -->
+            <div class="col-auto">
+                <h5>OMRÅDE:</h5>
+                <form method="post" asp-page-handler="NewAreaChosen">
+                    <div class="form-group">
+                        <select asp-for="SelectedArea" asp-items="@Model.AreaSelectList" class="form-select" onchange="this.form.submit()"></select>
+                        <!-- Preserve the selected date -->
+                        <input type="hidden" name="SelectedDate" value="@Model.SelectedDate.ToString("yyyy-MM-dd")" />
+                    </div>
+                </form>
+            </div>
+            <!-- Column for choosing date -->
+            <div class="col-auto text-end">
+                <h5>VÆLG/ÆNDRE DATO:</h5>
+                <div class="d-flex align-items-center">
+
+                    <!-- Button: Previous -->
+                    <form method="post" asp-page-handler="Previous" class="p-1 d-inline-block">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-arrow-left"></i>
+                        </button>
+                        <input type="hidden" name="SelectedDate" value="@Model.SelectedDate.ToString("yyyy-MM-dd")" />
+                        <input type="hidden" asp-for="SelectedArea" />
+                    </form>
+
+                    <!-- Datepicker -->
+                    <form method="post" asp-page-handler="NewDateChosen" class="p-1 d-inline-block">
+                        <div>
+                            <div class="input-group">
+                                <input type="date" asp-for="SelectedDate" class="form-control" value="@Model.SelectedDate.ToString("yyyy-MM-dd")" onchange="this.form.submit()">
+                                <input type="hidden" asp-for="SelectedArea" />
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Button: Today -->
+                    <form method="post" asp-page-handler="Today" class="p-1 d-inline-block">
+                        <button type="submit" class="btn btn-primary">Today</button>
+                        <input type="hidden" name="SelectedDate" value="@Model.SelectedDate.ToString("yyyy-MM-dd")" />
+                        <input type="hidden" asp-for="SelectedArea" />
+                    </form>
+
+                    <!-- Button: Next -->
+                    <form method="post" asp-page-handler="Next" class="p-1 d-inline-block">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-arrow-right"></i>
+                        </button>
+                        <input type="hidden" name="SelectedDate" value="@Model.SelectedDate.ToString("yyyy-MM-dd")" />
+                        <input type="hidden" asp-for="SelectedArea" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />
+
+<!-- Section for actual booking -->
+<div class="card">
+    <div class="card-body">
+        <!-- Booking table -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class ="custom-date-text">Kl.</th>
+                    <!-- Display day of the week (weekday name above the actual weekday date) -->
+                    @foreach (DateTime weekDay in @Model.CurrentWeekDays)
+                    {
+                        <th class="custom-date-text" style="background-color: @(weekDay.Date == DateTime.Today ? "#fcdbae" : "")">
+                            @weekDay.Date.ToString("dddd") <br />
+                            @weekDay.Date.ToString("d. MMMM yyyy")
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <!-- Empty column above the timeSlots -->
+                    <td></td>
+                    @foreach (DateTime weekDay in @Model.CurrentWeekDays) // For each day of the week.
+                    {
+                        <td style="text-align: center">
+                            <div class="btn-group">
+                                @if (Model.CourtsDict != null)
+                                {
+                                    @foreach (ICourt court in @Model.CourtsDict.Values)
+                                    {
+                                        <button class="court-btn">
+                                            <span style="display: flex; justify-content:center; align-items:center;">
+                                                @($"{court.ID} ")
+                                            </span>
+                                        </button>
+                                    }
+                                }
+                            </div>
+                        </td>
+                    }
+                </tr>
+                @for (int i = Model.Hour_From; i <= @Model.Hour_To; i++) // For each hour from 6:00 to 23:00.
+                {
+                    <tr>
+                        <!-- Show the time -->
+                        <td class="text-end" style="width: 40px">
+                            @i:00
+                        </td>
+                        @foreach (DateTime weekDay in @Model.CurrentWeekDays) // For each day of the week.
+                        {
+                            <td>
+                                <div class="btn-group">
+                                    @foreach (ICourt courtSlot in Model.CourtsDict.Values)
+                                    {
+                                        <!-- Create a button for each court at this timeSlot, with button color based on booking status -->
+                                        <button type="button"
+                                                class="booking-btn">
+                  @*                               onclick="openBookingModal('@Model.CurrentArea.ID', '@courtSlot.Court.CourtNo', '@courtSlot.Date', '@courtSlot.Date.ToShortDateString()', '@courtSlot.Date.Hour:00')"
+                                                style="background-color: @(!courtSlot.IsAvailable ? _gray : (courtSlot.IsBooked ? _red : _green));"
+                                                disabled="@( (!courtSlot.IsAvailable || courtSlot.IsBooked) ? "disabled" : null )"
+                                                title="@(!courtSlot.IsAvailable ? "Unavailable" : (courtSlot.IsBooked ? "Booked" : "Available"))"> *@
+                                        </button>
+                                    }
+@*                                     @foreach (CourtSlot courtSlot in weekDay.CourtSlots.Where(c => c.Date.Hour == i)) // Filter court slots by the current hour.
+                                    {
+                                        <!-- Create a button for each court at this timeSlot, with button color based on booking status -->
+                                        <button type="button"
+                                                class="booking-btn"
+                                                onclick="openBookingModal('@Model.CurrentArea.ID', '@courtSlot.Court.CourtNo', '@courtSlot.Date', '@courtSlot.Date.ToShortDateString()', '@courtSlot.Date.Hour:00')"
+                                                style="background-color: @(!courtSlot.IsAvailable ? _gray : (courtSlot.IsBooked ? _red : _green));"
+                                                disabled="@( (!courtSlot.IsAvailable || courtSlot.IsBooked) ? "disabled" : null )"
+                                                title="@(!courtSlot.IsAvailable ? "Unavailable" : (courtSlot.IsBooked ? "Booked" : "Available"))">
+                                        </button>
+                                    } *@
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

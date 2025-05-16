@@ -40,7 +40,7 @@
             <label for="teamId">Vælg et hold:</label>
             <br />
             <select name="teamId" id="teamId">
-                @foreach (var team in await Model.TeamDB.GetAllTeamAsync())
+                @foreach (var team in await Model.TeamDB.GetAllTeamsAsync())
                 {
                     @if (team.ID == Model.TeamId)
                     {
