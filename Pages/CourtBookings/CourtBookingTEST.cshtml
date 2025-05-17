@@ -7,6 +7,7 @@
     string _red = "red";
     string _green = "#87d49a";
     string _gray = "gray";
+    string _orange = "#fabe6b";
 }
 
 <style>
@@ -22,6 +23,10 @@
     height: 20px;
     border: 1px solid #eeeeee;
     border-radius: 5px; /* 👈 This adds rounded corners */
+        /* These 3 makes sure any icons in the buttons stays in the middle */
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .court-btn {
@@ -112,82 +117,185 @@
 <div class="card">
     <div class="card-body">
         <!-- Booking table -->
-        <table class="table">
-            <thead>
-                <tr>
-                    <th class ="custom-date-text">Kl.</th>
-                    <!-- Display day of the week (weekday name above the actual weekday date) -->
-                    @foreach (DateTime weekDay in @Model.CurrentWeekDays)
-                    {
-                        <th class="custom-date-text" style="background-color: @(weekDay.Date == DateTime.Today ? "#fcdbae" : "")">
-                            @weekDay.Date.ToString("dddd") <br />
-                            @weekDay.Date.ToString("d. MMMM yyyy")
-                        </th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <!-- Empty column above the timeSlots -->
-                    <td></td>
-                    @foreach (DateTime weekDay in @Model.CurrentWeekDays) // For each day of the week.
-                    {
-                        <td style="text-align: center">
-                            <div class="btn-group">
-                                @if (Model.CourtsDict != null)
-                                {
-                                    @foreach (ICourt court in @Model.CourtsDict.Values)
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class ="custom-date-text">Kl.</th>
+                        <!-- Display day of the week (with weekday name shown above the actual weekday date) -->
+                        @foreach (DateTime weekDay in @Model.CurrentWeekDays)
+                        {
+                            <th class="custom-date-text" style="background-color: @(weekDay.Date == DateTime.Today ? "#fcdbae !important" : "")">
+                                @weekDay.ToString("dddd") <br />
+                                @weekDay.ToString("d. MMMM yyyy")
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <!-- A single empty column above the timeSlots -->
+                        <td></td>
+                        @foreach (DateTime weekDay in @Model.CurrentWeekDays) // For each day of the week.
+                        {
+                            <td style="text-align: center">
+                                <div class="btn-group">
+                                    @foreach (ICourt court in @Model.CourtsDict[Model.CurrentArea]) // And for each court.
                                     {
+                                        <!-- Show court ID's -->
                                         <button class="court-btn">
                                             <span style="display: flex; justify-content:center; align-items:center;">
                                                 @($"{court.ID} ")
                                             </span>
                                         </button>
                                     }
-                                }
-                            </div>
-                        </td>
-                    }
-                </tr>
-                @for (int i = Model.Hour_From; i <= @Model.Hour_To; i++) // For each hour from 6:00 to 23:00.
-                {
-                    <tr>
-                        <!-- Show the time -->
-                        <td class="text-end" style="width: 40px">
-                            @i:00
-                        </td>
-                        @foreach (DateTime weekDay in @Model.CurrentWeekDays) // For each day of the week.
-                        {
-                            <td>
-                                <div class="btn-group">
-                                    @foreach (ICourt courtSlot in Model.CourtsDict.Values)
-                                    {
-                                        <!-- Create a button for each court at this timeSlot, with button color based on booking status -->
-                                        <button type="button"
-                                                class="booking-btn">
-                  @*                               onclick="openBookingModal('@Model.CurrentArea.ID', '@courtSlot.Court.CourtNo', '@courtSlot.Date', '@courtSlot.Date.ToShortDateString()', '@courtSlot.Date.Hour:00')"
-                                                style="background-color: @(!courtSlot.IsAvailable ? _gray : (courtSlot.IsBooked ? _red : _green));"
-                                                disabled="@( (!courtSlot.IsAvailable || courtSlot.IsBooked) ? "disabled" : null )"
-                                                title="@(!courtSlot.IsAvailable ? "Unavailable" : (courtSlot.IsBooked ? "Booked" : "Available"))"> *@
-                                        </button>
-                                    }
-@*                                     @foreach (CourtSlot courtSlot in weekDay.CourtSlots.Where(c => c.Date.Hour == i)) // Filter court slots by the current hour.
-                                    {
-                                        <!-- Create a button for each court at this timeSlot, with button color based on booking status -->
-                                        <button type="button"
-                                                class="booking-btn"
-                                                onclick="openBookingModal('@Model.CurrentArea.ID', '@courtSlot.Court.CourtNo', '@courtSlot.Date', '@courtSlot.Date.ToShortDateString()', '@courtSlot.Date.Hour:00')"
-                                                style="background-color: @(!courtSlot.IsAvailable ? _gray : (courtSlot.IsBooked ? _red : _green));"
-                                                disabled="@( (!courtSlot.IsAvailable || courtSlot.IsBooked) ? "disabled" : null )"
-                                                title="@(!courtSlot.IsAvailable ? "Unavailable" : (courtSlot.IsBooked ? "Booked" : "Available"))">
-                                        </button>
-                                    } *@
                                 </div>
                             </td>
                         }
                     </tr>
-                }
-            </tbody>
-        </table>
+                    @for (int i = 0; i <= @Model.TimeSlots; i++) // For each hour/time slot, for example from 6:00 to 23:00.
+                    {
+                        <tr>
+                            <!-- Show the time slots -->
+                            <td class="text-end" style="width: 40px">
+                                @(i+Model.HourToBeginFrom):00
+                            </td>
+                            @foreach (DateTime weekDay in @Model.CurrentWeekDays) // For each day of the week.
+                            {
+                                <td>
+                                    <div class="btn-group">
+                                        @foreach (ICourt courtSlot in Model.CourtsDict[Model.CurrentArea]) // And for each court.
+                                        {
+                                            bool isAvailable = Model.CheckIsAvailable(courtSlot, weekDay, i);
+                                            bool isBooked = Model.CheckIsBooked(courtSlot, weekDay, i);
+                                            bool isBookedByMe = false;
+                                            if (isBooked) { isBookedByMe = Model.CheckIsBookedByMe(courtSlot, weekDay, i); }
+
+                                            <form method="post" asp-page-handler="OpenBookCourtModal">
+                                                <input type="hidden" name="courtID" value="@courtSlot.ID" />
+                                                <input type="hidden" name="date" value="@weekDay" />
+                                                <input type="hidden" name="timeSlot" value="@i" />
+                                                <input type="hidden" name="SelectedDate" value="@Model.SelectedDate.ToString("yyyy-MM-dd")" />
+                                                <input type="hidden" asp-for="SelectedArea" />
+
+                                                <!-- Create a button for each court at this timeSlot, with button color based on booking status -->
+                                                <button type="submit"
+                                                        class="booking-btn"
+                                                        style="background-color: @(!isAvailable ? _gray : (isBooked ? (isBookedByMe ? _orange : _red) : _green));"
+                                                        disabled="@( (!isAvailable || isBooked) ? "disabled" : null )"
+                                                        title="@await Model.GetHoverTitle(courtSlot, weekDay, i, isAvailable, isBooked)">
+                                                        @if (isBooked)
+                                                        {
+                                                            <!-- Icon --> 
+                                                            <i class="@Model.GetIsBookedIcon(courtSlot, weekDay, i)" style="font-size: 15px;"></i>
+                                                        }
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <button type="button" class="booking-btn" style="background-color: @_gray; width: 20px; height: 20px;" disabled></button>
+                <span>Kan ikke bookes</span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <button type="button" class="booking-btn" style="background-color: @_green; width: 20px; height: 20px;" disabled></button>
+                <span>Ledig</span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <button type="button" class="booking-btn" style="background-color: @_orange; width: 20px; height: 20px;" disabled>
+                    <i class="fa-solid fa-user" style="font-size: 15px;"></i>
+                </button>
+                <span>Dine bookinger</span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <button type="button" class="booking-btn" style="background-color: @_red; width: 20px; height: 20px;" disabled>
+                    <i class="fa-solid fa-user" style="font-size: 15px;"></i>
+                </button>
+                <span>Medlemsbooking</span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <button type="button" class="booking-btn" style="background-color: @_red; width: 20px; height: 20px;" disabled>
+                    <i class="fa-solid fa-clock" style="font-size: 15px;"></i>
+                </button>
+                <span>Holdtræning</span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <button type="button" class="booking-btn" style="background-color: @_red; width: 20px; height: 20px;" disabled>
+                    <i class="fa-solid fa-calendar" style="font-size: 15px;"></i>
+                </button>
+                <span>Begivenhed</span>
+            </div>
+
+        </div>
     </div>
 </div>
+
+<!-- The modal (popup box) -->
+<div class="modal" id="bookingConfirmModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="BookCourt">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title">Bekræft Booking</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    Er du sikker på at du ønsker at booke 
+                    <strong>
+                        bane @Model.CurrentCourt?.ID @Model.CurrentCourt?.Type
+                    </strong><br />
+                    kl. 
+                    <strong>
+                        @(Model.CurrentTimeSlot+Model.HourToBeginFrom):00
+                    </strong>
+                    d. 
+                    <strong>
+                        @Model.CurrentDate?.ToShortDateString()
+                    </strong>
+                    ?
+                </div>
+
+                <input type="hidden" name="courtID" value="@Model.CurrentCourt?.ID" />
+                <input type="hidden" name="date" value="@Model.CurrentDate" />
+                <input type="hidden" name="timeSlot" value="@Model.CurrentTimeSlot" />
+                <input type="hidden" name="SelectedDate" value="@Model.SelectedDate.ToString("yyyy-MM-dd")" />
+                <input type="hidden" asp-for="SelectedArea" />
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tilbage</button>
+                    <button type="submit" class="btn btn-success">Book bane</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript function to help open the Modal (popup box) -->
+@if (Model.CurrentCourt != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function ()
+        {
+            var myModal = new bootstrap.Modal(document.getElementById('bookingConfirmModal'));
+            myModal.show();
+        });
+    </script>
+}
