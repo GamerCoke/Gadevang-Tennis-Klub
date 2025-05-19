@@ -76,23 +76,36 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav ms-auto text-uppercase">
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-page="/CourtBookings/CourtBookingTEST">Booking</a>
+                        <!-- Menus -->
+                        <li class="nav-item"><a class="nav-link text-light" asp-area="" asp-page="/Informations/AboutUs">Om Os</a></li>
+                        <li class="nav-item"><a class="nav-link text-light" asp-area="" asp-page="/Events/Calendar">Kalender</a></li>
+                        <li class="nav-item"><a class="nav-link text-light" asp-area="" asp-page="/CourtBookings/Members/CreateMemberBooking">Banebooking</a></li>
+                        <li class="nav-item"><a class="nav-link text-light" asp-area="" asp-page="/CourtBookings/CourtBooking">Banebooking NY</a></li>
+
+                        <!-- Dropdown menu for teams -->
+                        @using Gadevang_Tennis_Klub.Interfaces.Models
+                        @using Gadevang_Tennis_Klub.Interfaces.Services
+                        @inject ITeamDB _teamDB
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-light dropdown-toggle" id="coursesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Holdoversigt
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="coursesDropdown">
+                                @foreach (ITeam team in await _teamDB.GetAllTeamsAsync())
+                                {
+                                    <!-- Link til en GetTeam side som viser info om holdet ?? -->
+                                    <li><a asp-page="/Teams/GetAllTeams" asp-route-teamId="@team.ID" class="dropdown-item" style="text-transform: none;">@team.Name</a></li>
+                                }
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-page="/Informations/AboutUs">Om Klubben</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-page="/Events/Calendar">Kalender</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-page="/CourtBookings/Members/CreateMemberBooking">Banebooking</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-page="/Informations/Gallery">Galleri</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-page="/Informations/Rules">Tennisregler</a>
+                        <!-- Dropdown menu for about us -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-light dropdown-toggle" id="coursesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Om Klubben</a>
+                            <ul class="dropdown-menu" aria-labelledby="coursesDropdown">
+                                <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/???">Trænere</a></li>
+                                <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Informations/Gallery">Galleri</a></li>
+                                <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Informations/Rules">Tennisregler</a></li>
+                            </ul>
                         </li>
                         @if (string.IsNullOrEmpty(Context.Session.GetString("User")))
                         {
@@ -114,30 +127,14 @@
                                     </li>
                                     @if (bool.Parse(Context.Session.GetString("User").Split('|')[1]))
                                     {
-                                        <li>
-                                            <hr class="dropdown-divider"></hr>
-                                        </li>
-                                        <li>
-                                            <a asp-area="" asp-page="/Members/GetAllMembers" class="dropdown-item" style="text-transform: none;">Medlemmer</a>
-                                        </li>
-                                        <li>
-                                            <a asp-area="" asp-page="/Courts/GetAllCourts" class="dropdown-item" style="text-transform: none;">Baner</a>
-                                        </li>
-                                        <li>
-                                            <a asp-area="" asp-page="/Trainers/ReadAllTrainers" class="dropdown-item" style="text-transform: none;">Trænere</a>
-                                        </li>
-                                        <li>
-                                            <a asp-area="" asp-page="/Teams/GetAllTeams" class="dropdown-item" style="text-transform: none;">Hold</a>
-                                        </li>
-                                        <li>
-                                            <a asp-area="" asp-page="/Events/GetAllEvents" class="dropdown-item" style="text-transform: none;">Begivenheder</a>
-                                        </li>
-                                        <li>
-                                            <a asp-area="" asp-page="/CourtBookings/Events/ViewEventCourtBookings" class="dropdown-item" style="text-transform: none;">Baner Bookede for Begivenheder</a>
-                                        </li>
-                                        <li>
-                                            <a asp-area="" asp-page="/CourtBookings/Teams/ViewTeamCourtBookings" class="dropdown-item" style="text-transform: none;">Baner Bookede for Hold</a>
-                                        </li>
+                                        <li><hr class="dropdown-divider"></hr></li>
+                                        <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Members/GetAllMembers">Medlemmer</a></li>
+                                        <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Courts/GetAllCourts">Baner</a></li>
+                                        <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Trainers/ReadAllTrainers">Trænere</a></li>
+                                        <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Teams/GetAllTeams">Hold</a></li>
+                                        <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Events/GetAllEvents">Begivenheder</a></li>
+                                        <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/CourtBookings/Events/ViewEventCourtBookings">Baner Bookede for Begivenheder</a></li>
+                                        <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/CourtBookings/Teams/ViewTeamCourtBookings">Baner Bookede for Hold</a></li>
                                     }
                                     <li>     
                                       <hr class="dropdown-divider"></hr>

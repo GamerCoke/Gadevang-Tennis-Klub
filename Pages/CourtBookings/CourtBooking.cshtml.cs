@@ -4,17 +4,16 @@ using Gadevang_Tennis_Klub.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Gadevang_Tennis_Klub.Pages.CourtBookings
 {
-    public class CourtBookingTESTModel : PageModel
+    public class CourtBookingModel : PageModel
     {
         ICourtDB _courtDB;
-        ICourtBookingDB _courtBookingDB;
         ITeamDB _teamDB;
         IEventDB _eventDB;
 
+        public ICourtBookingDB CourtBookingDB { get; private set; }
 
         public string? CurrentUser { get; private set; }
 
@@ -56,10 +55,10 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
 
 
 
-        public CourtBookingTESTModel(ICourtDB courtDB, ICourtBookingDB courtBookingDB, ITeamDB teamDB, IEventDB eventDB)
+        public CourtBookingModel(ICourtDB courtDB, ICourtBookingDB courtBookingDB, ITeamDB teamDB, IEventDB eventDB)
         {
             _courtDB = courtDB;
-            _courtBookingDB = courtBookingDB;
+            CourtBookingDB = courtBookingDB;
             _teamDB = teamDB;
             _eventDB = eventDB;
 
@@ -106,7 +105,7 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
         }
         private async Task GenerateCurrentBookingsDict()
         {
-            List<ICourtBooking> currentCourtBookings = await _courtBookingDB.GetAllCourtBookingsAsync();
+            List<ICourtBooking> currentCourtBookings = await CourtBookingDB.GetAllCourtBookingsAsync();
             foreach (ICourtBooking courtBooking in currentCourtBookings)
             {
                 CurrentBookingsDict.Add((courtBooking.Court_ID, courtBooking.Date, courtBooking.Timeslot), courtBooking);
@@ -141,27 +140,30 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
             }
         }
 
-        public bool CheckIsAvailable(ICourt court, DateTime date, int timeSlot)
+        public bool CheckIsWithin14Days(DateTime date, int timeSlot)
         {
-            DateTime slotDateTime = date.AddHours(timeSlot+HourToBeginFrom); // Combine date and time
+            DateTime slotDateTime = date.AddHours(timeSlot + HourToBeginFrom); // Combine date and time
             DateTime now = DateTime.Now;
 
             bool isWithin14Days = slotDateTime >= now && slotDateTime <= now.AddDays(14);
 
             return isWithin14Days;
         }
+
+        public bool CheckIsAvailable(DateTime date, int timeSlot)
+        {
+            return CheckIsWithin14Days(date, timeSlot);
+        }
+
         public bool CheckIsBooked(ICourt court, DateTime date, int timeSlot)
         {
             var lookupKey = (court.ID, DateOnly.FromDateTime(date), timeSlot);
-
             return CurrentBookingsDict.ContainsKey(lookupKey);
         }
+
         public bool CheckIsBookedByMe(ICourt court, DateTime date, int timeSlot)
         {
-            CurrentUser = HttpContext.Session.GetString("User");
-            if (string.IsNullOrEmpty(CurrentUser)) return false; // return early if a user could not be found.
-
-            int memberID = int.Parse(CurrentUser.Split('|')[0]); // Get the member id
+            if (!int.TryParse(HttpContext.Session.GetString("User")?.Split('|')[0], out int memberID)) return false; // return early if a user could not be found.
 
             var lookupKey = (court.ID, DateOnly.FromDateTime(date), timeSlot);
             return CurrentBookingsDict.TryGetValue(lookupKey, out ICourtBooking? courtBooking) && courtBooking?.Member_ID == memberID;
@@ -169,9 +171,7 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
 
         public async Task<string> GetHoverTitle(ICourt court, DateTime date, int timeSlot, bool isAvailable, bool isBooked)
         {
-            string hoverTitle = !isAvailable ? "Kan ikke bookes" : (isBooked ? await GetIsBookedString(court, date, timeSlot) : GetIsAvailableString(court, timeSlot));
-
-            return hoverTitle;
+            return !isAvailable ? "Kan ikke bookes" : (isBooked ? await GetIsBookedString(court, date, timeSlot) : GetIsAvailableString(court, timeSlot));
         }
 
         private async Task<string> GetIsBookedString(ICourt court, DateTime date, int timeSlot)
@@ -180,35 +180,29 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
             if (!CurrentBookingsDict.TryGetValue(lookupKey, out ICourtBooking? courtBooking)) // return early if the booking could not be found.
                 return "";
 
+            // Check if it's a team booking
             if (courtBooking.Team_ID is int bookingTeamID)
             {
                 ITeam? team = await _teamDB.GetTeamByIDAsync(bookingTeamID);
                 return $"Holdtræning: {team?.Name}";
             }
 
+            // Check if it's a member booking
             if (courtBooking.Member_ID is int bookingMemberID)
             {
-                string? currentUser = HttpContext.Session.GetString("User");
-                if (!string.IsNullOrEmpty(currentUser))
+                if (int.TryParse(HttpContext.Session.GetString("User")?.Split('|')[0], out int memberID) && 
+                    bookingMemberID == memberID)
                 {
-                    if (int.TryParse(currentUser.Split('|')[0], out int memberID))
-                    {
-                        if (bookingMemberID == memberID)
-                        {
-                            List<IMember> participants = courtBooking.Participants.ToList();
-                            string participantsString = "";
-                            foreach (IMember participant in participants)
-                            {
-                                participantsString += $"\n{ participant.Name}";
-                            }
-                            return $"Din booking: Bane {court.ID} {court.Type} kl. {timeSlot + HourToBeginFrom}:00" +
-                                    $"\nBooket med: {participantsString}";
-                        }
-                    }
+                    List<IMember> participants = courtBooking.Participants.ToList();
+                    string participantNames = participants.Count == 0 ? "boldmaskinen" : $"\n{string.Join("\n", participants.Select(p => p.Name))}";
+
+                    return $"Din booking: Bane {court.ID} {court.Type} kl. {timeSlot + HourToBeginFrom}:00" +
+                            $"\nBooket med: {participantNames}";
                 }
                 return "Medlemsbooking";
             }
 
+            // Check if it's an event booking
             if (courtBooking.Event_ID is int bookingEventID)
             {
                 IEvent? ev = await _eventDB.GetEventByIDAsync(bookingEventID);
@@ -232,12 +226,10 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
             {
                 return $"fa-solid fa-clock";
             }
-
             if (courtBooking.Member_ID is int bookingMemberID)
             {
                 return "fa-solid fa-user";
             }
-
             if (courtBooking.Event_ID is int bookingEventID)
             {
                 return $"fa-solid fa-calendar";
@@ -258,8 +250,7 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
 
         public async Task<IActionResult> OnPostOpenBookCourtModal(int courtID, DateTime date, int timeSlot)
         {
-            CurrentUser = HttpContext.Session.GetString("User");
-            if (string.IsNullOrEmpty(CurrentUser))
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("User")))
             {
                 return RedirectToPage(@"/User/Login");
             }
@@ -275,27 +266,25 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
                 ViewData["ErrorMessage"] = ex.Message;
             }
 
-            //SelectedDate = date;
             await OnPageReload();
             return Page();
         }
 
         public async Task<IActionResult> OnPostBookCourt(int courtID, DateTime date, int timeSlot)
         {
-            CurrentUser = HttpContext.Session.GetString("User");
-            int memberID = int.Parse(CurrentUser.Split('|')[0]); // Get the member id
-
-            try
-            { 
-                ICourtBooking newCourtBooking = new CourtBooking(0, courtID, DateOnly.FromDateTime(date), timeSlot, null, memberID, null);
-                await _courtBookingDB.CreateCourtBookingAsync(newCourtBooking);
-            }
-            catch (Exception ex)
+            if (int.TryParse(HttpContext.Session.GetString("User")?.Split('|')[0], out int memberID))
             {
-                ViewData["ErrorMessage"] = ex.Message;
+                try
+                {
+                    ICourtBooking newCourtBooking = new CourtBooking(0, courtID, DateOnly.FromDateTime(date), timeSlot, null, memberID, null);
+                    await CourtBookingDB.CreateCourtBookingAsync(newCourtBooking);
+                }
+                catch (Exception ex)
+                {
+                    ViewData["ErrorMessage"] = ex.Message;
+                }
             }
 
-            //SelectedDate = date;
             await OnPageReload();
             return Page();
         }

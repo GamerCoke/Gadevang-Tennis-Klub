@@ -1,8 +1,8 @@
 ﻿@page
 @using Gadevang_Tennis_Klub.Interfaces.Models
-@model Gadevang_Tennis_Klub.Pages.CourtBookings.CourtBookingTESTModel
+@model Gadevang_Tennis_Klub.Pages.CourtBookings.CourtBookingModel
 @{
-    ViewData["Title"] = "Booking";
+    ViewData["Title"] = "CourtBooking";
 
     string _red = "red";
     string _green = "#87d49a";
@@ -23,10 +23,10 @@
     height: 20px;
     border: 1px solid #eeeeee;
     border-radius: 5px; /* 👈 This adds rounded corners */
-        /* These 3 makes sure any icons in the buttons stays in the middle */
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    /* These 3 makes sure any icons in the buttons stays in the middle */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     }
 
     .court-btn {
@@ -50,6 +50,13 @@
 <h1 class="text-center">Banebooking</h1>
 
 <br />
+
+@* @if (int.TryParse(HttpContext.Session.GetString("User")?.Split('|')[0], out int memberID))
+{
+    List<ICourtBooking> organisedCourtBookings = await Model.CourtBookingDB.GetCourtBookingsByOrganiserAsync(memberID);
+    //List<ICourtBooking> participatingCourtBookings = await Model.CourtBookingDB.GetCourtBookingsByParticipantsAsync(memberID);
+    <h1 class="text-center">Tilgængelige bookinger @(organisedCourtBookings.Count@* +participatingCourtBookings.Count *@@*)/4</h1>
+} *@
 
 <!-- Section for choosing area & precise dates -->
 <div class="card">
@@ -165,7 +172,7 @@
                                     <div class="btn-group">
                                         @foreach (ICourt courtSlot in Model.CourtsDict[Model.CurrentArea]) // And for each court.
                                         {
-                                            bool isAvailable = Model.CheckIsAvailable(courtSlot, weekDay, i);
+                                            bool isAvailable = Model.CheckIsAvailable(weekDay, i);
                                             bool isBooked = Model.CheckIsBooked(courtSlot, weekDay, i);
                                             bool isBookedByMe = false;
                                             if (isBooked) { isBookedByMe = Model.CheckIsBookedByMe(courtSlot, weekDay, i); }
@@ -183,7 +190,7 @@
                                                         style="background-color: @(!isAvailable ? _gray : (isBooked ? (isBookedByMe ? _orange : _red) : _green));"
                                                         disabled="@( (!isAvailable || isBooked) ? "disabled" : null )"
                                                         title="@await Model.GetHoverTitle(courtSlot, weekDay, i, isAvailable, isBooked)">
-                                                        @if (isBooked)
+                                                        @if (isAvailable && isBooked)
                                                         {
                                                             <!-- Icon --> 
                                                             <i class="@Model.GetIsBookedIcon(courtSlot, weekDay, i)" style="font-size: 15px;"></i>
