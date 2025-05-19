@@ -5,32 +5,51 @@
     ViewData["Title"] = "Min side";
 }
 
-<label asp-for="@Model.Member.Id" class="control-label">Id</label>
-<input asp-for="@Model.Member.Id" class="form-control" readonly />
-
-<label asp-for="@Model.Member.Name" class="control-label">Navn</label>
-<input asp-for="@Model.Member.Name" class="form-control" readonly />
-
-<label asp-for="@Model.Member.Address" class="control-label">Adresse</label>
-<input asp-for="@Model.Member.Address" class="form-control" readonly />
-
-<label asp-for="@Model.Member.Dob" class="control-label">Fødselsdag</label>
-<input asp-for="@Model.Member.Dob" class="form-control" readonly />
-
-<label asp-for="@Model.Member.Sex" class="control-label">Sex</label>
-<input asp-for="@Model.Member.Sex" class="form-control" readonly />
-
-<label asp-for="@Model.Member.Email" class="control-label">Email</label>
-<input asp-for="@Model.Member.Email" class="form-control" readonly />
-
-<label asp-for="@Model.Member.Phone" class="control-label">Telefon</label>
-<input asp-for="@Model.Member.Phone" class="form-control" readonly />
-
-<textarea readonly style="width: 100%">@Model.Member.Bio</textarea>
+<h1 class="text-center">Min Profil</h1>
 
 <br />
-<a asp-page="/Members/UpdateMember" asp-route-memberID=@Model.Member.Id
-   class="button">Updater</a>
+
+<div class="container-fluid">
+    <div class="row align-items-stretch align-items-start mb-3">
+        <!-- Member Info -->
+        <div class="col-md-4 d-flex">
+            <div class="card p-3 w-100">
+                <h5>Medlemsoplysninger</h5>
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">ID:</dt>
+                    <dd class="col-sm-8">@Model.Member.Id</dd>
+
+                    <dt class="col-sm-4">Navn:</dt>
+                    <dd class="col-sm-8">@Model.Member.Name</dd>
+
+                    <dt class="col-sm-4">Adresse:</dt>
+                    <dd class="col-sm-8">@Model.Member.Address</dd>
+
+                    <dt class="col-sm-4">Fødselsdato:</dt>
+                    <dd class="col-sm-8">@Model.Member.Dob.ToShortDateString()</dd>
+
+                    <dt class="col-sm-4">Køn:</dt>
+                    <dd class="col-sm-8">@Model.Member.Sex</dd>
+
+                    <dt class="col-sm-4">Email:</dt>
+                    <dd class="col-sm-8">@Model.Member.Email</dd>
+
+                    <dt class="col-sm-4">Telefon:</dt>
+                    <dd class="col-sm-8">@Model.Member.Phone</dd>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Bio -->
+        <div class="col-md-8 d-flex">
+            <div class="card p-3 h-100 w-100">
+                <h5>Bio:</h5>
+                <p>@(!string.IsNullOrWhiteSpace(Model.Member.Bio) ? Model.Member.Bio : "Ingen bio angivet.")</p>
+            </div>
+        </div>
+    </div>
+</div>
+<a asp-page="/Members/UpdateMember" asp-route-memberID=@Model.Member.Id class="button">Updater</a>
 
 <br />
 <br />
