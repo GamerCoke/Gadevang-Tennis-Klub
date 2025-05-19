@@ -63,7 +63,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL.Booking
                 $"from Partners " +
                 $"right join CourtBookings on CourtBookings.ID = Partners.BookingID " +
                 $"where Partners.MemberID = {memberID} or CourtBookings.MemberID = {memberID} " +
-                $"group by ID, BookingDate, CourtID, CourtID, TimeSlot, TeamID, CourtBookings.MemberID, EventID;;"
+                $"group by ID, BookingDate, CourtID, CourtID, TimeSlot, TeamID, CourtBookings.MemberID, EventID;"
                 );
         }
 
