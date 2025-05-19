@@ -50,7 +50,7 @@ CREATE TABLE Activities (
 	EventID int not null,
 	Description varchar(512) not null,
 	Title varchar(32) not null,
-	StartTime DATE not null,
+	StartTime DATETIME not null,
 	EndTime TIME not null,
 
 	FOREIGN KEY (EventID) REFERENCES Events(ID)
