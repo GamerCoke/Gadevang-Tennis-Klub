@@ -21,6 +21,10 @@
                     <input asp-for="@Model.Kodeord" class="form-control" />
                     <span asp-validation-for="@Model.Kodeord" class="text-danger"></span>
                 </tr>
+                @if (Model.Message != null)
+                {
+                    <p class="text-danger">@Model.Message</p>
+                }
                 <tr>
                     <td><br /><Input type="submit" value="Login" class="btn btn-success" /></td>
                 </tr>
