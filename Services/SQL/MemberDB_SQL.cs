@@ -68,9 +68,6 @@ namespace Gadevang_Tennis_Klub.Services.SQL
         public async Task<IMember> GetMemberByLoginAsync(string email, string password)
         {
             return (await GetMembersByQueryAsync(queStr + $" WHERE Email = '{email}' AND Password = '{password}'")).FirstOrDefault();
-            // queStr += @" WHERE Email = @EMAIL AND PassWord = @PASSWORD";
-            // com.Parameters.AddWithValue("@EMAIL", email);
-            // com.Parameters.AddWithValue("@PASSWORD", password);
             /*
              queStr += @" WHERE Email = @EMAIL AND PassWord = @PASSWORD";
             using (SqlConnection con = new SqlConnection(connectionString)
