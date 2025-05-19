@@ -36,7 +36,7 @@ namespace Gadevang_Tennis_Klub.Pages.User
             }
             else
             {
-                Message = $"Email: {Email} og Kodeord: {Kodeord} er ikke en genkendt kombination i vores register";
+                Message = $"Email: \"{Email}\" og Kodeord: \"{Kodeord}\" er ikke en genkendt kombination i vores register";
                 return Page();
             }
         }
