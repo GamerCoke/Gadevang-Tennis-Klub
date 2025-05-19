@@ -9,13 +9,17 @@ namespace Gadevang_Tennis_Klub.Services.SQL
     {
         private string connectionString = Secret.ConnectionString;
         private string queStr = "SELECT * FROM Courts";
+        // private string insStr = @"INSTERT INTRO Courts (Type, Name) VALUES (@TYPE, @NAME)";
+        // private string delStr = @"DELETE FROM Courts WHERE ID = @ID";
+        // private string updStr = @"UPDATE Courts (Type, Name) SET (@TYPE, @NAME) WHERE ID = @ID";
 
         public async Task<bool> CreateCourtAsync(ICourt court)
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                string name = court.Name == null ? "null" : $"'{court.Name}'";
-                string insStr = $"INSERT INTO Courts VALUES ('{court.Type}', {name});";
+                // com.Parameters.AddWithValue(@TYPE, court.type);
+                // com.Parameters.AddWithValue(@NAME, court.name);
+                string insStr = $"INSERT INTO Courts VALUES ('{court.Type}', '{court.Name}');";
                 return await NonReadQueryAsync(insStr);
             }
         }

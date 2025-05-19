@@ -134,13 +134,10 @@ namespace Gadevang_Tennis_Klub.Pages.Events
 
         public async Task<IActionResult> OnPostEventRegister(int currentYear, int currentMonth, int eventID)
         {
-            CurrentUser = HttpContext.Session.GetString("User");
-            if (string.IsNullOrEmpty(CurrentUser))
+            if (!int.TryParse(HttpContext.Session.GetString("User")?.Split('|')[0], out int memberID))
             {
                 return RedirectToPage(@"/User/Login");
             }
-
-            int memberID = int.Parse(CurrentUser.Split('|')[0]); // Get the member id
 
             try
             {
@@ -171,25 +168,24 @@ namespace Gadevang_Tennis_Klub.Pages.Events
 
         public async Task<IActionResult> OnPostEventUnregister(int currentYear, int currentMonth, int eventID)
         {
-
-            CurrentUser = HttpContext.Session.GetString("User");
-            int memberID = int.Parse(CurrentUser.Split('|')[0]); // Get the member id
-
-            try
+            if (int.TryParse(HttpContext.Session.GetString("User")?.Split('|')[0], out int memberID))
             {
-                // Make sure the member is actually booked for this event before deleting the booking
-                IEventBooking? evBooking = await GetMemberBooking(eventID, memberID);
-                if (evBooking != null)
+                try
                 {
-                    await _eventBookingDB.DeleteEventBookingAsync(evBooking.ID);
+                    // Make sure the member is actually booked for this event before deleting the booking
+                    IEventBooking? evBooking = await GetMemberBooking(eventID, memberID);
+                    if (evBooking != null)
+                    {
+                        await _eventBookingDB.DeleteEventBookingAsync(evBooking.ID);
 
-                    IEvent ev = await _eventDB.GetEventByIDAsync(eventID);
-                    MessageDanger = $"Du er nu afmeldt begivenheden: {ev.Title}";
+                        IEvent ev = await _eventDB.GetEventByIDAsync(eventID);
+                        MessageDanger = $"Du er nu afmeldt begivenheden: {ev.Title}";
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                ViewData["ErrorMessage"] = ex.Message;
+                catch (Exception ex)
+                {
+                    ViewData["ErrorMessage"] = ex.Message;
+                }
             }
 
             await LoadCalendar(new DateTime(currentYear, currentMonth, 1));
