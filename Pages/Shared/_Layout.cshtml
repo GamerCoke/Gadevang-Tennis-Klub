@@ -77,6 +77,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav ms-auto text-uppercase">
                         <!-- Menus -->
+                        <li class="nav-item"><a class="nav-link text-light" asp-area="" asp-page="/Forum/GetAllAnnouncements">Forum</a></li>
                         <li class="nav-item"><a class="nav-link text-light" asp-area="" asp-page="/Informations/AboutUs">Om Os</a></li>
                         <li class="nav-item"><a class="nav-link text-light" asp-area="" asp-page="/Events/Calendar">Kalender</a></li>
                         <li class="nav-item"><a class="nav-link text-light" asp-area="" asp-page="/CourtBookings/Members/CreateMemberBooking">Banebooking</a></li>
@@ -124,6 +125,9 @@
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
                                         <a asp-area="" asp-page="/User/MyPage" class="dropdown-item" style="text-transform: none;">Mig</a>
+                                    </li>
+                                    <li>
+                                        <a asp-area="" asp-page="/Teams/GetAllTeams" class="dropdown-item" style="text-transform: none;">Hold</a>
                                     </li>
                                     @if (bool.Parse(Context.Session.GetString("User").Split('|')[1]))
                                     {

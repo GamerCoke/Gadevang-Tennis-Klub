@@ -65,11 +65,14 @@ CREATE TABLE Announcements (
     Type varchar(16) NOT NULL,
     Actual BIT NULL,
 
-    CONSTRAINT typeConstraint
-    CHECK (Type IN ('Service', 'Partner', 'General')),
+    -- Single-column CHECK: Fine inline
+    CONSTRAINT typeConstraint CHECK (Type IN ('Service', 'Partner', 'General')),
 
+    -- Multi-column CHECK: Must be at table level
     CONSTRAINT CK_Announcements_Actual_OnlyForService
-    CHECK (Actual IS NULL OR Type = 'Service'),
+        CHECK (
+            Actual IS NULL OR Type = 'Service'
+        ),
 
     FOREIGN KEY (MemberID) REFERENCES Members(ID)
 );
@@ -236,6 +239,12 @@ INSERT INTO Announcements
 VALUES (2, 'Help', 'Jeg er ikke sikker på hvad jeg skal gøre.', '0001-01-02', 'General', null)
 INSERT INTO Announcements
 VALUES (2, '???', 'Mortalis es fatum. Nalyë, caurelye istya.', '2025-04-29', 'General', null)
+INSERT INTO Announcements
+VALUES (2, 'Måger', 'Der er måger der angriber alt og alle på bane 2', '2024-08-19', 'Service', 0)
+INSERT INTO Announcements
+VALUES (2, 'Boldmaskine', 'Boldmaskinen er ude af drift pg.a nogen fyldte den med æbler', '2025-05-12', 'Service', 1)
+INSERT INTO Announcements
+VALUES (2, 'Skur', 'Døren til skuret binder fordi der er nogen som super limede den.', '2025-05-14', 'Service', 1)
 
 INSERT INTO Trainers
 VALUES ('Kenneth', '12332165', 'Kenneth@mail.dk', null)

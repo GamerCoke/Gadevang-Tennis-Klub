@@ -8,12 +8,17 @@ namespace Gadevang_Tennis_Klub.Services.SQL
     public class AnnouncementDB_SQL : IAnnouncementDB
     {
         private string _connectionString = Secret.ConnectionString;
-        string query = @"SELECT a.ID, a.Title, a.Text, a.Upload, a.Type, m.ID AS MemberID, m.Name AS MemberName, m.Email AS MemberEmail FROM Announcements a INNER JOIN Members m ON a.MemberID = m.ID";
+        string query = @"SELECT a.ID, a.Title, a.Text, a.Upload, a.Type, a.Actual,
+                        m.ID AS MemberID, m.Name AS MemberName, m.Email AS MemberEmail
+                 FROM Announcements a
+                 INNER JOIN Members m ON a.MemberID = m.ID";
+
         public async Task<bool> CreateAnnouncementAsync(IAnnouncement announcement)
         {
             const string insertString = @"
-        INSERT INTO Announcements (MemberID, Title, Text, Upload, Type)
-        VALUES (@MemberID, @Title, @Text, @Upload, @Type)";
+INSERT INTO Announcements (MemberID, Title, Text, Upload, Type, Actual)
+VALUES (@MemberID, @Title, @Text, @Upload, @Type, @Actual)";
+
 
             using SqlConnection connection = new SqlConnection(_connectionString);
             using SqlCommand cmd = new SqlCommand(insertString, connection);
@@ -26,6 +31,8 @@ namespace Gadevang_Tennis_Klub.Services.SQL
             cmd.Parameters.AddWithValue("@Text", announcement.Text ?? "");
             cmd.Parameters.AddWithValue("@Upload", announcement.UploadTime);
             cmd.Parameters.AddWithValue("@Type", announcement.Type ?? "General");
+            cmd.Parameters.AddWithValue("@Actual", announcement.Type == "Service" ? (object?)announcement.Actual : DBNull.Value);
+
 
             try
             {
@@ -79,8 +86,10 @@ namespace Gadevang_Tennis_Klub.Services.SQL
                         Text = reader["Text"].ToString(),
                         UploadTime = Convert.ToDateTime(reader["Upload"]),
                         Type = reader["Type"].ToString(),
-                        Announcer = announcer
+                        Announcer = announcer,
+                        Actual = reader["Actual"] != DBNull.Value ? Convert.ToBoolean(reader["Actual"]) : null
                     };
+
 
                     announcements.Add(announcement);
                 }
@@ -151,19 +160,22 @@ JOIN Members M ON A.MemberID = M.ID";
                 while (await reader.ReadAsync())
                 {
                     IAnnouncement announcement = new Announcement(
-                        id: Convert.ToInt32(reader["ID"]),
-                        title: reader["Title"].ToString(),
-                        text: reader["Text"].ToString(),
-                        uploadTime: Convert.ToDateTime(reader["Upload"]),
-                        type: reader["Type"].ToString(),
-                        announcer: new Member
-                        {
-                            Id = Convert.ToInt32(reader["MemberID"]),
-                            Name = reader["Name"].ToString(),
-                            Email = reader["Email"].ToString(),
-                            Phone = reader["Phone"].ToString()
-                        }
+                    id: Convert.ToInt32(reader["ID"]),
+                    title: reader["Title"].ToString(),
+                    text: reader["Text"].ToString(),
+                    uploadTime: Convert.ToDateTime(reader["Upload"]),
+                    type: reader["Type"].ToString(),
+                    announcer: new Member
+                    {
+                        Id = Convert.ToInt32(reader["MemberID"]),
+                        Name = reader["Name"].ToString(),
+                        Email = reader["Email"].ToString(),
+                        Phone = reader["Phone"].ToString()
+                    }
                     );
+
+                    announcement.Actual = reader["Actual"] != DBNull.Value ? Convert.ToBoolean(reader["Actual"]) : null;
+
 
                     announcements.Add(announcement);
                 }
@@ -238,8 +250,9 @@ JOIN Members M ON A.MemberID = M.ID";
         {
             string query = @"
 UPDATE Announcements
-SET Title = @Title, Text = @Text, Upload = @Upload, Type = @Type
+SET Title = @Title, Text = @Text, Upload = @Upload, Type = @Type, Actual = @Actual
 WHERE ID = @ID";
+
 
             using SqlConnection connection = new SqlConnection(Secret.ConnectionString);
             using SqlCommand cmd = new SqlCommand(query, connection);
@@ -250,6 +263,7 @@ WHERE ID = @ID";
             cmd.Parameters.AddWithValue("@Upload", announcement.UploadTime);
             cmd.Parameters.AddWithValue("@Type", announcement.Type);
             cmd.Parameters.AddWithValue("@ID", announcement.Id);
+            cmd.Parameters.AddWithValue("@Actual", announcement.Type == "Service" ? (object?)announcement.Actual : DBNull.Value);
 
             try
             {
