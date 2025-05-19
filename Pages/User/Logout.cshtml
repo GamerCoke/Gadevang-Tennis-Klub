@@ -3,7 +3,12 @@
 @{
     ViewData["Title"] = "Logud";
 }
-<h1>Logud?</h1>
+
+
+<h1>Logud</h1>
+
+<p>Er du sikker på at du ønsker at logge ud?</p>
+
 <form asp-page-handler="logout" method="post">
-    <Input type="submit" value="Logud" />
+    <Input type="submit" value="Logud" class="btn btn-success" />
 </form>

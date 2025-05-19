@@ -14,6 +14,7 @@ namespace Gadevang_Tennis_Klub.Pages.User
         public string Kodeord { get; set; }
         public IMemberDB MemberDB { get; set; }
         public string? UserCookie { get; set; }
+        public string? Message { get; set; }
 
         public LoginModel(IMemberDB memberDB)
         {
@@ -28,10 +29,16 @@ namespace Gadevang_Tennis_Klub.Pages.User
 
         public IActionResult OnPostLogin()
         {
-            IMember user = MemberDB.GetMemberByLoginAsync(Email, Kodeord).Result;
-            if (user != null)
+            IMember user = MemberDB.GetMemberByLoginAsync(Email, Kodeord).Result; if (user != null)
+            {
                 HttpContext.Session.SetString("User", $"{user.Id}|{user.IsAdmin}|{user.Name}");
-            return RedirectToPage(@"MyPage");
+                return RedirectToPage(@"MyPage");
+            }
+            else
+            {
+                Message = $"Email: \"{Email}\" og Kodeord: \"{Kodeord}\" er ikke en genkendt kombination i vores register";
+                return Page();
+            }
         }
     }
 }

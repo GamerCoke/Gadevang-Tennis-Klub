@@ -3,23 +3,32 @@
 @{
     ViewData["Title"] = "Login";
 }
-<title>Login</title>
-<form asp-page-handler="login" method="post">
-    <table>
-        <tr>
-            <label asp-for="@Model.Email" class="control-label"></label>
-            <input asp-for="@Model.Email" class="form-control" />
-            <span asp-validation-for="@Model.Email" class="text-danger"></span>
-        </tr>
-        <tr>
-            <label asp-for="@Model.Kodeord" class="control-label"></label>
-            <input asp-for="@Model.Kodeord" class="form-control" />
-            <span asp-validation-for="@Model.Kodeord" class="text-danger"></span>
-        </tr>
-        <tr>
-            <td>&nbsp</td>
-            <td><Input type="submit" value="Login" /></td>
-        </tr>
-    </table>
 
-</form>
+<h1 class="text-center mb-3">Login</h1>
+<title>Login</title>
+
+<div class="d-flex justify-content-center">
+    <div class="card p-3 align-items-center" style="width:50%">
+        <form asp-page-handler="login" method="post" style="width:80%">
+            <table>
+                <tr>
+                    <label asp-for="@Model.Email" class="control-label"></label>
+                    <input asp-for="@Model.Email" class="form-control" />
+                    <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                </tr>
+                <tr>
+                    <label asp-for="@Model.Kodeord" class="control-label"></label>
+                    <input asp-for="@Model.Kodeord" class="form-control" />
+                    <span asp-validation-for="@Model.Kodeord" class="text-danger"></span>
+                </tr>
+                @if (Model.Message != null)
+                {
+                    <p class="text-danger">@Model.Message</p>
+                }
+                <tr>
+                    <td><br /><Input type="submit" value="Login" class="btn btn-success" /></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
