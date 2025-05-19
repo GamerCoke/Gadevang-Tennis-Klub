@@ -1,5 +1,6 @@
 ﻿@page
 @model Gadevang_Tennis_Klub.Pages.CourtBookings.Events.AddEventCourtBookingsModel
+@inject Gadevang_Tennis_Klub.Services.OwnerData ownerData;
 @{
     ViewData["Title"] = "Begivenhed-Book-Baner";
 }
@@ -54,18 +55,18 @@
             <label for="timeslot" class="control-label">Tidsslot</label>
             <br />
             <select name="timeslot" id="timeslot">
-                @for (int i = 0; i < 18; i++)
+                @for (int hour = ownerData.CourtsOpen; hour < ownerData.CourtsClose; hour++)
                 {
-                    @if (i == Model.Timeslot)
+                    @if (hour == Model.Timeslot)
                     {
-                        <option value="@i" selected>
-                            @($"{i + 6}.00 - {i + 7}.00")
+                        <option value="@hour" selected>
+                            @($"{hour}.00 - {hour + 1}.00")
                         </option>
                     }
                     else
                     {
-                        <option value="@i">
-                            @($"{i + 6}.00 - {i + 7}.00")
+                        <option value="@hour">
+                            @($"{hour}.00 - {hour + 1}.00")
                         </option>
                     }
                 }
