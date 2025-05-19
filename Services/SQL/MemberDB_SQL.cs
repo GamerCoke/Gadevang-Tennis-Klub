@@ -61,8 +61,15 @@ namespace Gadevang_Tennis_Klub.Services.SQL
         public async Task<IMember> GetMemberByIDAsync(int memberID)
         {
             return (await GetMembersByQueryAsync(queStr + $" WHERE ID = {memberID}")).FirstOrDefault();
-            // queStr += @" WHERE ID = @ID";
-            // com.Parameters.AddWithValue("@ID", memberID);
+            /*
+            queStr += @" WHERE ID = @ID";
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                SqlCommand com = new SqlCommand(queStr, con)
+                com.Parameters.AddWithValue("@ID", memberID);
+                return await SomethingQueryAsync(con, com);
+            }
+             */
         }
 
         public async Task<IMember> GetMemberByLoginAsync(string email, string password)
