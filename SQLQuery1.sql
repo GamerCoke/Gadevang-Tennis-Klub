@@ -53,7 +53,7 @@ CREATE TABLE Activities (
 	StartTime DATETIME not null,
 	EndTime TIME not null,
 
-	FOREIGN KEY (EventID) REFERENCES Events(ID)
+	FOREIGN KEY (EventID) REFERENCES Events(ID) ON UPDATE CASCADE
 );
 
 CREATE TABLE Announcements (
@@ -74,7 +74,7 @@ CREATE TABLE Announcements (
             Actual IS NULL OR Type = 'Service'
         ),
 
-    FOREIGN KEY (MemberID) REFERENCES Members(ID)
+    FOREIGN KEY (MemberID) REFERENCES Members(ID) ON UPDATE CASCADE
 );
 
 
@@ -103,7 +103,7 @@ CREATE TABLE Teams (
         )
 	),
 
-	FOREIGN KEY (TrainerID) REFERENCES Trainers(ID)
+	FOREIGN KEY (TrainerID) REFERENCES Trainers(ID) ON UPDATE CASCADE
 );
 
 CREATE TABLE CourtBookings (
@@ -115,10 +115,10 @@ CREATE TABLE CourtBookings (
 	MemberID int,
 	EventID int,
 
-	FOREIGN KEY (CourtID) REFERENCES Courts(ID),
-	FOREIGN KEY (TeamID) REFERENCES Teams(ID),
-	FOREIGN KEY (MemberID) REFERENCES Members(ID),
-	FOREIGN KEY (EventID) REFERENCES Events(ID),
+	FOREIGN KEY (CourtID) REFERENCES Courts(ID) ON UPDATE CASCADE,
+	FOREIGN KEY (TeamID) REFERENCES Teams(ID) ON UPDATE CASCADE,
+	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON UPDATE CASCADE,
+	FOREIGN KEY (EventID) REFERENCES Events(ID) ON UPDATE CASCADE,
 
 	CONSTRAINT idBooking
 	CHECK(
@@ -135,8 +135,8 @@ CREATE TABLE TeamBookings (
 	MemberID int not null,
 	TeamID int not null,
 
-	FOREIGN KEY (MemberID) REFERENCES Members(ID),
-	FOREIGN KEY (TeamID) REFERENCES Teams(ID),
+	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON UPDATE CASCADE,
+	FOREIGN KEY (TeamID) REFERENCES Teams(ID) ON UPDATE CASCADE,
 
 	PRIMARY KEY (MemberID, TeamID)
 );
@@ -146,8 +146,8 @@ CREATE TABLE EventBookings (
 	MemberID int not null,
 	EventID int not null,
 
-	FOREIGN KEY (MemberID) REFERENCES Members(ID),
-	FOREIGN KEY (EventID) REFERENCES Events(ID),
+	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON UPDATE CASCADE,
+	FOREIGN KEY (EventID) REFERENCES Events(ID) ON UPDATE CASCADE,
 
 	PRIMARY KEY (MemberID, EventID)
 );
@@ -156,8 +156,8 @@ CREATE TABLE Partners (
 	MemberID int not null,
 	BookingID int not null,
 
-	FOREIGN KEY (MemberID) REFERENCES Members(ID),
-	FOREIGN KEY (BookingID) REFERENCES CourtBookings(ID),
+	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON UPDATE CASCADE,
+	FOREIGN KEY (BookingID) REFERENCES CourtBookings(ID) ON UPDATE CASCADE,
 
 	PRIMARY KEY (MemberID, BookingID)
 );
