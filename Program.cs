@@ -1,4 +1,5 @@
 using Gadevang_Tennis_Klub.Interfaces.Services;
+using Gadevang_Tennis_Klub.Services;
 using Gadevang_Tennis_Klub.Services.SQL;
 using Gadevang_Tennis_Klub.Services.SQL.Booking;
 
@@ -16,6 +17,8 @@ builder.Services.AddTransient<ICourtBookingDB, CourtBookingDB_SQL>();
 builder.Services.AddTransient<ICourtDB, CourtDB_SQL>();
 builder.Services.AddTransient<IEventBookingDB, EventBookingDB_SQL>();
 builder.Services.AddTransient<ITeamBookingDB, TeamBookingDB_SQL>();
+
+builder.Services.AddTransient<OwnerData>();//OwnerData
 
 builder.Services.AddSession();    //cookie
 builder.Services.AddHttpContextAccessor();//cookie

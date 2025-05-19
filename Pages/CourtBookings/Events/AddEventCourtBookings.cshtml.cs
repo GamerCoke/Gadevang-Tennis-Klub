@@ -43,6 +43,13 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings.Events
             Timeslot = timeslot;
             ICourtBooking booking = new CourtBooking(0, courtId, DateOnly.FromDateTime((await EventDB.GetEventByIDAsync(eventId)).Start), timeslot, null, null, eventId);
 
+            IEvent @event = await EventDB.GetEventByIDAsync(eventId);
+            if (timeslot < @event.Start.Hour || timeslot > @event.End.Hour - 1)
+            {
+                Message = $"Banen skal bookes i begivenhedens tidsrum.";
+                return Page();
+            }
+
             try
             {
                 if (!ModelState.IsValid || !await CourtBookingDB.CreateCourtBookingAsync(booking))
