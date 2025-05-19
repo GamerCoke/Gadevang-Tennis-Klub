@@ -52,7 +52,7 @@
         {
             <tr>
                 <td>@($"#{booking.Court_ID}: {(await Model.CourtDB.GetCourtByIDAsync(booking.Court_ID)).Name}")</td>
-                <td>@($"Dato: {booking.Date} | Tidslot: {booking.Timeslot} / {new TimeOnly(booking.Timeslot + ownerData.CourtsOpen, 0, 0)}-{new TimeOnly(booking.Timeslot + ownerData.CourtsClose + 1, 0, 0)}")</td>
+                <td>@($"Dato: {booking.Date} | Tidslot: {booking.Timeslot} / {booking.Timeslot + ownerData.CourtsOpen}.00-{booking.Timeslot + ownerData.CourtsOpen + 1}.00")</td>
                 <td>@($"{(await Model.MemberDB.GetMemberByIDAsync((int)booking.Member_ID)).Name}")</td>
                 <td>
                     @{
