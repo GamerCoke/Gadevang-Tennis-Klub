@@ -28,11 +28,11 @@
         </p>
         <p>
             <i class="fa-solid fa-chalkboard-user me-2 text-secondary"></i>
-            <strong>Træner:</strong> @Model.Team.Trainer.Name
+            <strong>Træner:</strong> @Model.Trainer.Name
         </p>
         <p>
-            <i class="fa-solid fa-users me-2 text-secondary"></i>
-            <strong>Tilmeldte:</strong> 0/0
+            <i class="fa-solid fa-user me-2 text-secondary"></i>
+            <strong>Tilmeldte:</strong> @Model.TeamBookings.Count / @Model.Team.Capacity tilmeldte
         </p>
         <p>
             <i class="fa-solid fa-coins me-2 text-secondary"></i>

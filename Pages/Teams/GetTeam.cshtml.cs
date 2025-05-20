@@ -8,13 +8,19 @@ namespace Gadevang_Tennis_Klub.Pages.Teams
     public class GetTeamModel : PageModel
     {
         private ITeamDB _teamDB;
+        private ITrainerDB _trainerDB;
+        private ITeamBookingDB _teamBookingDB;
 
         public ITeam Team { get; set; }
+        public ITrainer Trainer { get; set; }
+        public List<ITeamBooking> TeamBookings { get; set; }
 
 
-        public GetTeamModel(ITeamDB teamDB)
+        public GetTeamModel(ITeamDB teamDB, ITrainerDB trainerDB, ITeamBookingDB teamBookingDB)
         {
             _teamDB = teamDB;
+            _trainerDB = trainerDB;
+            _teamBookingDB = teamBookingDB;
         }
 
         public async Task OnGetAsync(int teamID)
@@ -22,6 +28,8 @@ namespace Gadevang_Tennis_Klub.Pages.Teams
             try
             {
                 Team = await _teamDB.GetTeamByIDAsync(teamID);
+                Trainer = await _trainerDB.GetTrainerByIDAsync(Team.Trainer.Id);
+                TeamBookings = (await _teamBookingDB.GetAllTeamBookingAsync()).Where(teamBooking => teamBooking.Team_ID == Team.ID).ToList();
             }
             catch (Exception ex)
             {
@@ -34,6 +42,8 @@ namespace Gadevang_Tennis_Klub.Pages.Teams
             try
             {
                 Team = await _teamDB.GetTeamByIDAsync(teamID);
+                Trainer = await _trainerDB.GetTrainerByIDAsync(Team.Trainer.Id);
+                TeamBookings = (await _teamBookingDB.GetAllTeamBookingAsync()).Where(teamBooking => teamBooking.Team_ID == Team.ID).ToList();
 
                 // Code to join team ??? 
             }
