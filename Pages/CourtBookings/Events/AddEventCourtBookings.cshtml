@@ -16,13 +16,13 @@
                     @if (Event.ID == Model.EventId)
                     {
                         <option value="@Event.ID" selected>
-                            @($"Hold ({Event.ID}): {Event.Title}, Dag: {DateOnly.FromDateTime(Event.Start)}")
+                            @($"Hold ({Event.ID}): {Event.Title}, Dag: {DateOnly.FromDateTime(Event.Start)}, Tid: {Event.Start.Hour}.00 - {Event.End.Hour}.00")
                         </option>
                     }
                     else
                     {
                         <option value="@Event.ID">
-                            @($"Hold ({Event.ID}): {Event.Title}, Dag: {DateOnly.FromDateTime(Event.Start)}")
+                            @($"Hold ({Event.ID}): {Event.Title}, Dag: {DateOnly.FromDateTime(Event.Start)}, Tid: {Event.Start.Hour}.00 - {Event.End.Hour}.00")
                         </option>
                     }
                 }
