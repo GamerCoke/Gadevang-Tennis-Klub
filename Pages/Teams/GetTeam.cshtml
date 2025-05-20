@@ -1,6 +1,7 @@
 ﻿@page
 @model Gadevang_Tennis_Klub.Pages.Teams.GetTeamModel
 @{
+    ViewData["Title"] = "Hold";
 }
 
 
@@ -17,6 +18,8 @@
                 <strong>Info:</strong> @Model.Team.Description
             </p>
         </div>
+
+        <input asp-for="@Model.Team.ID" hidden />
 
         <!-- Other info's -->
         <p>
@@ -41,7 +44,7 @@
 
         <!-- Booking knap -->
         <div class="text-end">
-            <form method="post" asp-page-handler="BookTeam" asp-route-id="@Model.Team.ID">
+            <form method="post" asp-page-handler="BookTeam" asp-route-teamID="@Model.Team.ID">
                 <button type="submit" class="btn btn-success px-4">
                     Tilmeld
                 </button>
