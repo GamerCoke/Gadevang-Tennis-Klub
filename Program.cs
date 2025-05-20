@@ -17,6 +17,7 @@ builder.Services.AddTransient<ICourtBookingDB, CourtBookingDB_SQL>();
 builder.Services.AddTransient<ICourtDB, CourtDB_SQL>();
 builder.Services.AddTransient<IEventBookingDB, EventBookingDB_SQL>();
 builder.Services.AddTransient<ITeamBookingDB, TeamBookingDB_SQL>();
+builder.Services.AddTransient<IAnnouncementDB, AnnouncementDB_SQL>();
 
 builder.Services.AddTransient<OwnerData>();//OwnerData
 
