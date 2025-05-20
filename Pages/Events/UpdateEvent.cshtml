@@ -11,7 +11,7 @@
         <h1>Opdater begivenhed</h1>
         @if (!@Model.IsUpdated)
         {
-            <a asp-page="GetEvent" asp-route-eventID=@Model.Event.ID class ="btn btn-danger" role="button">Tilbage</a>
+            <a asp-page="GetEvent" asp-route-eventID=@Model.Event.ID class="btn btn-danger" role="button"><i class="fa fa-chevron-left" aria-hidden="true"></i> Tilbage</a>
         }
     </div>
 
@@ -65,7 +65,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h5>Aktiviteter</h5>
                 <div class="formgroup">
-                    <button type="submit" class="btn btn-primary btn-sm" asp-page-handler="AddActivity">Tilføj Aktivitet</button>
+                    <button type="submit" class="btn btn-primary btn-sm" asp-page-handler="AddActivity">Tilføj Aktivitet <i class="fade fa-plus-circle"></i></button>
                 </div>
             </div>
 
@@ -87,7 +87,7 @@
                                 <input asp-for="@Model.Activities[i].Title" class="form-control" />
                             </div>
                             <div class="formgroup" style="margin-top: 20px">
-                                <button type="submit" class="btn btn-danger btn-sm" asp-page-handler="RemoveActivity">Fjern</button>
+                                <button type="submit" class="btn btn-danger btn-sm" asp-page-handler="RemoveActivity">Fjern <i class="fa fa-trash"></i></button>
                             </div>
                         </div>
                         <div class="form-group row mb-2">
@@ -119,7 +119,7 @@
 
             <br />
             <div class="formgroup">
-                <button type="submit" class="btn btn-success" asp-page-handler="UpdateEvent">Bekræft</button>
+                <button type="submit" class="btn btn-success" asp-page-handler="UpdateEvent">Bekræft <i class="fa fa-check" aria-hidden="true"></i></button>
             </div>
         </form>
     }
@@ -127,6 +127,6 @@
     {
         <p>Begivenheden er blevet opdateret.</p>
 
-        <a asp-page="GetEvent" asp-route-eventID=@Model.Event.ID class="btn btn-success w-auto align-self-start">Videre</a>
+        <a asp-page="GetEvent" asp-route-eventID=@Model.Event.ID class="btn btn-success w-auto align-self-start">Videre <i class="fa fa-chevron-right" aria-hidden="true"></i></a>
     }
 </div>

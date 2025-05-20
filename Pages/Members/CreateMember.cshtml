@@ -112,13 +112,12 @@
         </div>
 
         <br />
-        <br />
 
-        <div>
-            <td>&nbsp</td>
-            <td><Input type="submit" value="Opret" /></td>
-        </div>
     </table>
+
+    <div>
+        <button type="submit" class="btn btn-success btn-sm" asp-page-handler="CreateMember">Opret medlem <i class="fa fa-check" aria-hidden="true"></i></button>
+    </div>
 </form>
 @if (Model.Message != null)
 {
