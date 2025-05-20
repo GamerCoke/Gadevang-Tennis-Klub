@@ -1,0 +1,51 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.Teams.GetTeamModel
+@{
+}
+
+
+
+<div class="card mx-auto mb-4" style="width: 65%;">
+    <div class="card-header text-white" style="background: #467191">
+        <h3 class="mb-0">@Model.Team.Name</h3>
+    </div>
+    <div class="card-body">
+        <!-- Info-boks -->
+        <div class="p-3 mb-3 rounded bg-light border">
+            <p class="mb-0">
+                <i class="fa-solid fa-circle-info me-2 text-secondary"></i>
+                <strong>Info:</strong> @Model.Team.Description
+            </p>
+        </div>
+
+        <!-- Other info's -->
+        <p>
+            <i class="fa-solid fa-calendar-days me-2 text-secondary"></i>
+            <strong>Tid/Sted:</strong> @Model.Team.ActiveDay
+        </p>
+        <p>
+            <i class="fa-solid fa-chalkboard-user me-2 text-secondary"></i>
+            <strong>Træner:</strong> @Model.Team.Trainer.Name
+        </p>
+        <p>
+            <i class="fa-solid fa-users me-2 text-secondary"></i>
+            <strong>Tilmeldte:</strong> 0/0
+        </p>
+        <p>
+            <i class="fa-solid fa-coins me-2 text-secondary"></i>
+            <strong>Pris:</strong> @Model.Team.Price
+        </p>
+
+        <!-- Divider -->
+        <hr class="mt-auto" />
+
+        <!-- Booking knap -->
+        <div class="text-end">
+            <form method="post" asp-page-handler="BookTeam" asp-route-id="@Model.Team.ID">
+                <button type="submit" class="btn btn-success px-4">
+                    Tilmeld
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

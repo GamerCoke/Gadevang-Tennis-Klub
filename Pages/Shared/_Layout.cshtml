@@ -95,7 +95,7 @@
                                 @foreach (ITeam team in await _teamDB.GetAllTeamsAsync())
                                 {
                                     <!-- Link til en GetTeam side som viser info om holdet ?? -->
-                                    <li><a asp-page="/Teams/GetAllTeams" asp-route-teamId="@team.ID" class="dropdown-item" style="text-transform: none;">@team.Name</a></li>
+                                    <li><a asp-page="/Teams/GetTeam" asp-route-teamId="@team.ID" class="dropdown-item" style="text-transform: none;">@team.Name</a></li>
                                 }
                             </ul>
                         </li>
