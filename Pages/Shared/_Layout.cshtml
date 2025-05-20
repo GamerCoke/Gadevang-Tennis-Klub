@@ -125,18 +125,15 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
-                                        <a asp-area="" asp-page="/User/MyPage" class="dropdown-item" style="text-transform: none;">Min Profil</a>
-                                    </li>
-                                    <li>
-                                        <a asp-area="" asp-page="/Teams/GetAllTeams" class="dropdown-item" style="text-transform: none;">Hold</a>
+                                        <a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/User/MyPage">Min Profil</a>
                                     </li>
                                     @if (bool.Parse(Context.Session.GetString("User").Split('|')[1]))
                                     {
                                         <li><hr class="dropdown-divider"></hr></li>
                                         <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Members/GetAllMembers">Medlemmer</a></li>
                                         <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Courts/GetAllCourts">Baner</a></li>
-                                        <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Trainers/ReadAllTrainers">Trænere</a></li>
                                         <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Teams/GetAllTeams">Hold</a></li>
+                                        <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Trainers/ReadAllTrainers">Trænere</a></li>
                                         <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Events/GetAllEvents">Begivenheder</a></li>
                                         <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/CourtBookings/Events/ViewEventCourtBookings">Baner Bookede for Begivenheder</a></li>
                                         <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/CourtBookings/Teams/ViewTeamCourtBookings">Baner Bookede for Hold</a></li>
