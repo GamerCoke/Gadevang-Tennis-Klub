@@ -96,14 +96,14 @@
 <div class="d-flex justify-content-between">
     <div class="d-flex gap-2">
         <form method="post" asp-page-handler="Previous" asp-route-year="@Model.CurrentYear" asp-route-month="@Model.CurrentMonth">
-            <button type="submit" class="btn btn-primary">Previous</button>
+            <button type="submit" class="btn" style="background-color: #467191; color: white;">Previous</button>
         </form>
         <form method="post" asp-page-handler="Next" asp-route-year="@Model.CurrentYear" asp-route-month="@Model.CurrentMonth">
-            <button type="submit" class="btn btn-primary">Next</button>
+            <button type="submit" class="btn" style="background-color: #467191; color: white;">Next</button>
         </form>
     </div>
     <form method="post" asp-page-handler="Today">
-        <button type="submit" class="btn btn-primary">Today</button>
+        <button type="submit" class="btn" style="background-color: #467191; color: white;">Today</button>
     </form>
 </div>
 
@@ -149,9 +149,9 @@
                     <div class="modal-header">
                         <div class="d-flex align-items-center gap-3">
                             <!-- Calendar-style date box with a red top and white bottom -->
-                            <div style="width: 50px; border: 1px solid red; text-align: center; font-family: Arial, sans-serif;">
+                            <div style="width: 50px; border: 1px solid #C6583A; text-align: center; font-family: Arial, sans-serif;">
                                 <!-- Month section in red -->
-                                <div style="background-color: red; color: white; padding: 4px 0; font-size: 0.8em;">
+                                <div style="background-color: #C6583A; color: white; padding: 4px 0; font-size: 0.8em;">
                                     @Model.CurrentEvent.Start.ToString("MMM", new System.Globalization.CultureInfo("da-DK")).ToUpper()
                                 </div>
                                 <!-- Day section in white -->
