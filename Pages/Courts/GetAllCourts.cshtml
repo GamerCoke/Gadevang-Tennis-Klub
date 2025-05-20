@@ -14,7 +14,7 @@
     @if (Model.IsAdmin)
     {
         <div class="col text-end">
-            <a asp-page="CreateCourt" class="btn btn-success" role="button">Opret ny bane</a>
+            <a asp-page="CreateCourt" class="btn btn-success" role="button">Opret ny bane <i class="fas fa-plus-circle"></i></a>
         </div>
     }
 </div>
@@ -49,11 +49,8 @@
                 @if (Model.IsAdmin)
                 {
                     <td>
-                        <a asp-page="DeleteCourt" asp-route-courtID=@court.ID
-                           class="button">Slet</a>
-                        <br />
-                        <a asp-page="UpdateCourt" asp-route-courtID=@court.ID
-                           class="button">Updater</a>
+                        <a class="btn btn-primary btn-sm" title="Redigér bane" asp-page="UpdateCourt" asp-route-courtID=@court.ID><i class="fas fa-edit"></i></a>
+                        <a class="btn btn-danger btn-sm" title="Slet bane" asp-page="DeleteCourt" asp-route-courtID=@court.ID><i class="fas fa-trash"></i></a>
                     </td>
                 }
             </tr>

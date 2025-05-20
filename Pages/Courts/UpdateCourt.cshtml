@@ -6,7 +6,7 @@
 
 <div class="d-flex justify-content-between align-items-center">
     <h1>Opdater Bane</h1>
-    <a asp-page="GetAllCours" class="btn btn-danger" role="button">Tilbage</a>
+    <a asp-page="GetAllCourts" class="btn btn-danger btn-sm" role="button"><i class="fa fa-chevron-left"></i> Tilbage</a>
 </div>
 
 <form method="post" enctype="multipart/form-data">
@@ -15,6 +15,9 @@
             <label asp-for="@Model.Court.ID" class="control-label">ID</label>
             <input asp-for="@Model.Court.ID" class="form-control" readonly />
         </div>
+
+        <br />
+
         <div>
             <label asp-for="@Model.Court.Name" class="control-label">Navn</label>
             <br />
@@ -39,7 +42,6 @@
 
         <br />
 
-        <td>&nbsp</td>
         <td><Input type="submit" value="Opdater" /></td>
     </table>
 </form>

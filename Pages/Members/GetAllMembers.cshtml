@@ -15,7 +15,7 @@
         <p class="mb-0">Antal Medlemmer: @Model.Members.Count</p>
     </div>
     <div class="col text-end">
-        <a asp-page="CreateMember" class="btn btn-success" role="button">Opret nyt medlem</a>
+        <a asp-page="CreateMember" class="btn btn-success" role="button">Opret nyt medlem <i class="fas fa-plus-circle"></i></a>
     </div>
 </div>
 
@@ -47,7 +47,7 @@
             {
                 <th>Handlinger</th>
             }
-            
+
         </tr>
     </thead>
     <tbody>
@@ -74,7 +74,7 @@
                 <td>@member.Email</td>
                 <td>@member.Dob</td>
                 <td>@member.Sex</td>
-                
+
                 @if (Model.IsAdmin)
                 {
                     <td>@member.Address</td>
@@ -94,11 +94,11 @@
                 @if (Model.IsAdmin)
                 {
                     <td>
-                        <a asp-page="DeleteMember" asp-route-memberID=@member.Id
-                           class="button">Slet</a>
-                        <br />
-                        <a asp-page="UpdateMember" asp-route-memberID=@member.Id
-                           class="button">Updater</a>
+                        <a class="btn btn-primary btn-sm" title="Redigér medlem" asp-page="UpdateMember" asp-route-memberID=@member.Id><i class="fas fa-edit"></i></a>
+                        @if (int.Parse(Model.User.Split('|')[0]) != member.Id)
+                        {
+                            <a class="btn btn-danger btn-sm" title="Slet medlem" asp-page="DeleteMember" asp-route-memberID=@member.Id><i class="fas fa-trash"></i></a>
+                        }
                     </td>
                 }
             </tr>

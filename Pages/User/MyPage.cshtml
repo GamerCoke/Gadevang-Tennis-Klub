@@ -49,7 +49,7 @@
         </div>
     </div>
 </div>
-<a asp-page="/Members/UpdateMember" asp-route-memberID=@Model.Member.Id class="button">Updater</a>
+<a class="btn btn-primary btn-sm" title="Redigér" asp-page="/Members/UpdateMember" asp-route-memberID=@Model.Member.Id><i class="fas fa-edit"></i></a>
 
 <br />
 <br />
@@ -92,13 +92,12 @@
                 <td>
                     @if (Model.Member.Id == booking.Member_ID)
                     {
-                        <a class="button" asp-page="/CourtBookings/Members/AddParticipant" asp-route-bookingId=@booking.ID>Tilføj Deltager</a>
-                        <br />
-                        <a class="button" asp-page="/CourtBookings/Members/DeleteMemberBooking" asp-route-bookingId=@booking.ID>Slet Booking</a>
+                        <a class="button btn-success btn-sm" title="Tilføj Deltager" asp-page="/CourtBookings/Members/AddParticipant" asp-route-bookingId=@booking.ID><i class="fas fa-plus-circle"></i></a>
+                        <a class="button btn-danger btn-sm" title="Slet Booking" asp-page="/CourtBookings/Members/DeleteMemberBooking" asp-route-bookingId=@booking.ID><i class="fas fa-trash"></i></a>
                     }
                     else
                     {
-                        <a class="button" asp-page="/CourtBookings/Members/LeaveBooking" asp-route-bookingId=@booking.ID>Forlad Booking</a>
+                        <a class="button btn-danger btn-sm" title="Forlad Booking" asp-page="/CourtBookings/Members/LeaveBooking" asp-route-bookingId=@booking.ID><i class="fas fa-sign-out"></i></a>
                     }
                 </td>
             </tr>

@@ -10,6 +10,7 @@ namespace Gadevang_Tennis_Klub.Pages.Members
         public IMemberDB _memberDB;
         public ITeamDB _teamDB;
         public bool IsAdmin;
+        public string? User;
 
         public List<IMember> Members { get; set; }
 
@@ -31,6 +32,7 @@ namespace Gadevang_Tennis_Klub.Pages.Members
         {
             try
             {
+                User = HttpContext.Session.GetString("User");
                 Members = await _memberDB.GetAllMembersAsync();
                 SortByName(Members);
                 string? user = HttpContext.Session.GetString("User");

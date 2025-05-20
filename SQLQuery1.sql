@@ -11,7 +11,7 @@ DROP TABLE Activities;
 DROP TABLE Events;
 
 CREATE TABLE Members (
-	ID int identity(0, 1) UNIQUE,
+	ID int identity(0, 1) PRIMARY KEY,
 	Name varchar(256) not null,
 	PassWord varchar(256) not null,
 	Address varchar(256) not null,
@@ -26,7 +26,7 @@ CREATE TABLE Members (
 	CONSTRAINT sexOptions
 	CHECK(Sex IN ('Herre', 'Dame', 'Andet')),
 
-	PRIMARY KEY (Email, PassWord)
+	UNIQUE (Email, PassWord)
 );
 
 CREATE TABLE Courts (
@@ -53,7 +53,7 @@ CREATE TABLE Activities (
 	StartTime DATETIME not null,
 	EndTime TIME not null,
 
-	FOREIGN KEY (EventID) REFERENCES Events(ID) ON UPDATE CASCADE
+	FOREIGN KEY (EventID) REFERENCES Events(ID) ON DELETE CASCADE
 );
 
 CREATE TABLE Announcements (
@@ -74,7 +74,7 @@ CREATE TABLE Announcements (
             Actual IS NULL OR Type = 'Service'
         ),
 
-    FOREIGN KEY (MemberID) REFERENCES Members(ID) ON UPDATE CASCADE
+    FOREIGN KEY (MemberID) REFERENCES Members(ID) ON DELETE CASCADE
 );
 
 
@@ -103,7 +103,7 @@ CREATE TABLE Teams (
         )
 	),
 
-	FOREIGN KEY (TrainerID) REFERENCES Trainers(ID) ON UPDATE CASCADE
+	FOREIGN KEY (TrainerID) REFERENCES Trainers(ID) ON DELETE CASCADE
 );
 
 CREATE TABLE CourtBookings (
@@ -115,10 +115,10 @@ CREATE TABLE CourtBookings (
 	MemberID int,
 	EventID int,
 
-	FOREIGN KEY (CourtID) REFERENCES Courts(ID) ON UPDATE CASCADE,
-	FOREIGN KEY (TeamID) REFERENCES Teams(ID) ON UPDATE CASCADE,
-	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON UPDATE CASCADE,
-	FOREIGN KEY (EventID) REFERENCES Events(ID) ON UPDATE CASCADE,
+	FOREIGN KEY (CourtID) REFERENCES Courts(ID)ON DELETE CASCADE,
+	FOREIGN KEY (TeamID) REFERENCES Teams(ID) ON DELETE CASCADE,
+	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON DELETE CASCADE,
+	FOREIGN KEY (EventID) REFERENCES Events(ID) ON DELETE CASCADE,
 
 	CONSTRAINT idBooking
 	CHECK(
@@ -135,8 +135,8 @@ CREATE TABLE TeamBookings (
 	MemberID int not null,
 	TeamID int not null,
 
-	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON UPDATE CASCADE,
-	FOREIGN KEY (TeamID) REFERENCES Teams(ID) ON UPDATE CASCADE,
+	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON DELETE CASCADE,
+	FOREIGN KEY (TeamID) REFERENCES Teams(ID) ON DELETE CASCADE,
 
 	PRIMARY KEY (MemberID, TeamID)
 );
@@ -146,8 +146,8 @@ CREATE TABLE EventBookings (
 	MemberID int not null,
 	EventID int not null,
 
-	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON UPDATE CASCADE,
-	FOREIGN KEY (EventID) REFERENCES Events(ID) ON UPDATE CASCADE,
+	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON DELETE CASCADE,
+	FOREIGN KEY (EventID) REFERENCES Events(ID) ON DELETE CASCADE,
 
 	PRIMARY KEY (MemberID, EventID)
 );
@@ -156,8 +156,8 @@ CREATE TABLE Partners (
 	MemberID int not null,
 	BookingID int not null,
 
-	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON UPDATE CASCADE,
-	FOREIGN KEY (BookingID) REFERENCES CourtBookings(ID) ON UPDATE CASCADE,
+	FOREIGN KEY (BookingID) REFERENCES CourtBookings(ID) ON DELETE CASCADE,
+	FOREIGN KEY (MemberID) REFERENCES Members(ID),
 
 	PRIMARY KEY (MemberID, BookingID)
 );
