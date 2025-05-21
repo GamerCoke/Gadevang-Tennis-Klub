@@ -5,6 +5,16 @@ namespace Gadevang_Tennis_Klub.Services.IEnumerable.Booking
 {
     public class TeamBookingDB_IENU : ITeamBookingDB
     {
+        public Task<List<IMember>> GetMembersByTeamAsync(int teamId, IMemberDB memberDB)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int?> GetTeamBookingIDAsync(int teamID, int memberID)
+        {
+            throw new NotImplementedException();
+        }
+
         Task<bool> ITeamBookingDB.CreateTeamBookingAsync(ITeamBooking teamBooking)
         {
             throw new NotImplementedException();

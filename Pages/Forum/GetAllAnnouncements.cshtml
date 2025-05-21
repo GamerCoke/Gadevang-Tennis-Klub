@@ -6,6 +6,15 @@
 
 <h1>All Announcements</h1>
 
+@if (HttpContext.Session.GetString("User") != null)
+{
+    <a asp-page="/Forum/CreateAnnouncement" class="btn btn-primary mb-3">Create New Announcement</a>
+}
+else
+{
+    <p>Please <a asp-page="/User/Login">log in</a> to create announcements.</p>
+}
+
 @* ---------------- Service Announcements ---------------- *@
 <h2>Service Beskeder</h2>
 <table class="table table-bordered">
@@ -16,6 +25,7 @@
             <th>Upload</th>
             <th>Actual</th>
             <th>Announcer</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -26,13 +36,32 @@
                 <td>@announcement.Text</td>
                 <td>@announcement.UploadTime.ToShortDateString()</td>
                 <td>
-                    <input type="checkbox" disabled @(announcement.Actual == true ? "checked" : "") />
+                    @if (Model.IsAdmin)
+                    {
+                        <form method="post" asp-page-handler="ToggleActual">
+                            <input type="hidden" name="id" value="@announcement.Id" />
+                            <input type="checkbox" name="actual" value="true"
+                                   onchange="this.form.submit()"
+                            @(announcement.Actual == true ? "checked" : "") />
+                        </form>
+                    }
+                    else
+                    {
+                        <input type="checkbox" disabled @(announcement.Actual == true ? "checked" : "") />
+                    }
                 </td>
                 <td>@announcement.Announcer?.Name</td>
+                <td>
+                    @if ((announcement.Announcer?.Id == Model.CurrentUserId) || Model.IsAdmin)
+                    {
+                        <a asp-page="UpdateAnnouncement" asp-route-id="@announcement.Id" class="btn btn-warning">Opdater</a>
+                    }
+                </td>
             </tr>
         }
     </tbody>
 </table>
+
 
 @* ---------------- Partner Announcements ---------------- *@
 <h2>Søger Partner</h2>
@@ -43,6 +72,7 @@
             <th>Text</th>
             <th>Upload</th>
             <th>Announcer</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -53,6 +83,15 @@
                 <td>@announcement.Text</td>
                 <td>@announcement.UploadTime.ToShortDateString()</td>
                 <td>@announcement.Announcer?.Name</td>
+                <td>
+                    @if ((announcement.Announcer?.Id == Model.CurrentUserId) || Model.IsAdmin)
+                    {
+                        <a asp-page="UpdateAnnouncement" asp-route-id="@announcement.Id" class="btn btn-warning">Opdater</a>
+                        <form method="post" asp-page-handler="Delete" asp-route-id="@announcement.Id" class="d-inline">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Er du sikker på, at du vil slette denne besked?');">Slet</button>
+                        </form>
+                    }
+                </td>
             </tr>
         }
     </tbody>
@@ -67,6 +106,7 @@
             <th>Text</th>
             <th>Upload</th>
             <th>Announcer</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -77,6 +117,15 @@
                 <td>@announcement.Text</td>
                 <td>@announcement.UploadTime.ToShortDateString()</td>
                 <td>@announcement.Announcer?.Name</td>
+                <td>
+                @if ((announcement.Announcer?.Id == Model.CurrentUserId) || Model.IsAdmin)
+                {
+                    <a asp-page="UpdateAnnouncement" asp-route-id="@announcement.Id" class="btn btn-warning">Opdater</a>
+                        <form method="post" asp-page-handler="Delete" asp-route-id="@announcement.Id" class="d-inline">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Er du sikker på, at du vil slette denne besked?');">Slet</button>
+                        </form>
+                }
+                </td>
             </tr>
         }
     </tbody>
