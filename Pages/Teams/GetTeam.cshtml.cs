@@ -28,7 +28,7 @@ namespace Gadevang_Tennis_Klub.Pages.Teams
             try
             {
                 Team = await _teamDB.GetTeamByIDAsync(teamID);
-                Trainer = await _trainerDB.GetTrainerByIDAsync(Team.Trainer.Id);
+                Trainer = await _trainerDB.GetTrainerByIDAsync(Team.TrainerId);
                 TeamBookings = (await _teamBookingDB.GetAllTeamBookingAsync()).Where(teamBooking => teamBooking.Team_ID == Team.ID).ToList();
             }
             catch (Exception ex)
@@ -42,7 +42,7 @@ namespace Gadevang_Tennis_Klub.Pages.Teams
             try
             {
                 Team = await _teamDB.GetTeamByIDAsync(teamID);
-                Trainer = await _trainerDB.GetTrainerByIDAsync(Team.Trainer.Id);
+                Trainer = await _trainerDB.GetTrainerByIDAsync(Team.TrainerId);
                 TeamBookings = (await _teamBookingDB.GetAllTeamBookingAsync()).Where(teamBooking => teamBooking.Team_ID == Team.ID).ToList();
 
                 // Code to join team ??? 
