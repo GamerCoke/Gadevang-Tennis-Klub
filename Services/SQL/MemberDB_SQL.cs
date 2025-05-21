@@ -61,32 +61,60 @@ namespace Gadevang_Tennis_Klub.Services.SQL
         public async Task<IMember> GetMemberByIDAsync(int memberID)
         {
             return (await GetMembersByQueryAsync(queStr + $" WHERE ID = {memberID}")).FirstOrDefault();
-            // queStr += @" WHERE ID = @ID";
-            // com.Parameters.AddWithValue("@ID", memberID);
+            /*
+            queStr += @" WHERE ID = @ID";
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                SqlCommand com = new SqlCommand(queStr, con)
+                com.Parameters.AddWithValue("@ID", memberID);
+                return await SomethingQueryAsync(con, com);
+            }
+             */
         }
 
         public async Task<IMember> GetMemberByLoginAsync(string email, string password)
         {
             return (await GetMembersByQueryAsync(queStr + $" WHERE Email = '{email}' AND Password = '{password}'")).FirstOrDefault();
-            // queStr += @" WHERE Email = @EMAIL AND Password = @PASSWORD";
-            // com.Parameters.AddWithValue("@EMAIL", email);
-            // com.Parameters.AddWithValue("@PASSWORD", password);
+            /*
+             queStr += @" WHERE Email = @EMAIL AND PassWord = @PASSWORD";
+            using (SqlConnection con = new SqlConnection(connectionString)
+            {   
+                SqlCommand com = new SqlCommand(queStr, con)
+                com.Parameters.AddWithValue("@EMAIL", email);
+                com.Parameters.AddWithValue("@PASSWORD", password);
+                return await SomethingQúeryAsync(con, com);
+            }
+             */
         }
 
         public async Task<List<IMember>> GetMembersByAdminAsync(bool isAdmin)
         {
             int isA = isAdmin == false ? 0 : 1;
             return await GetMembersByQueryAsync(queStr + $" WHERE IsAdmin = {isA}");
-            // queStr += @" WHERE IsAdmin = @ISADMIN";
-            // com.Parameter.AddwithValue("@ISADMIN", isA);
+            /*
+             queStr += @" WHERE IsAdmin = @ISADMIN";
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                SqlCommand com = new SqlCommand(queStr, con)
+                com.Parameter.AddWithValue("@ISADMIN", isA);
+                return await SomethingQueryAsync(con, com);
+            }
+             */
         }
 
         public async Task<List<IMember>> GetMembersByAgeAboveAsync(int age)
         {
             DateOnly actAge = (DateOnly.FromDateTime(DateTime.Now)).AddYears(-age);
             return await GetMembersByQueryAsync(queStr + $" WHERE DoB < '{actAge}'");
-            // queStr += @"WHERE Dob < @AGETIME";
-            // com.Parameter.AddWithValue("@AGETIME", actAge);
+            /*
+            queStr += @"WHERE Dob < @AGETIME";
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                SqlCommand com = new SqlCommand(queStr, con)
+                com.Parameter.AddWithValue("@AGETIME", actAge);
+                return await SomethingQueryAsync(con, com);
+            }
+            */
         }
 
         public async Task<List<IMember>> GetMembersByAgeBelowAsync(int age)
@@ -95,7 +123,12 @@ namespace Gadevang_Tennis_Klub.Services.SQL
             return await GetMembersByQueryAsync(queStr + $" WHERE DoB > '{actAge}'");
             /*
             queStr += @"WHERE Dob > @AGETIME";
-            com.Parameter.AddWithValue("@AGETIME", actAge);
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                SqlCommand com = new SqlCommand(queStr, con)
+                com.Parameter.AddWithValue("@AGETIME", actAge);
+                return await SomethingQueryAsync(con, com);
+            }
              */
 
         }
