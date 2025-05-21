@@ -113,7 +113,7 @@
                         {
                             <a class="btn rounded-pill ms-3" asp-area="" asp-page="/User/Login"
                             style="background-color: #1b2e1b; padding: 10px 20px;">
-                                <span class="text-light">Login</span>
+                                <span class="text-light">Login <i class="fas fa-sign-in"></i></span>
                             </a>
                         }
                         else
@@ -124,7 +124,7 @@
                                     <span class="text-light">@Context.Session.GetString("User").Split('|')[2]</span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/User/MyPage">Min Profil</a></li>
+                                    <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/User/MyPage">Min Profil <i class="fas fa-user"></i></a></li>
                                     <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Teams/GetAllTeams">Hold</a></li>
 
                                     @if (bool.Parse(Context.Session.GetString("User").Split('|')[1]))
@@ -141,7 +141,7 @@
                                       <hr class="dropdown-divider"></hr>
                                     </li>
                                     <li>
-                                        <a asp-area="" asp-page="/User/Logout" class="dropdown-item" style="text-transform: none;">Logout</a>
+                                        <a asp-area="" asp-page="/User/Logout" class="dropdown-item" style="text-transform: none;">Log af<i class="fas fa-sign-out"></i></a>
                                     </li>
                                 </ul>
                             </div>
