@@ -7,7 +7,7 @@
 @if (Model.IsAdmin)
 {
     <a asp-page="CreateTrainer"
-       class="button btn-success btn-sm">Opret Træner <i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+       class="button">Opret Træner</a>
 }
 
 <title>Trænere</title>
@@ -64,10 +64,10 @@
                 {
                     <td>
                         <a asp-page="DeleteTrainer" asp-route-trainerID=@trainer.Id
-                           class="button btn-danger btn-sm">Slet<i class="fa fa-trash" aria-hidden="true"></i></a>
+                           class="button">Slet</a>
                         <br />
                         <a asp-page="UpdateTrainer" asp-route-trainerID=@trainer.Id
-                           class="button btn-primary btn-sm">Updater<i class="fas fa-edit"></i></a>
+                           class="button">Updater</a>
                     </td>
                 }
             </tr>

@@ -96,14 +96,14 @@
 <div class="d-flex justify-content-between">
     <div class="d-flex gap-2">
         <form method="post" asp-page-handler="Previous" asp-route-year="@Model.CurrentYear" asp-route-month="@Model.CurrentMonth">
-            <button type="submit" class="btn" style="background-color: #467191; color: white;"><i class="fa fa-chevron-left" aria-hidden="true"></i> Previous</button>
+            <button type="submit" class="btn" style="background-color: #467191; color: white;">Previous</button>
         </form>
         <form method="post" asp-page-handler="Next" asp-route-year="@Model.CurrentYear" asp-route-month="@Model.CurrentMonth">
-            <button type="submit" class="btn" style="background-color: #467191; color: white;">Next <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+            <button type="submit" class="btn" style="background-color: #467191; color: white;">Next</button>
         </form>
     </div>
     <form method="post" asp-page-handler="Today">
-        <button type="submit" class="btn" style="background-color: #467191; color: white;">Today <i class="fa fa-calendar-check-o" aria-hidden="true"></i></button>
+        <button type="submit" class="btn" style="background-color: #467191; color: white;">Today</button>
     </form>
 </div>
 

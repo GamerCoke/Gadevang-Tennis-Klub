@@ -6,7 +6,7 @@
 
 <div class="d-flex justify-content-between align-items-center">
     <h1>Slet en Bane</h1>
-    <a asp-page="GetAllCourts" class="btn btn-danger btn-sm" role="button"><i class="fa fa-chevron-left"></i> Tilbage</a>
+    <a asp-page="GetAllCours" class="btn btn-danger" role="button">Tilbage</a>
 </div>
 <p>Er du sikker på at du ønsker at slette følgende bane:</p>
 
@@ -30,7 +30,7 @@
 <br />
 
 <form method="post">
-    <button class="btn btn-danger btn-sm"> <i class="fas fa-trash"></i> Fjern </button>
+    <button class="btn btn-success"> Delete </button>
     <input type="hidden" name="CourtID" value=@Model.Court.ID />
 </form>
 

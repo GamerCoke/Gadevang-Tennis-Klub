@@ -11,7 +11,7 @@
         <h1>Slet en begivenhed</h1>
         @if (Model.Event != null && !Model.IsDeleted)
         {
-            <a asp-page="GetEvent" asp-route-eventID=@Model.Event.ID class ="btn btn-danger" role="button"><i class="fa fa-chevron-left" aria-hidden="true"></i> Tilbage</a>
+            <a asp-page="GetEvent" asp-route-eventID=@Model.Event.ID class ="btn btn-danger" role="button">Tilbage</a>
         }
     </div>
 
@@ -84,7 +84,7 @@
         <br />
 
         <form method="post">
-            <button class="btn btn-danger"> Delete <i class="fa fa-trash" aria-hidden="true"></i></button>
+            <button class="btn btn-success"> Delete </button>
             <input type="hidden" name="eventID" value=@Model.Event.ID />
         </form>
     }

@@ -26,7 +26,7 @@ namespace Gadevang_Tennis_Klub.Pages.Members
             else if (user != null)
                 IsAdmin = bool.Parse(user.Split('|')[1]);
 
-            if (!IsAdmin || memberID == int.Parse(user.Split('|')[0]))
+            if (!(IsAdmin || memberID == int.Parse(user.Split('|')[0])))
                 return RedirectToPage(@"/Members/GetAllMembers");
 
              try
