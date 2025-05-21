@@ -1,4 +1,5 @@
 ﻿@page
+@using Gadevang_Tennis_Klub.Interfaces.Models
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -112,34 +113,20 @@
                 <h4><i class="fa-solid fa-bullhorn p-3"></i> Service meddelelser</h4>
                 <!-- Scroll-container -->
                 <div style="max-height: 175px; overflow-y: auto; padding-right: 10px;">
-                    @* @foreach (IAnnouncement announcement in @Model.Announcements) *@
-                    @* { *@
+                    @foreach (IAnnouncement announcement in Model.ActualServiceAnnouncements)
+                    {
                     <div class="card">
                         <div class="card-header" style="background-color: #C6583A; color: white; display: flex; align-items: center; height: 50px;">
-                            <h5 class="card-title">Some important announcement</h5>
+                            <h5 class="card-title">@announcement.Title</h5>
                         </div>
                         <div class="card-body">
-                            <small class="text-muted" style="display: block; margin-bottom: 10px;">May 14, 2025</small>
+                            <small class="text-muted" style="display: block; margin-bottom: 10px;">@announcement.UploadTime.ToShortDateString()</small>
                             <p class="card-text">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                @announcement.Text
                             </p>
                         </div>
                     </div>
-                    @* } *@
-                    <!-- TEMP EKSTRA CARD - FJERN NÅR LOOPET VIRKER -->
-                    <div class="card">
-                        <div class="card-header" style="background-color: #C6583A; color: white; display: flex; align-items: center; height: 50px;">
-                            <h5 class="card-title">Some other important announcement</h5>
-                        </div>
-                        <div class="card-body">
-                            <small class="text-muted" style="display: block; margin-bottom: 10px;">May 14, 2025</small>
-                            <p class="card-text">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            </p>
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>
