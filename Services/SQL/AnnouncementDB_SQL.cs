@@ -114,7 +114,7 @@ VALUES (@MemberID, @Title, @Text, @Upload, @Type, @Actual)";
         {
             List<IAnnouncement> announcements = new();
             string baseQuery = @"
-SELECT A.ID, A.Title, A.Text, A.Upload, A.Type, M.ID AS MemberID, M.Name, M.Email, M.Phone
+SELECT A.ID, A.Title, A.Text, A.Upload, A.Type, A.Actual, M.ID AS MemberID, M.Name, M.Email, M.Phone
 FROM Announcements A
 JOIN Members M ON A.MemberID = M.ID";
 

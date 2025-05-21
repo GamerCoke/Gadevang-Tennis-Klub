@@ -1,41 +1,49 @@
 ﻿using Gadevang_Tennis_Klub.Interfaces.Models;
-using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gadevang_Tennis_Klub.Models
 {
     public class Team : ITeam
     {
         public int? ID { get; set; }
-        [BindProperty]
-        public string Name { get; set; }
-        [BindProperty]
-        public string Description { get; set; }
-        [BindProperty]
-        public Trainer Trainer { get; set; }
-        [BindProperty]
+
+        [Required]
+        public string Name { get; set; } = string.Empty;
+
+        [Required]
+        public string Description { get; set; } = string.Empty;
+
+        [Range(1, int.MaxValue)]
         public int Capacity { get; set; }
-        [BindProperty]
+
+        [Range(0, int.MaxValue)]
         public int Price { get; set; }
-        [BindProperty]
-        public string ActiveDay { get; set; }
 
+        [Required]
+        public string ActiveDay { get; set; } = string.Empty;
 
+        [Required]
+        public int TrainerId { get; set; }
+
+        // Parameterless constructor
         public Team()
         {
             ID = 0;
             Name = string.Empty;
             Description = string.Empty;
-            Trainer = new Trainer();
             Capacity = 0;
             Price = 0;
             ActiveDay = string.Empty;
+            TrainerId = 0;
         }
-        public Team(int iD, string name, string description, Trainer trainer, int capacity, int price, string activeDay)
+
+        // Full constructor without Trainer object
+        public Team(int? id, string name, string description, int trainerId, int capacity, int price, string activeDay)
         {
-            ID = iD;
+            ID = id;
             Name = name;
             Description = description;
-            Trainer = trainer;
+            TrainerId = trainerId;
             Capacity = capacity;
             Price = price;
             ActiveDay = activeDay;

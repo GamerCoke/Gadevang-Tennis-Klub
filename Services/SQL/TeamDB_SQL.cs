@@ -1,13 +1,17 @@
 using Gadevang_Tennis_Klub.Interfaces.Models;
 using Gadevang_Tennis_Klub.Interfaces.Services;
 using Gadevang_Tennis_Klub.Models;
-using Gadevang_Tennis_Klub.Services;
 using Microsoft.Data.SqlClient;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
+using Gadevang_Tennis_Klub.Services;
 
 public class TeamDB_SQL : ITeamDB
 {
     private string _connectionString = Secret.ConnectionString;
-    private string insertString = @"INSERT INTO Teams VALUES(@Name, @Description, @TrainerID, @Capacity, @ActiveDay, @Price)";
+    private string insertString = @"INSERT INTO Teams (Name, Description, TrainerID, Capacity, ActiveDay, Price) VALUES (@Name, @Description, @TrainerID, @Capacity, @ActiveDay, @Price)";
     private string queryString = @"SELECT ID, Name, Description, TrainerID, Capacity, ActiveDay, Price FROM Teams";
     private string updateString = @"UPDATE Teams SET Name = @Name, Description = @Description, TrainerID = @TrainerID, Capacity = @Capacity, ActiveDay = @ActiveDay, Price = @Price WHERE ID = @ID";
 
@@ -19,7 +23,7 @@ public class TeamDB_SQL : ITeamDB
             SqlCommand cmd = new SqlCommand(insertString, connection);
             cmd.Parameters.AddWithValue("@Name", team.Name);
             cmd.Parameters.AddWithValue("@Description", team.Description);
-            cmd.Parameters.AddWithValue("@TrainerID", team.Trainer?.Id ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@TrainerID", team.TrainerId);
             cmd.Parameters.AddWithValue("@Capacity", team.Capacity);
             cmd.Parameters.AddWithValue("@ActiveDay", team.ActiveDay);
             cmd.Parameters.AddWithValue("@Price", team.Price);
@@ -93,7 +97,7 @@ public class TeamDB_SQL : ITeamDB
                     Capacity = Convert.ToInt32(reader["Capacity"]),
                     Price = Convert.ToInt32(reader["Price"]),
                     ActiveDay = reader["ActiveDay"].ToString(),
-                    Trainer = new Trainer { Id = Convert.ToInt32(reader["TrainerID"]) }
+                    TrainerId = Convert.ToInt32(reader["TrainerID"])
                 };
                 teams.Add(team);
             }
@@ -102,11 +106,11 @@ public class TeamDB_SQL : ITeamDB
         }
         catch (SqlException sqlEx)
         {
-            Console.WriteLine("SQL Error (GetAllTeamAsync): " + sqlEx.Message);
+            Console.WriteLine("SQL Error (GetAllTeamsAsync): " + sqlEx.Message);
         }
         catch (Exception ex)
         {
-            Console.WriteLine("General Error (GetAllTeamAsync): " + ex.Message);
+            Console.WriteLine("General Error (GetAllTeamsAsync): " + ex.Message);
         }
         finally
         {
@@ -154,15 +158,12 @@ public class TeamDB_SQL : ITeamDB
             connection.Close();
         }
 
-        // If no teams found, return an empty list
         if (teamIds.Count == 0)
             return new List<ITeam>();
 
-        // Use SearchTeamsAsync with the list of Team IDs
         var criteria = new Dictionary<string, object> { { "ID", teamIds } };
         return await SearchTeamsAsync(criteria);
     }
-
 
     public async Task<int> GetTeamCapacityAsync(int teamID)
     {
@@ -250,7 +251,7 @@ public class TeamDB_SQL : ITeamDB
                     Capacity = Convert.ToInt32(reader["Capacity"]),
                     Price = Convert.ToInt32(reader["Price"]),
                     ActiveDay = reader["ActiveDay"].ToString(),
-                    Trainer = new Trainer { Id = Convert.ToInt32(reader["TrainerID"]) }
+                    TrainerId = Convert.ToInt32(reader["TrainerID"])
                 };
                 teams.Add(team);
             }
@@ -263,11 +264,8 @@ public class TeamDB_SQL : ITeamDB
         {
             Console.WriteLine("General Error (SearchTeamsAsync): " + ex.Message);
         }
-
         return teams;
     }
-
-
 
     public async Task<bool> UpdateTeamAsync(ITeam team)
     {
@@ -276,7 +274,7 @@ public class TeamDB_SQL : ITeamDB
         cmd.Parameters.AddWithValue("@ID", team.ID);
         cmd.Parameters.AddWithValue("@Name", team.Name);
         cmd.Parameters.AddWithValue("@Description", team.Description);
-        cmd.Parameters.AddWithValue("@TrainerID", team.Trainer?.Id ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@TrainerID", team.TrainerId);
         cmd.Parameters.AddWithValue("@Capacity", team.Capacity);
         cmd.Parameters.AddWithValue("@ActiveDay", team.ActiveDay);
         cmd.Parameters.AddWithValue("@Price", team.Price);

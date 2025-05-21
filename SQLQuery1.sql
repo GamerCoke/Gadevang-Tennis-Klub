@@ -135,8 +135,8 @@ CREATE TABLE TeamBookings (
 	MemberID int not null,
 	TeamID int not null,
 
-	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON UPDATE CASCADE,
-	FOREIGN KEY (TeamID) REFERENCES Teams(ID) ON UPDATE CASCADE,
+	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (TeamID) REFERENCES Teams(ID) ON UPDATE CASCADE ON DELETE CASCADE,
 
 	PRIMARY KEY (MemberID, TeamID)
 );
@@ -157,7 +157,7 @@ CREATE TABLE Partners (
 	BookingID int not null,
 
 	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON UPDATE CASCADE,
-	FOREIGN KEY (BookingID) REFERENCES CourtBookings(ID) ON UPDATE CASCADE,
+	FOREIGN KEY (BookingID) REFERENCES CourtBookings(ID) ON DELETE CASCADE,
 
 	PRIMARY KEY (MemberID, BookingID)
 );
@@ -255,7 +255,7 @@ VALUES ('Daffy', '+45 56 56 56 56', 'Daffy@mail.us', null)
 
 
 INSERT INTO Teams
-VALUES ('test', 'test', 1, 2, 'Fredag', 1750)
+VALUES ('test', 'test', 1, 3, 'Fredag', 1750)
 INSERT INTO Teams
 VALUES ('Mini', 'Minitræning for børn i alderen 5-7 år', 1, 8, 'Onsdag', 450)
 INSERT INTO Teams
