@@ -1,4 +1,5 @@
 ﻿@page
+@using Gadevang_Tennis_Klub.Interfaces.Models
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -80,28 +81,28 @@
                         <div style="width: 50px; border: 1px solid #C6583A; text-align: center; font-family: Arial, sans-serif;">
                                 <!-- Month section in red -->
                             <div style="background-color: #C6583A; color: white; padding: 4px 0; font-size: 0.8em;">
-                                    JUN
+                                    @Model.Event.Start.ToString("MMM", new System.Globalization.CultureInfo("da-DK")).ToUpper()
                                 </div>
                                 <!-- Day section in white -->
                                 <div style="background-color: white; color: black; padding: 6px 0; font-size: 1.2em; font-weight: bold;">
-                                    25
+                                    @Model.Event.Start.Day
                                 </div>
                             </div>
                             <!-- Title (placed next to the calendar) -->
-                            <h5 class="card-title m-0">Grill og Tennis</h5>
+                        <h5 class="card-title m-0">@Model.Event.Title</h5>
                         </div>
                         <hr />
                         <div style="display: flex; justify-content: space-between; align-items: end; padding: 10px;">
                             <div style="margin-left: 15px;">
                                 <div style="color: #555;">
-                                    <i class="fas fa-clock text-center" style="width: 20px;"></i> 10:00-18:00
+                                    <i class="fas fa-clock text-center" style="width: 20px;"></i> @Model.Event.Start.ToString("HH:mm")-@Model.Event.End
                                 </div>
                                 <div style="color: #555;">
-                                    <i class="fa-solid fa-location-dot text-center" style="width: 20px;"></i> Klubhuset
+                                    <i class="fa-solid fa-location-dot text-center" style="width: 20px;"></i> @Model.Event.Location
                                 </div>
                             </div>
                             <div>
-                                <a class="btn btn-success btn-sm" title="Vis begivenhed">Vis</a>
+                                <a class="btn btn-success btn-sm" title="Vis begivenheder" asp-page="/Events/Calendar">Vis begivenheder</a>
                             </div>
                         </div>
                         </div>
@@ -112,34 +113,20 @@
                 <h4><i class="fa-solid fa-bullhorn p-3"></i> Service meddelelser</h4>
                 <!-- Scroll-container -->
                 <div style="max-height: 175px; overflow-y: auto; padding-right: 10px;">
-                    @* @foreach (IAnnouncement announcement in @Model.Announcements) *@
-                    @* { *@
+                    @foreach (IAnnouncement announcement in Model.ActualServiceAnnouncements)
+                    {
                     <div class="card">
                         <div class="card-header" style="background-color: #C6583A; color: white; display: flex; align-items: center; height: 50px;">
-                            <h5 class="card-title">Some important announcement</h5>
+                            <h5 class="card-title">@announcement.Title</h5>
                         </div>
                         <div class="card-body">
-                            <small class="text-muted" style="display: block; margin-bottom: 10px;">May 14, 2025</small>
+                            <small class="text-muted" style="display: block; margin-bottom: 10px;">@announcement.UploadTime.ToShortDateString()</small>
                             <p class="card-text">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                @announcement.Text
                             </p>
                         </div>
                     </div>
-                    @* } *@
-                    <!-- TEMP EKSTRA CARD - FJERN NÅR LOOPET VIRKER -->
-                    <div class="card">
-                        <div class="card-header" style="background-color: #C6583A; color: white; display: flex; align-items: center; height: 50px;">
-                            <h5 class="card-title">Some other important announcement</h5>
-                        </div>
-                        <div class="card-body">
-                            <small class="text-muted" style="display: block; margin-bottom: 10px;">May 14, 2025</small>
-                            <p class="card-text">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                            </p>
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>

@@ -148,6 +148,25 @@ namespace Gadevang_Tennis_Klub.Services.SQL.Booking
             return null;
         }
 
+        public async Task<List<IMember>> GetMembersByTeamAsync(int teamId, IMemberDB memberDB)
+        {
+            var allBookings = await GetAllTeamBookingAsync();
+            var bookingsForTeam = allBookings.Where(tb => tb.Team_ID == teamId).ToList();
+
+            var members = new List<IMember>();
+
+            foreach (var booking in bookingsForTeam)
+            {
+                var member = await memberDB.GetMemberByIDAsync(booking.Member_ID);
+                if (member != null)
+                {
+                    members.Add(member);
+                }
+            }
+            return members;
+        }
+
+
         public async Task<bool> UpdateTeamBookingAsync(ITeamBooking teamBooking)
         {
             using SqlConnection connection = new SqlConnection(_connectionString);
@@ -177,5 +196,28 @@ namespace Gadevang_Tennis_Klub.Services.SQL.Booking
                 connection.Close();
             }
         }
+
+        public async Task<int?> GetTeamBookingIDAsync(int teamID, int memberID)
+        {
+            string query = "SELECT ID FROM TeamBookings WHERE TeamID = @TeamID AND MemberID = @MemberID";
+
+            using SqlConnection connection = new SqlConnection(_connectionString);
+            using SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@TeamID", teamID);
+            cmd.Parameters.AddWithValue("@MemberID", memberID);
+
+            try
+            {
+                await connection.OpenAsync();
+                object result = await cmd.ExecuteScalarAsync();
+                return result != null ? (int?)Convert.ToInt32(result) : null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in GetBookingIDAsync: " + ex.Message);
+                return null;
+            }
+        }
+
     }
 }

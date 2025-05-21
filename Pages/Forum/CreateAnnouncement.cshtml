@@ -1,0 +1,34 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.Forum.CreateAnnouncementModel
+@{
+    ViewData["Title"] = "Create Announcement";
+}
+
+<h1>Opret ny besked</h1>
+
+<form method="post">
+    <div class="mb-3">
+        <label asp-for="NewAnnouncement.Title" class="form-label"></label>
+        <input asp-for="NewAnnouncement.Title" class="form-control" />
+        <span asp-validation-for="NewAnnouncement.Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NewAnnouncement.Text" class="form-label"></label>
+        <textarea asp-for="NewAnnouncement.Text" class="form-control" rows="5"></textarea>
+        <span asp-validation-for="NewAnnouncement.Text" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NewAnnouncement.Type" class="form-label"></label>
+        <select asp-for="NewAnnouncement.Type" class="form-select">
+            <option value="">-- Vælg type --</option>
+            <option value="Service">Service</option>
+            <option value="Partner">Partner</option>
+            <option value="General">General</option>
+        </select>
+        <span asp-validation-for="NewAnnouncement.Type" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Opret</button>
+</form>
