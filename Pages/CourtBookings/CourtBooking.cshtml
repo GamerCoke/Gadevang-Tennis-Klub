@@ -47,16 +47,30 @@
     } 
 </style>
 
+
+<!-- Popup messages to show when successfully booking or removing bookings -->
+@{
+    if (!string.IsNullOrEmpty(@Model.MessageSuccess))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button>
+            @Model.MessageSuccess
+        </div>
+    }
+    if (!string.IsNullOrEmpty(@Model.MessageDanger))
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button>
+            @Model.MessageDanger
+        </div>
+    }
+}
+
+
+
 <h1 class="text-center">Banebooking</h1>
 
 <br />
-
-@* @if (int.TryParse(HttpContext.Session.GetString("User")?.Split('|')[0], out int memberID))
-{
-    List<ICourtBooking> organisedCourtBookings = await Model.CourtBookingDB.GetCourtBookingsByOrganiserAsync(memberID);
-    //List<ICourtBooking> participatingCourtBookings = await Model.CourtBookingDB.GetCourtBookingsByParticipantsAsync(memberID);
-    <h1 class="text-center">Tilgængelige bookinger @(organisedCourtBookings.Count@* +participatingCourtBookings.Count *@@*)/4</h1>
-} *@
 
 <!-- Section for choosing area & precise dates -->
 <div class="card">
@@ -123,6 +137,13 @@
 <!-- Section for actual booking -->
 <div class="card">
     <div class="card-body">
+
+        @if (int.TryParse(HttpContext.Session.GetString("User")?.Split('|')[0], out int memberID))
+        {
+            <h5>Dine banebookinger: @(await Model.GetMyCurrentBookingsCount(memberID))/@(Model.MaxBookings)</h5>
+            <br />
+        }
+
         <!-- Booking table -->
             <table class="table">
                 <thead>

@@ -4,6 +4,8 @@ using Gadevang_Tennis_Klub.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
+using System.Reflection;
 
 namespace Gadevang_Tennis_Klub.Pages.CourtBookings
 {
@@ -18,11 +20,15 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
         public string? CurrentUser { get; private set; }
 
 
-        public int HourFrom = 6; // Admin should maybe be able to change this?
-        public int HourTo = 23; // Admin should maybe be able to change this?
+        // For the message popup when successfully booking or removing bookings
+        public string MessageSuccess { get; set; }
+        public string MessageDanger { get; set; }
 
-        public int TimeSlots = 17; // Admin should maybe be able to change this?
-        public int HourToBeginFrom = 6; // Admin should maybe be able to change this?
+
+        public int MaxBookings { get; } = 4; // Admin should maybe be able to change this?
+
+        public int TimeSlots { get; } = 15; // Admin should maybe be able to change this?
+        public int HourToBeginFrom { get; } = 6; // Admin should maybe be able to change this?
 
 
         public List<DateTime> CurrentWeekDays { get; set; }
@@ -140,19 +146,36 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
             }
         }
 
-        public bool CheckIsWithin14Days(DateTime date, int timeSlot)
+        public async Task<int> GetMyCurrentBookingsCount(int memberID)
         {
-            DateTime slotDateTime = date.AddHours(timeSlot + HourToBeginFrom); // Combine date and time
+            List<ICourtBooking> participatingCourtBookings = await CourtBookingDB.GetCourtBookingsByParticipantsAsync(memberID);
+
+            int count = 0;
+
+            foreach (ICourtBooking courtBooking in participatingCourtBookings)
+            {
+                // Convert DateOnly to DateTime and add Timeslot hours
+                DateTime bookingDateTime = courtBooking.Date.ToDateTime(TimeOnly.MinValue).AddHours(courtBooking.Timeslot);
+
+                if (CheckIsWithin14Days(bookingDateTime)) count++;
+            }
+
+            return count;
+        }
+
+
+        public bool CheckIsWithin14Days(DateTime dateTime)
+        {
             DateTime now = DateTime.Now;
 
-            bool isWithin14Days = slotDateTime >= now && slotDateTime <= now.AddDays(14);
+            bool isWithin14Days = dateTime >= now && dateTime <= now.AddDays(14);
 
             return isWithin14Days;
         }
 
         public bool CheckIsAvailable(DateTime date, int timeSlot)
         {
-            return CheckIsWithin14Days(date, timeSlot);
+            return CheckIsWithin14Days(date.AddHours(timeSlot + HourToBeginFrom)); // Combine date and time
         }
 
         public bool CheckIsBooked(ICourt court, DateTime date, int timeSlot)
@@ -276,8 +299,41 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
             {
                 try
                 {
-                    ICourtBooking newCourtBooking = new CourtBooking(0, courtID, DateOnly.FromDateTime(date), timeSlot, null, memberID, null);
-                    await CourtBookingDB.CreateCourtBookingAsync(newCourtBooking);
+                    // Make sure the member has'nt already booked up to their max bookings
+                    if (MaxBookings > await GetMyCurrentBookingsCount(memberID))
+                    {
+                        ICourtBooking newCourtBooking = new CourtBooking(0, courtID, DateOnly.FromDateTime(date), timeSlot, null, memberID, null);
+                        await CourtBookingDB.CreateCourtBookingAsync(newCourtBooking);
+                        
+                        MessageSuccess = $"Du har nu booket bane {courtID} kl. {timeSlot + HourToBeginFrom}:00 d. {date.ToShortDateString()}";
+                    }
+                    else MessageDanger = $"Du har ikke flere tilgængelige bookinger tilbage";
+                }
+                catch (Exception ex)
+                {
+                    ViewData["ErrorMessage"] = ex.Message;
+                }
+            }
+
+            await OnPageReload();
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostRemoveCourtBooking(int courtID, DateTime date, int timeSlot)
+        {
+            if (int.TryParse(HttpContext.Session.GetString("User")?.Split('|')[0], out int memberID))
+            {
+                try
+                {
+                    // Make sure the member has'nt already booked up to their max bookings
+                    if (MaxBookings > await GetMyCurrentBookingsCount(memberID))
+                    {
+                        ICourtBooking newCourtBooking = new CourtBooking(0, courtID, DateOnly.FromDateTime(date), timeSlot, null, memberID, null);
+                        await CourtBookingDB.CreateCourtBookingAsync(newCourtBooking);
+
+                        MessageSuccess = $"Du har nu booket bane {courtID} kl. {timeSlot + HourToBeginFrom}:00 d. {date.ToShortDateString()}";
+                    }
+                    else MessageDanger = $"Du har ikke flere tilgængelige bookinger tilbage";
                 }
                 catch (Exception ex)
                 {
