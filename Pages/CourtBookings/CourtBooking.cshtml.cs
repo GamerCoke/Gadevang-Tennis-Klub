@@ -57,7 +57,7 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
         public ICourt? CurrentCourt { get; set; }
         public DateTime? CurrentDate { get; set; }
         public int? CurrentTimeSlot { get; set; }
-
+        public bool IsBooked { get; set; }
 
 
 
@@ -271,7 +271,7 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
             await OnPageReload();
         }
 
-        public async Task<IActionResult> OnPostOpenBookCourtModal(int courtID, DateTime date, int timeSlot)
+        public async Task<IActionResult> OnPostOpenBookCourtModal(int courtID, DateTime date, int timeSlot, bool isBooked)
         {
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("User")))
             {
@@ -283,6 +283,7 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
                 CurrentCourt = await _courtDB.GetCourtByIDAsync(courtID);
                 CurrentDate = date;
                 CurrentTimeSlot = timeSlot;
+                IsBooked = isBooked;
             }
             catch (Exception ex)
             {
@@ -325,15 +326,17 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
             {
                 try
                 {
-                    // Make sure the member has'nt already booked up to their max bookings
-                    if (MaxBookings > await GetMyCurrentBookingsCount(memberID))
-                    {
-                        ICourtBooking newCourtBooking = new CourtBooking(0, courtID, DateOnly.FromDateTime(date), timeSlot, null, memberID, null);
-                        await CourtBookingDB.CreateCourtBookingAsync(newCourtBooking);
+                    await GenerateCurrentBookingsDict(); // Make sure the bookings are actually loaded before trying to remove the booking.
 
-                        MessageSuccess = $"Du har nu booket bane {courtID} kl. {timeSlot + HourToBeginFrom}:00 d. {date.ToShortDateString()}";
+                    var lookupKey = (courtID, DateOnly.FromDateTime(date), timeSlot);
+                    if (CurrentBookingsDict.TryGetValue(lookupKey, out ICourtBooking? courtBooking))
+                    {
+                        await CourtBookingDB.DeleteCourtBookingAsync(courtBooking.ID);
+
+                        MessageDanger = $"Du har nu slettet din booking: bane {courtID} kl. {timeSlot + HourToBeginFrom}:00 d. {date.ToShortDateString()}";
                     }
-                    else MessageDanger = $"Du har ikke flere tilgængelige bookinger tilbage";
+
+                    CurrentBookingsDict.Clear(); // Clear the dictionary before we continue, to make sure the PageReload reloads the dictionary from scatch.
                 }
                 catch (Exception ex)
                 {
