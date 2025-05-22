@@ -48,7 +48,7 @@ namespace Gadevang_Tennis_Klub.Services.SQL
 
         public async Task<bool> DeleteMemberAsync(int memberID)
         {
-            return await NonReadQueryAsync($"DELETE FROM Members WHERE ID = {memberID}");
+            return await NonReadQueryAsync($"DELETE FROM Partners WHERE MemberID = {memberID};\nDELETE FROM Members WHERE ID = {memberID};");
         }
 
         public async Task<List<IMember>> GetAllMembersAsync()

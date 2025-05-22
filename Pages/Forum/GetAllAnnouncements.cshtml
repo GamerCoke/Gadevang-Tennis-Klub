@@ -1,4 +1,5 @@
 ﻿@page
+@using Gadevang_Tennis_Klub.Models
 @model GetAllAnnouncementsModel
 @{
     ViewData["Title"] = "All Announcements";
@@ -25,7 +26,10 @@ else
             <th>Upload</th>
             <th>Actual</th>
             <th>Announcer</th>
-            <th></th>
+            @if (Model.IsAdmin || Model.ServiceAnnouncements.Any(a => a.Announcer?.Id == Model.CurrentUserId))
+            {
+                <th></th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -41,7 +45,7 @@ else
                         <form method="post" asp-page-handler="ToggleActual">
                             <input type="hidden" name="id" value="@announcement.Id" />
                             <input type="checkbox" name="actual" value="true"
-                                   onchange="this.form.submit()"
+                            onchange="this.form.submit()"
                             @(announcement.Actual == true ? "checked" : "") />
                         </form>
                     }
@@ -51,12 +55,14 @@ else
                     }
                 </td>
                 <td>@announcement.Announcer?.Name</td>
-                <td>
+                
                     @if ((announcement.Announcer?.Id == Model.CurrentUserId) || Model.IsAdmin)
                     {
+                        <td>
                         <a asp-page="UpdateAnnouncement" asp-route-id="@announcement.Id" class="btn btn-warning">Opdater</a>
+                        </td>
                     }
-                </td>
+                
             </tr>
         }
     </tbody>
@@ -72,7 +78,10 @@ else
             <th>Text</th>
             <th>Upload</th>
             <th>Announcer</th>
-            <th></th>
+            @if (Model.IsAdmin || Model.ServiceAnnouncements.Any(a => a.Announcer?.Id == Model.CurrentUserId))
+            {
+                <th></th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -83,15 +92,17 @@ else
                 <td>@announcement.Text</td>
                 <td>@announcement.UploadTime.ToShortDateString()</td>
                 <td>@announcement.Announcer?.Name</td>
-                <td>
+                
                     @if ((announcement.Announcer?.Id == Model.CurrentUserId) || Model.IsAdmin)
                     {
+                        <td>
                         <a asp-page="UpdateAnnouncement" asp-route-id="@announcement.Id" class="btn btn-warning">Opdater</a>
                         <form method="post" asp-page-handler="Delete" asp-route-id="@announcement.Id" class="d-inline">
                             <button type="submit" class="btn btn-danger" onclick="return confirm('Er du sikker på, at du vil slette denne besked?');">Slet</button>
                         </form>
+                        </td>
                     }
-                </td>
+                
             </tr>
         }
     </tbody>
@@ -105,8 +116,11 @@ else
             <th>Title</th>
             <th>Text</th>
             <th>Upload</th>
-            <th>Announcer</th>
-            <th></th>
+            <th>Oplagt af</th>
+            @if (Model.IsAdmin || Model.ServiceAnnouncements.Any(a => a.Announcer?.Id == Model.CurrentUserId))
+            {
+                <th></th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -117,15 +131,17 @@ else
                 <td>@announcement.Text</td>
                 <td>@announcement.UploadTime.ToShortDateString()</td>
                 <td>@announcement.Announcer?.Name</td>
-                <td>
+                
                 @if ((announcement.Announcer?.Id == Model.CurrentUserId) || Model.IsAdmin)
                 {
+                    <td>
                     <a asp-page="UpdateAnnouncement" asp-route-id="@announcement.Id" class="btn btn-warning">Opdater</a>
                         <form method="post" asp-page-handler="Delete" asp-route-id="@announcement.Id" class="d-inline">
                             <button type="submit" class="btn btn-danger" onclick="return confirm('Er du sikker på, at du vil slette denne besked?');">Slet</button>
                         </form>
+                    </td>
                 }
-                </td>
+                
             </tr>
         }
     </tbody>
