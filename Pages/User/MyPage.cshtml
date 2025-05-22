@@ -67,41 +67,46 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var booking in await Model.CourtBookingDB.GetCourtBookingsByParticipantsAsync(Model.Member.Id))
-        {
-            <tr>
-                <td>@($"#{booking.Court_ID}: {(await Model.CourtDB.GetCourtByIDAsync(booking.Court_ID)).Name}")</td>
-                <td>@($"Dato: {booking.Date} | Tidslot: {booking.Timeslot} / {booking.Timeslot + ownerData.CourtsOpen}.00-{booking.Timeslot + ownerData.CourtsOpen + 1}.00")</td>
-                <td>@($"{(await Model.MemberDB.GetMemberByIDAsync((int)booking.Member_ID)).Name}")</td>
-                <td>
-                    @{
-                        var members = booking.Participants;
-                        if (members.Count == 0)
+        @{
+            var list = await Model.CourtBookingDB.GetCourtBookingsByParticipantsAsync(Model.Member.Id);
+            list.Sort((b1, b2) => b1.Date.CompareTo(b2.Date) * 10 + b1.Timeslot.CompareTo(b2.Timeslot));
+            var sortedList = list.Where(b => b.Date >= DateOnly.FromDateTime(DateTime.Now));
+            foreach (var booking in sortedList)
+            {
+                <tr>
+                    <td>@($"#{booking.Court_ID}: {(await Model.CourtDB.GetCourtByIDAsync(booking.Court_ID)).Name}")</td>
+                    <td>@($"Dato: {booking.Date} | Tidslot: {booking.Timeslot} / {booking.Timeslot + ownerData.CourtsOpen}.00-{booking.Timeslot + ownerData.CourtsOpen + 1}.00")</td>
+                    <td>@($"{(await Model.MemberDB.GetMemberByIDAsync((int)booking.Member_ID)).Name}")</td>
+                    <td>
+                        @{
+                            var members = booking.Participants;
+                            if (members.Count == 0)
+                            {
+                                <p>Du spiller mod Maskinen</p>
+                            }
+                            else
+                            {
+                                foreach (var member in members)
+                                {
+                                    <p>@member.Name</p>
+                                }
+                            }
+                        }
+                    </td>
+                    <td>
+                        @if (Model.Member.Id == booking.Member_ID)
                         {
-                            <p>Du spiller mod Maskinen</p>
+                            <a class="btn btn-success" asp-page="/CourtBookings/Members/AddParticipant" asp-route-bookingId=@booking.ID>Tilføj Deltager <i class="fas fa-user-plus"></i></a>
+                            <br />
+                            <a class="btn btn-danger" asp-page="/CourtBookings/Members/DeleteMemberBooking" asp-route-bookingId=@booking.ID>Slet Booking <i class="fa fa-calendar-minus"></i></a>
                         }
                         else
                         {
-                            foreach (var member in members)
-                            {
-                                <p>@member.Name</p>
-                            }
+                            <a class="btn btn-danger" asp-page="/CourtBookings/Members/LeaveBooking" asp-route-bookingId=@booking.ID>Forlad Booking <i class="fas fa-sign-out"></i></a>
                         }
-                    }
-                </td>
-                <td>
-                    @if (Model.Member.Id == booking.Member_ID)
-                    {
-                        <a class="btn btn-success" asp-page="/CourtBookings/Members/AddParticipant" asp-route-bookingId=@booking.ID>Tilføj Deltager <i class="fas fa-user-plus"></i></a>
-                        <br />
-                        <a class="btn btn-danger" asp-page="/CourtBookings/Members/DeleteMemberBooking" asp-route-bookingId=@booking.ID>Slet Booking <i class="fa fa-calendar-minus"></i></a>
-                    }
-                    else
-                    {
-                        <a class="btn btn-danger" asp-page="/CourtBookings/Members/LeaveBooking" asp-route-bookingId=@booking.ID>Forlad Booking <i class="fas fa-sign-out"></i></a>
-                    }
-                </td>
-            </tr>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>
