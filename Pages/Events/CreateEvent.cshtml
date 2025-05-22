@@ -11,7 +11,7 @@
         <h1>Opret begivenhed</h1>
         @if (!Model.IsCreated)
         {
-            <a asp-page="GetAllEvents" class="btn btn-danger" role="button">Tilbage</a>
+            <a asp-page="GetAllEvents" class="btn btn-secondary" role="button"><i class="fas fa-chevron-left"></i> Tilbage</a>
         }
     </div>
 
@@ -104,7 +104,7 @@
 
             <br />
             <div class="formgroup">
-                <button type="submit" class="btn btn-success" asp-page-handler="CreateEvent">Opret Event</button>
+                <button type="submit" class="btn btn-success" asp-page-handler="CreateEvent">Opret Event <i class="fas fa-check"></i></button>
             </div>
         </form>
     }

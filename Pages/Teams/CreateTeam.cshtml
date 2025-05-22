@@ -7,7 +7,7 @@
 <div class="card p-3 mx-auto" style="width:65%">
     <div class="d-flex justify-content-between align-items-center">
         <h1>Opret Hold</h1>
-        <a asp-page="GetAllTeams" class="btn btn-danger">Tilbage</a>
+        <a asp-page="GetAllTeams" class="btn btn-secondary"><i class="fas fa-chevron-left"></i> Tilbage</a>
     </div>
 
     <form method="post">
@@ -58,7 +58,7 @@
             <span asp-validation-for="Team.TrainerId" class="text-danger"></span>
         </div>
 
-        <button type="submit" class="btn btn-success">Opret Hold</button>
+        <button type="submit" class="btn btn-success">Opret Hold<i class="fas fa-check"></i></button>
     </form>
 </div>
 

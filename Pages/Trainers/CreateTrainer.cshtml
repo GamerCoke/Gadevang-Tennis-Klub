@@ -4,7 +4,10 @@
     ViewData["Title"] = "Opret Træner";
 }
 
-<title>Opret Træner</title>
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Opret Træner</h1>
+    <a asp-page="ReadAllTrainers" class="btn btn-secondary" role="button"><i class="fas fa-chevron-left"></i> Tilbage</a>
+</div>
 <form asp-page-handler="login" method="post">
     <table>
         <tr>
@@ -26,8 +29,8 @@
             <input asp-for="@Model.Trainer.Email" class="form-control" />
         </tr>
         <tr>
-            <td>&nbsp</td>
-            <td><Input type="submit" value="Opret" /></td>
+
+            <td><button type="submit" class="btn btn-success">Opret Medlem <i class="fa fa-check"></i></button></td>
         </tr>
     </table>
 </form>

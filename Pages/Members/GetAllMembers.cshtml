@@ -14,9 +14,12 @@
     <div class="col">
         <p class="mb-0">Antal Medlemmer: @Model.Members.Count</p>
     </div>
-    <div class="col text-end">
-        <a asp-page="CreateMember" class="btn btn-success" role="button">Opret nyt medlem <i class="fas fa-plus-circle"></i></a>
-    </div>
+    @if (Model.IsAdmin)
+    {
+        <div class="col text-end">
+            <a asp-page="CreateMember" class="btn btn-success" role="button">Opret Medlem <i class="fas fa-plus-circle"></i></a>
+        </div>
+    }
 </div>
 
 <br />
