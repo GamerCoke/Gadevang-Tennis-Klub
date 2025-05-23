@@ -163,7 +163,7 @@ CREATE TABLE Partners (
 );
 
 INSERT INTO Members
-VALUES ('Børge', 'Pass123', 'VesterVej 40', 'Børge@DanskMail.dk', '50505050', 'Herre', '1980-04-29', 'Jeg er Børge fra Vestervej 40, Jeg har ikke spillet tennis før', 0, null);
+VALUES ('Børge', 'Pass123', 'VesterVej 40', 'Børge@DanskMail.dk', '50505050', 'Herre', '1980-04-29', 'Jeg er Børge fra Vestervej 40, Jeg har ikke spillet tennis før', 0, '463054478_10233804884366780_3919973871656113720_n.png');
 INSERT INTO Members
 VALUES ('Bendte', '2B', 'Mestervej 32', 'Bendte@Mail.dk', '29751076', 'Dame', '1962-04-28', 'Danmarks Mester 1983', 0, null);
 INSERT INTO Members
