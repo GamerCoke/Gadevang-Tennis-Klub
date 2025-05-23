@@ -152,15 +152,23 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var booking in (await Model.EventBookingDB.GetAllEventBookingsAsync()).Where(@event => @event.MemberID == Model.Member.Id))
-        {
-            var Event = await Model.EventDB.GetEventByIDAsync(booking.EventID);
-            <tr>
-                <td>@Event.Title</td>
-                <td>@Event.Location</td>
-                <td>@($"{DateOnly.FromDateTime(Event.Start)}: {TimeOnly.FromDateTime(Event.Start)}-{Event.End}")</td>
-                <td>@Event.Description</td>
-            </tr>
+        @{
+            var eventBookingList = 
+                (await Model.EventBookingDB.GetAllEventBookingsAsync())
+                .Where(@event => @event.MemberID == Model.Member.Id).ToList();
+            var eventList = eventBookingList.ConvertAll(
+                booking => Model.EventDB.GetEventByIDAsync(booking.EventID).Result
+            );
+            eventList.Sort((b1, b2) => b1.Start.CompareTo(b2.Start));
+            foreach (var Event in eventList)
+            {
+                <tr>
+                    <td>@Event.Title</td>
+                    <td>@Event.Location</td>
+                    <td>@($"{DateOnly.FromDateTime(Event.Start)}: {TimeOnly.FromDateTime(Event.Start)}-{Event.End}")</td>
+                    <td>@Event.Description</td>
+                </tr>
+            }
         }
     </tbody>
 </table>
@@ -177,38 +185,56 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var team in (await Model.TeamDB.GetTeamsByMemberAsync(Model.Member.Id)))
-        {
-            <tr>
-                <td>@team.Name</td>
-                <td>
-                    @{
-                        var trainers = await Model.TrainerDB.GetAllTrainersAsync();
-                        int trainerID = -1;
-                        foreach (var tr in trainers)
-                        {
-                            foreach (var te in await Model.TeamDB.GetTeamsByTrainerAsync(tr.Id.ToString()))
+        @{
+            int GetValue(string day)
+            {
+                switch (day)
+                {
+                    case "Mandag": return 1;
+                    case "Tirsdag": return 2;
+                    case "Onsdag": return 3;
+                    case "Torsdag": return 4;
+                    case "Fredag": return 5;
+                    case "Lørdag": return 6;
+                    case "Søndag": return 7;
+                    default: return 0;
+                }
+            }
+            var teamList = await Model.TeamDB.GetTeamsByMemberAsync(Model.Member.Id);
+            teamList.Sort((b1, b2) => GetValue(b1.ActiveDay).CompareTo(GetValue(b2.ActiveDay)));
+            foreach (var team in teamList)
+            {
+                <tr>
+                    <td>@team.Name</td>
+                    <td>
+                        @{
+                            var trainers = await Model.TrainerDB.GetAllTrainersAsync();
+                            int trainerID = -1;
+                            foreach (var tr in trainers)
                             {
-                                if (te.ID == team.ID)
+                                foreach (var te in await Model.TeamDB.GetTeamsByTrainerAsync(tr.Id.ToString()))
                                 {
-                                    trainerID = tr.Id;
-                                    break;
+                                    if (te.ID == team.ID)
+                                    {
+                                        trainerID = tr.Id;
+                                        break;
+                                    }
                                 }
                             }
+                            if (trainerID == -1) throw new Exception("WTF --- kill me");
+                            var trainer = await Model.TrainerDB.GetTrainerByIDAsync(trainerID);
+                            <p>@trainer.Name</p>
+                            @if (trainer.Image != null)
+                            {
+                                <img class="img-fluid" src="~/Images/@trainer.Image" alt="@trainer.Name" style="max-width: 100px; max-height: 100px;" />
+                            }
                         }
-                        if (trainerID == -1) throw new Exception("WTF --- kill me");
-                        var trainer = await Model.TrainerDB.GetTrainerByIDAsync(trainerID);
-                        <p>@trainer.Name</p>
-                        @if (trainer.Image != null)
-                        {
-                            <img class="img-fluid" src="~/Images/@trainer.Image" alt="@trainer.Name" style="max-width: 100px; max-height: 100px;" />
-                        }
-                    }
-                </td>
-                <td>@team.Description</td>
-                <td>@team.Price</td>
-                <td>@team.ActiveDay</td>
-            </tr>
+                    </td>
+                    <td>@team.Description</td>
+                    <td>@team.Price</td>
+                    <td>@team.ActiveDay</td>
+                </tr>
+            }
         }
     </tbody>
 </table>
