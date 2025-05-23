@@ -79,6 +79,12 @@ namespace Gadevang_Tennis_Klub.Pages.Teams
                 }
             }
 
+            Teams = (await _teamDB.GetAllTeamsAsync())
+    .OrderBy(t => DayOfWeekValue(t.ActiveDay))
+    .ThenBy(t => t.Name) // optional secondary sort
+    .ToList();
+
+
             return Page();
         }
 
@@ -200,6 +206,20 @@ namespace Gadevang_Tennis_Klub.Pages.Teams
             }
 
             return null;
+        }
+        private int DayOfWeekValue(string day)
+        {
+            return day?.ToLowerInvariant() switch
+            {
+                "mandag" => 1,
+                "tirsdag" => 2,
+                "onsdag" => 3,
+                "torsdag" => 4,
+                "fredag" => 5,
+                "lørdag" => 6,
+                "søndag" => 7,
+                _ => 8
+            };
         }
     }
 }

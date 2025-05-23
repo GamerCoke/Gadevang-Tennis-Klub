@@ -7,36 +7,31 @@
 <h1>Opdater Besked</h1>
 
 <form method="post">
-    <input type="hidden" asp-for="AnnouncementToUpdate.Id" />
+    <input type="hidden" asp-for="Id" />
 
     <div class="mb-3">
-        <label asp-for="AnnouncementToUpdate.Title" class="form-label"></label>
-        <input asp-for="AnnouncementToUpdate.Title" class="form-control" />
-        <span asp-validation-for="AnnouncementToUpdate.Title" class="text-danger"></span>
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label asp-for="AnnouncementToUpdate.Text" class="form-label"></label>
-        <textarea asp-for="AnnouncementToUpdate.Text" class="form-control" rows="4"></textarea>
-        <span asp-validation-for="AnnouncementToUpdate.Text" class="text-danger"></span>
+        <label asp-for="Text" class="form-label"></label>
+        <textarea asp-for="Text" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Text" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label asp-for="AnnouncementToUpdate.Type" class="form-label"></label>
-        <select asp-for="AnnouncementToUpdate.Type" class="form-select">
-            <option value="">-- Vælg type --</option>
-            <option value="Service">Service</option>
-            <option value="Partner">Partner</option>
-            <option value="General">General</option>
-        </select>
-        <span asp-validation-for="AnnouncementToUpdate.Type" class="text-danger"></span>
+        <label class="form-label">Type</label>
+        <input class="form-control" value="@Model.Type" disabled />
+        <input type="hidden" name="Type" value="@Model.Type" />
     </div>
 
-    @if (Model.IsAdmin)
+    @if (Model.IsAdmin && Model.Type == "Service")
     {
         <div class="form-check">
-            <input asp-for="AnnouncementToUpdate.Actual" class="form-check-input" />
-            <label asp-for="AnnouncementToUpdate.Actual" class="form-check-label">Er aktuel?</label>
+            <input class="form-check-input" asp-for="ActualFlag" type="checkbox" />
+            <label class="form-check-label" asp-for="ActualFlag">Mark as Actual</label>
         </div>
     }
 
