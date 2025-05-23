@@ -28,7 +28,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
             _eventDB = eventDB;
             _activityDB = activityDB;
         }
-        public IActionResult OnGet()
+        public IActionResult OnGetAsync()
         {
             // Validate if user is logged in, and is admin before showing data.         
             CurrentUser = HttpContext.Session.GetString("User");
@@ -69,7 +69,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
                 {
                     // Create the event
                     int? eventId = await _eventDB.CreateEventAsync(NewEvent);
-                    if (eventId == null) throw new Exception("Kunne ikke finde id på den oprettede beginvenhed");
+                    if (eventId == null) throw new Exception("Kunne ikke finde id på den oprettede begivenhed");
 
                     // Then add the activities to the event
                     if (NewActivities != null && NewActivities.Count > 0)

@@ -96,14 +96,14 @@
 <div class="d-flex justify-content-between">
     <div class="d-flex gap-2">
         <form method="post" asp-page-handler="Previous" asp-route-year="@Model.CurrentYear" asp-route-month="@Model.CurrentMonth">
-            <button type="submit" class="btn" style="background-color: #467191; color: white;">Forrige</button>
+            <button type="submit" class="btn" style="background-color: #467191; color: white;"><i class="fas fa-chevron-left"></i> Forrige</button>
         </form>
         <form method="post" asp-page-handler="Next" asp-route-year="@Model.CurrentYear" asp-route-month="@Model.CurrentMonth">
-            <button type="submit" class="btn" style="background-color: #467191; color: white;">Næste</button>
+            <button type="submit" class="btn" style="background-color: #467191; color: white;">Næste <i class="fas fa-chevron-right"></i></button>
         </form>
     </div>
     <form method="post" asp-page-handler="Today">
-        <button type="submit" class="btn" style="background-color: #467191; color: white;">I dag</button>
+        <button type="submit" class="btn" style="background-color: #467191; color: white;">I dag  <i class="fas fa-calendar"></i></button>
     </form>
 </div>
 
@@ -224,7 +224,7 @@
                         @if (Model.CurrentEvent.Capacity != null && Model.CurrentEvent.Capacity > 0)
                         {
                             // If a user is logged in and is booked for the event -> show option to unregister from the event.
-                            @if ((!string.IsNullOrEmpty(Model.CurrentUser)) && (await Model.GetMemberBooking(Model.CurrentEvent.ID, int.Parse(Model.CurrentUser.Split('|')[0])) != null))
+                            @if ((!string.IsNullOrEmpty(Model.CurrentUser)) && (await Model.GetMemberBookingAsync(Model.CurrentEvent.ID, int.Parse(Model.CurrentUser.Split('|')[0])) != null))
                             {
                                 <button type="submit" class="btn btn-danger" asp-page-handler="EventUnregister">Afmeld</button>
                             }

@@ -3,8 +3,10 @@
 @{
     ViewData["Title"] = "Opdater Medlem";
 }
-
-<title>Opdater Medlem</title>
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Opdatér Medlem</h1>
+    <a asp-page="GetAllMembers" class="btn btn-secondary" role="button"><i class="fas fa-chevron-left"></i> Tilbage</a>
+</div>
 <form method="post" enctype="multipart/form-data">
     <table>
         <div>
@@ -116,10 +118,8 @@
         </div>
 
         <br />
-        <br />
 
-        <td>&nbsp</td>
-        <td><Input type="submit" value="Opdater" /></td>
+        <td><button type="submit" class="btn btn-success">Gem Ændringer <i class="far fa-floppy-disk"></i></button></td>
     </table>
 </form>
 

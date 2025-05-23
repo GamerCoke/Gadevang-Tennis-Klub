@@ -10,10 +10,12 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings.Teams
     {
         private ICourtBookingDB _courtBookingDB { get; set; }
         private ITeamDB _teamDB { get; set; }
-        public ViewTeamCourtBookingsModel(ICourtBookingDB courtBookingDB, ITeamDB teamDB)
+        private ICourtDB _cbd { get; set; }
+        public ViewTeamCourtBookingsModel(ICourtBookingDB courtBookingDB, ITeamDB teamDB, ICourtDB cbd)
         {
             _courtBookingDB = courtBookingDB;
             _teamDB = teamDB;
+            _cbd = cbd;
         }
         public IActionResult OnGet()
         {
@@ -30,6 +32,10 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings.Teams
             IEnumerable<ICourtBooking> bookings = (await _courtBookingDB.GetAllCourtBookingsAsync()).Where(c => c.Team_ID != null);
             
             return bookings;
+        }
+        public async Task<ICourt> GetCourtAsync(int id)
+        {
+            return await _cbd.GetCourtByIDAsync(id);
         }
         public async Task<ITeam> GetTeamAsync(int id)
         {

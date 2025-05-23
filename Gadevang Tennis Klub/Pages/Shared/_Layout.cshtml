@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="~/Gadevang_Tennis_Klub.styles.css" asp-append-version="true" />
 
     <!-- To use the icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
 
     <style>
         .custom-navbar-css {
@@ -125,7 +125,7 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/User/MyPage">Min Profil <i class="fas fa-user"></i></a></li>
-                                    <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Teams/GetAllTeams">Hold</a></li>
+                                    <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Teams/GetAllTeams">Hold <i class="fas fa-users-rectangle"></i></a></li>
 
                                     @if (bool.Parse(Context.Session.GetString("User").Split('|')[1]))
                                     {
@@ -141,7 +141,7 @@
                                       <hr class="dropdown-divider"></hr>
                                     </li>
                                     <li>
-                                        <a asp-area="" asp-page="/User/Logout" class="dropdown-item" style="text-transform: none;">Log af<i class="fas fa-sign-out"></i></a>
+                                        <a asp-area="" asp-page="/User/Logout" class="dropdown-item" style="text-transform: none;">Log af <i class="fas fa-sign-out"></i></a>
                                     </li>
                                 </ul>
                             </div>

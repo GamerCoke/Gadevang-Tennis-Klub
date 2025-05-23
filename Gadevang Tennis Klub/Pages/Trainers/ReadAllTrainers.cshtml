@@ -6,8 +6,9 @@
 
 @if (Model.IsAdmin)
 {
-    <a asp-page="CreateTrainer"
-       class="button">Opret Træner</a>
+    <div class="col text-end">
+        <a asp-page="CreateTrainer" class="btn btn-success" role="button">Opret Træner <i class="fas fa-plus-circle"></i></a>
+    </div>
 }
 
 <title>Trænere</title>
@@ -52,22 +53,27 @@
                 <td>@trainer.Email</td>
                 <td>
                     @{
-                        string teams = "| ";
-                        foreach (var team in await Model.TeamDB.GetTeamsByTrainerAsync(trainer.Id.ToString()))
+                        var teamss = await Model.TeamDB.GetTeamsByTrainerAsync(trainer.Id.ToString());
+                        if(teamss != null && teamss.Any())
                         {
-                            teams += team.Name + " | ";
+                            string teams = "| ";
+                            foreach (var team in teamss)
+                            {
+                                teams += team.Name + " | ";
+                            }
+                            <p>@teams</p>
                         }
-                        <p>@teams</p>
+
                     }
                 </td>
                 @if (Model.IsAdmin)
                 {
                     <td>
                         <a asp-page="DeleteTrainer" asp-route-trainerID=@trainer.Id
-                           class="button">Slet</a>
+                           class="btn btn-danger"><i class="fas fa-trash"></i></a>
                         <br />
                         <a asp-page="UpdateTrainer" asp-route-trainerID=@trainer.Id
-                           class="button">Updater</a>
+                           class="btn btn-primary"><i class="fas fa-edit"></i></a>
                     </td>
                 }
             </tr>

@@ -11,7 +11,7 @@
         <h1>Opret begivenhed</h1>
         @if (!Model.IsCreated)
         {
-            <a asp-page="GetAllEvents" class="btn btn-danger" role="button">Tilbage</a>
+            <a asp-page="GetAllEvents" class="btn btn-secondary" role="button"><i class="fas fa-chevron-left"></i> Tilbage</a>
         }
     </div>
 
@@ -78,7 +78,7 @@
                                 <input asp-for="@Model.NewActivities[i].Title" class="form-control" />
                             </div>
                             <div class="formgroup" style="margin-top: 20px">
-                                <button type="submit" class="btn btn-danger btn-sm" asp-page-handler="RemoveActivity">Fjern</button>
+                                <button type="submit" class="btn btn-danger btn-sm" asp-page-handler="RemoveActivity">Fjern <i class="fas fa-trash"></i></button>
                             </div>
                         </div>
                         <div class="form-group row mb-2">
@@ -104,7 +104,7 @@
 
             <br />
             <div class="formgroup">
-                <button type="submit" class="btn btn-success" asp-page-handler="CreateEvent">Opret Event</button>
+                <button type="submit" class="btn btn-success" asp-page-handler="CreateEvent">Opret Event <i class="fas fa-check"></i></button>
             </div>
         </form>
     }

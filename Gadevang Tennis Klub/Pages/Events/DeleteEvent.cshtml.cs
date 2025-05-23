@@ -52,7 +52,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
             }
             return RedirectToPage(@"/Index");
         }
-        public async Task OnPost(int eventID)
+        public async Task OnPostAsync(int eventID)
         {
             try
             {

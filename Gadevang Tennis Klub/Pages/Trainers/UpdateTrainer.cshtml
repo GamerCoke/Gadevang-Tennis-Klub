@@ -4,7 +4,10 @@
     ViewData["Title"] = "Updater Træner";
 }
 
-<title>Update Træner</title>
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Redigér Træner</h1>
+    <a asp-page="ReadAllTrainers" class="btn btn-secondary" role="button"><i class="fas fa-chevron-left"></i> Tilbage</a>
+</div>
 <form method="post" enctype="multipart/form-data">
     <table>
         <tr>
@@ -41,8 +44,7 @@
             </div>
         </div>
         <tr>
-            <td>&nbsp</td>
-            <td><Input type="submit" value="Updater" /></td>
+            <td><button type="submit" class="btn btn-success">Gem Ændringer <i class="far fa-floppy-disk"></i></button></td>
         </tr>
     </table>
 </form>
