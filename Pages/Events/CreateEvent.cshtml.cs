@@ -69,7 +69,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
                 {
                     // Create the event
                     int? eventId = await _eventDB.CreateEventAsync(NewEvent);
-                    if (eventId == null) throw new Exception("Kunne ikke finde id på den oprettede beginvenhed");
+                    if (eventId == null) throw new Exception("Kunne ikke finde id på den oprettede begivenhed");
 
                     // Then add the activities to the event
                     if (NewActivities != null && NewActivities.Count > 0)
