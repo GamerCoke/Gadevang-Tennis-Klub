@@ -1,17 +1,17 @@
-﻿DROP TABLE Partners;
-DROP TABLE CourtBookings;
-DROP TABLE TeamBookings;
-DROP TABLE EventBookings;
-DROP TABLE Teams;
-DROP TABLE Trainers;
-DROP TABLE Announcements;
-DROP TABLE Members;
-DROP TABLE Courts;
-DROP TABLE Activities;
-DROP TABLE Events;
+﻿DROP TABLE IF EXISTS Partners;
+DROP TABLE IF EXISTS EventBookings;
+DROP TABLE IF EXISTS TeamBookings;
+DROP TABLE IF EXISTS CourtBookings;
+DROP TABLE IF EXISTS Teams;
+DROP TABLE IF EXISTS Trainers;
+DROP TABLE IF EXISTS Announcements;
+DROP TABLE IF EXISTS Activities;
+DROP TABLE IF EXISTS Events;
+DROP TABLE IF EXISTS Courts;
+DROP TABLE IF EXISTS Members;
 
 CREATE TABLE Members (
-	ID int identity(0, 1) UNIQUE,
+	ID int identity(1, 1) UNIQUE,
 	Name varchar(256) not null,
 	PassWord varchar(256) not null,
 	Address varchar(256) not null,
@@ -30,13 +30,13 @@ CREATE TABLE Members (
 );
 
 CREATE TABLE Courts (
-	ID int identity(0, 1) PRIMARY KEY not null,
+	ID int identity(1, 1) PRIMARY KEY not null,
 	Type varchar(32) not null,
     Name varchar(32) not null
 );
 
 CREATE TABLE Events (
-	ID int identity(0, 1) PRIMARY KEY not null,
+	ID int identity(1, 1) PRIMARY KEY not null,
     Title varchar(64) not null,
     Description varchar(1024) not null,
 	StartTime DATETIME not null,
@@ -53,11 +53,11 @@ CREATE TABLE Activities (
 	StartTime DATETIME not null,
 	EndTime TIME not null,
 
-	FOREIGN KEY (EventID) REFERENCES Events(ID) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (EventID) REFERENCES Events(ID) ON DELETE CASCADE,
 );
 
 CREATE TABLE Announcements (
-    ID int identity(0, 1) PRIMARY KEY NOT NULL,
+    ID int identity(1, 1) PRIMARY KEY NOT NULL,
     MemberID int NOT NULL,
     Title varchar(32) NOT NULL,
     Text varchar(1024) NOT NULL,
@@ -74,13 +74,13 @@ CREATE TABLE Announcements (
             Actual IS NULL OR Type = 'Service'
         ),
 
-    FOREIGN KEY (MemberID) REFERENCES Members(ID) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (MemberID) REFERENCES Members(ID) ON DELETE CASCADE
 );
 
 
 
 CREATE TABLE Trainers (
-	ID int identity(0, 1) PRIMARY KEY not null,
+	ID int identity(1, 1) PRIMARY KEY not null,
 	Name varchar(64) not null,
 	Phone varchar(16) not null,
 	Email varchar(64) not null,
@@ -88,7 +88,7 @@ CREATE TABLE Trainers (
 );
 
 CREATE TABLE Teams (
-	ID int identity(0, 1) PRIMARY KEY not null,
+	ID int identity(1, 1) PRIMARY KEY not null,
 	Name varchar(32) not null,
     Description varchar(256) not null,
 	TrainerID int not null,
@@ -103,11 +103,11 @@ CREATE TABLE Teams (
         )
 	),
 
-	FOREIGN KEY (TrainerID) REFERENCES Trainers(ID) ON UPDATE CASCADE ON DELETE CASCADE
+	FOREIGN KEY (TrainerID) REFERENCES Trainers(ID) ON DELETE CASCADE
 );
 
 CREATE TABLE CourtBookings (
-	ID int identity(0, 1) not null UNIQUE,
+	ID int identity(1, 1) not null UNIQUE,
 	BookingDate Date not null,
 	CourtID int not null,
 	TimeSlot int not null,
@@ -115,10 +115,10 @@ CREATE TABLE CourtBookings (
 	MemberID int,
 	EventID int,
 
-	FOREIGN KEY (CourtID) REFERENCES Courts(ID) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY (TeamID) REFERENCES Teams(ID) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY (EventID) REFERENCES Events(ID) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (CourtID) REFERENCES Courts(ID) ON DELETE CASCADE,
+	FOREIGN KEY (TeamID) REFERENCES Teams(ID) ON DELETE CASCADE,
+	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON DELETE CASCADE,
+	FOREIGN KEY (EventID) REFERENCES Events(ID) ON DELETE CASCADE,
 
 	CONSTRAINT idBooking
 	CHECK(
@@ -131,23 +131,23 @@ CREATE TABLE CourtBookings (
 );
 
 CREATE TABLE TeamBookings (
-	ID int identity(0, 1) UNIQUE not null,
+	ID int identity(1, 1) UNIQUE not null,
 	MemberID int not null,
 	TeamID int not null,
 
-	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY (TeamID) REFERENCES Teams(ID) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON DELETE CASCADE,
+	FOREIGN KEY (TeamID) REFERENCES Teams(ID) ON DELETE CASCADE,
 
 	PRIMARY KEY (MemberID, TeamID)
 );
 
 CREATE TABLE EventBookings (
-	ID int identity(0, 1) UNIQUE not null,
+	ID int identity(1, 1) UNIQUE not null,
 	MemberID int not null,
 	EventID int not null,
 
-	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY (EventID) REFERENCES Events(ID) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON DELETE CASCADE,
+	FOREIGN KEY (EventID) REFERENCES Events(ID) ON DELETE CASCADE,
 
 	PRIMARY KEY (MemberID, EventID)
 );
@@ -156,8 +156,8 @@ CREATE TABLE Partners (
 	MemberID int not null,
 	BookingID int not null,
 
-	FOREIGN KEY (MemberID) REFERENCES Members(ID) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY (BookingID) REFERENCES CourtBookings(ID) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (MemberID) REFERENCES Members(ID),
+	FOREIGN KEY (BookingID) REFERENCES CourtBookings(ID) ON DELETE CASCADE,
 
 	PRIMARY KEY (MemberID, BookingID)
 );
@@ -217,34 +217,34 @@ INSERT INTO Events
 VALUES ('Store Flødebolle Dag', '', '2025-06-18 10:00:00', '14:00:00', 'Klubhuset', '100')
 
 INSERT INTO Activities
-VALUES(0, '', 'Klargøring af banerne', '2025-05-24 10:00:00', '2025-05-24 11:00:00')
+VALUES(1, '', 'Klargøring af banerne', '2025-05-24 10:00:00', '2025-05-24 11:00:00')
 INSERT INTO Activities
-VALUES(0, '', 'Standerhejsning', '2025-05-24 11:00:00', '2025-05-24 12:00:00')
+VALUES(1, '', 'Standerhejsning', '2025-05-24 11:00:00', '2025-05-24 12:00:00')
 INSERT INTO Activities
-VALUES(3, '', 'Dame Double', '2025-06-26 09:00:00', '2025-06-26 11:00:00')
+VALUES(4, '', 'Dame Double', '2025-06-26 09:00:00', '2025-06-26 11:00:00')
 INSERT INTO Activities
-VALUES(3, '', 'Dame Single', '2025-06-26 11:00:00', '2025-06-26 13:00:00')
+VALUES(4, '', 'Dame Single', '2025-06-26 11:00:00', '2025-06-26 13:00:00')
 INSERT INTO Activities
-VALUES(3, '', 'Herre Double', '2025-06-26 13:00:00', '2025-06-26 15:00:00')
+VALUES(4, '', 'Herre Double', '2025-06-26 13:00:00', '2025-06-26 15:00:00')
 INSERT INTO Activities
-VALUES(3, '', 'Herre Single', '2025-06-26 15:00:00', '2025-06-26 17:00:00')
+VALUES(4, '', 'Herre Single', '2025-06-26 15:00:00', '2025-06-26 17:00:00')
 INSERT INTO Activities
-VALUES(6, 'Alt om flødebollers oprindelse og om hvorfor det er så vigtigt at indtage dem', 'Foredrag og flødeboller', '2025-06-18 10:00:00', '2025-06-18 11:00:00')
+VALUES(7, 'Alt om flødebollers oprindelse og om hvorfor det er så vigtigt at indtage dem', 'Foredrag og flødeboller', '2025-06-18 10:00:00', '2025-06-18 11:00:00')
 INSERT INTO Activities
-VALUES(6, 'Der skal spises flødeboller', 'Flødebolleædning', '2025-06-18 11:00:00', '2025-06-18 14:00:00')
+VALUES(7, 'Der skal spises flødeboller', 'Flødebolleædning', '2025-06-18 11:00:00', '2025-06-18 14:00:00')
 
 INSERT INTO Announcements
-VALUES (0, 'Søger Partner', 'Vil gerne spille noget tennis på tirsdag, er der nogen der er interesseret?', '2024-01-03', 'Partner',null)
+VALUES (1, 'Søger Partner', 'Vil gerne spille noget tennis på tirsdag, er der nogen der er interesseret?', '2024-01-03', 'Partner',null)
 INSERT INTO Announcements
-VALUES (2, 'Help', 'Jeg er ikke sikker på hvad jeg skal gøre.', '0001-01-02', 'General', null)
+VALUES (3, 'Help', 'Jeg er ikke sikker på hvad jeg skal gøre.', '0001-01-02', 'General', null)
 INSERT INTO Announcements
-VALUES (2, '???', 'Mortalis es fatum. Nalyë, caurelye istya.', '2025-04-29', 'General', null)
+VALUES (3, '???', 'Mortalis es fatum. Nalyë, caurelye istya.', '2025-04-29', 'General', null)
 INSERT INTO Announcements
-VALUES (2, 'Måger', 'Der er måger der angriber alt og alle på bane 2', '2024-08-19', 'Service', 0)
+VALUES (3, 'Måger', 'Der er måger der angriber alt og alle på bane 2', '2024-08-19', 'Service', 0)
 INSERT INTO Announcements
-VALUES (2, 'Boldmaskine', 'Boldmaskinen er ude af drift pg.a nogen fyldte den med æbler', '2025-05-12', 'Service', 1)
+VALUES (3, 'Boldmaskine', 'Boldmaskinen er ude af drift pg.a nogen fyldte den med æbler', '2025-05-12', 'Service', 1)
 INSERT INTO Announcements
-VALUES (2, 'Skur', 'Døren til skuret binder fordi der er nogen som super limede den.', '2025-05-14', 'Service', 1)
+VALUES (3, 'Skur', 'Døren til skuret binder fordi der er nogen som super limede den.', '2025-05-14', 'Service', 1)
 
 INSERT INTO Trainers
 VALUES ('Kenneth', '12332165', 'Kenneth@mail.dk', null)
@@ -270,59 +270,59 @@ INSERT INTO Teams
 VALUES ('Senior rutineret', 'Seniortræning for rutinerede spillere', 2, 5, 'Mandag', 750)
 
 INSERT INTO CourtBookings
-VALUES ('2025-06-15', 1, 1, null, 1, null)
+VALUES ('2025-06-15', 2, 1, null, 2, null)
 INSERT INTO CourtBookings
-VALUES ('2025-07-22', 1, 3, null, 0, null)
+VALUES ('2025-07-22', 2, 3, null, 1, null)
 INSERT INTO CourtBookings
-VALUES ('2025-06-11', 0, 4, null, 2, null)
+VALUES ('2025-06-11', 1, 4, null, 3, null)
 INSERT INTO CourtBookings
-VALUES ('2025-05-21', 0, 9, 1, null, null)
+VALUES ('2025-05-21', 1, 9, 2, null, null)
 INSERT INTO CourtBookings
-VALUES ('2025-08-06', 2, 1, 2, null, null)
+VALUES ('2025-08-06', 3, 1, 3, null, null)
 INSERT INTO CourtBookings
-VALUES ('2025-06-13', 1, 8, 0, null, null)
+VALUES ('2025-06-13', 2, 8, 1, null, null)
 INSERT INTO CourtBookings
-VALUES ('2025-07-8', 2, 3, null, null, 0)
+VALUES ('2025-07-8', 3, 3, null, null, 1)
 INSERT INTO CourtBookings
-VALUES ('2025-05-25', 0, 11, null, null, 1)
+VALUES ('2025-05-25', 1, 11, null, null, 1)
 INSERT INTO CourtBookings
-VALUES ('2025-08-19', 1, 4, null, null, 2)
+VALUES ('2025-08-19', 2, 4, null, null, 2)
 
 INSERT INTO TeamBookings
-VALUES (0, 1)
+VALUES (1, 2)
+INSERT INTO TeamBookings
+VALUES (2, 2)
+INSERT INTO TeamBookings
+VALUES (3, 2)
+INSERT INTO TeamBookings
+VALUES (4, 1)
+INSERT INTO TeamBookings
+VALUES (3, 1)
 INSERT INTO TeamBookings
 VALUES (1, 1)
-INSERT INTO TeamBookings
-VALUES (2, 1)
-INSERT INTO TeamBookings
-VALUES (3, 0)
-INSERT INTO TeamBookings
-VALUES (2, 0)
-INSERT INTO TeamBookings
-VALUES (0, 0)
 
 INSERT INTO EventBookings
-VALUES (0, 0)
+VALUES (1, 1)
 INSERT INTO EventBookings
-VALUES (1, 2)
+VALUES (2, 3)
 INSERT INTO EventBookings
+VALUES (4, 3)
+INSERT INTO EventBookings
+VALUES (1, 5)
+INSERT INTO EventBookings
+VALUES (2, 7)
+INSERT INTO EventBookings
+VALUES (1, 7)
+INSERT INTO EventBookings
+VALUES (4, 7)
+
+INSERT INTO Partners
+VALUES (1, 3)
+INSERT INTO Partners
+VALUES (1, 1)
+INSERT INTO Partners
+VALUES (3, 1)
+INSERT INTO Partners
+VALUES (4, 1)
+INSERT INTO Partners
 VALUES (3, 2)
-INSERT INTO EventBookings
-VALUES (0, 4)
-INSERT INTO EventBookings
-VALUES (1, 6)
-INSERT INTO EventBookings
-VALUES (0, 6)
-INSERT INTO EventBookings
-VALUES (3, 6)
-
-INSERT INTO Partners
-VALUES (0, 2)
-INSERT INTO Partners
-VALUES (0, 0)
-INSERT INTO Partners
-VALUES (2, 0)
-INSERT INTO Partners
-VALUES (3, 0)
-INSERT INTO Partners
-VALUES (2, 1)

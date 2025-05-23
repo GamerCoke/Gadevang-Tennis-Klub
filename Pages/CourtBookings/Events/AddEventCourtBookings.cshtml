@@ -4,6 +4,10 @@
 @{
     ViewData["Title"] = "Begivenhed-Book-Baner";
 }
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Opret hold booking af bane</h1>
+    <a asp-page="ViewEventCourtBookings" class="btn btn-secondary" role="button"><i class="fas fa-chevron-left"></i> Tilbage</a>
+</div>
 
 <form method="post">
     <table>
@@ -73,13 +77,13 @@
             </select>
             <br />
         </tr>
+        <br /> 
         <tr>
             @if (Model.Message != null)
             {
                 <p class="text-danger">@Model.Message</p>
             }
-            <td>&nbsp</td>
-            <td><Input type="submit" value="Opret" /></td>
+            <button type="submit" class="btn btn-success">Opret <i class="fas fa-check"></i></button>
         </tr>
     </table>
 </form>

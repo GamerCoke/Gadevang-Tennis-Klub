@@ -4,7 +4,8 @@
     ViewData["Title"] = "Delete Team";
 }
 
-<h2>Delete Teams</h2>
+<h2>Slet Hold</h2>
+<a asp-page="GetAllTeams" class="btn btn-secondary" role="button"><i class="fas fa-chevron-left"></i> Tilbage</a>
 
 @if (Model.Teams == null || !Model.Teams.Any())
 {
@@ -29,7 +30,7 @@ else
                     <td>
                         <form method="post" asp-page-handler="Delete">
                             <input type="hidden" name="teamID" value="@team.ID" />
-                            <button type="submit" onclick="return confirm('Delete this team?');">Delete</button>
+                            <button type="submit" onclick="return confirm('Delete this team?');">Slet <i class="fas fa-trash"></i></button>
                         </form>
                     </td>
                 </tr>

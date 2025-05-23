@@ -3,7 +3,7 @@
 
 <h2>Team Members</h2>
 
-<a asp-page="/Teams/GetAllTeams" class="btn btn-secondary mb-3">← Back to Teams</a>
+<a asp-page="/Teams/GetAllTeams" class="btn btn-secondary mb-3"><i class="fas fa-chevron-left"></i> Back to Teams</a>
 
 <table class="table table-striped table-bordered">
     <thead class="thead-dark">
@@ -32,7 +32,7 @@
                         <form method="post" asp-page-handler="RemoveMember">
                             <input type="hidden" name="memberId" value="@member.Id" />
                             <input type="hidden" name="teamId" value="@Model.TeamId" />
-                            <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                            <button type="submit" class="btn btn-sm btn-danger">Fjern <i class="fas fa-trash"></i></button>
                         </form>
                     </td>
                 }

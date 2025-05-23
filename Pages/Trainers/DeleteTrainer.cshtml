@@ -3,7 +3,10 @@
 @{
     ViewData["Title"] = "Slet Træner";
 }
-
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Slet Træner</h1>
+    <a asp-page="ReadAllTrainers" class="btn btn-secondary" role="button"><i class="fas fa-chevron-left"></i> Tilbage</a>
+</div>
 <br />
 <label asp-for="@Model.Trainer.Id" class="control-label"></label>
 <input asp-for="@Model.Trainer.Id" class="form-control" disabled />
@@ -14,7 +17,7 @@
 <label asp-for="@Model.Trainer.Email" class="control-label"></label>
 <input asp-for="@Model.Trainer.Email" class="form-control" disabled />
 <form method="post">
-    <button type="submit" class="button">Slet</button>
+    <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
     <input type="hidden" name="trainerID" value="@Model.Trainer.Id" />
 </form>
 @if (Model.Message != null)

@@ -78,22 +78,22 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
             if (SelectedDate == default)
                 SelectedDate = DateTime.Today;
 
-            await OnPageReload();
+            await OnPageReloadAsync();
         }
 
-        private async Task OnPageReload()
+        private async Task OnPageReloadAsync()
         {
-            await LinkCourtsToAreas();
-            await GenerateCurrentBookingsDict();
+            await LinkCourtsToAreasAsync();
+            await GenerateCurrentBookingsDictAsync();
 
             // Create dropdown list for areas.
             CreateAreaSelectList();
             CurrentArea = Areas[SelectedArea];
 
-            await GetCurrentWeekDays(SelectedDate);
+            await GetCurrentWeekDaysAsync(SelectedDate);
         }
 
-        private async Task LinkCourtsToAreas()
+        private async Task LinkCourtsToAreasAsync()
         {
             List<ICourt> allCourts = await _courtDB.GetAllCourtsAsync();
             foreach (ICourt court in allCourts)
@@ -109,7 +109,7 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
                 }
             }
         }
-        private async Task GenerateCurrentBookingsDict()
+        private async Task GenerateCurrentBookingsDictAsync()
         {
             List<ICourtBooking> currentCourtBookings = await CourtBookingDB.GetAllCourtBookingsAsync();
             foreach (ICourtBooking courtBooking in currentCourtBookings)
@@ -119,7 +119,7 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
         }
 
 
-        private async Task GetCurrentWeekDays(DateTime day)
+        private async Task GetCurrentWeekDaysAsync(DateTime day)
         {
             CurrentWeekDays = new List<DateTime>(); // This list is going to contain the 7 weekdays that we currently see on the screen.
 
@@ -146,7 +146,7 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
             }
         }
 
-        public async Task<int> GetMyCurrentBookingsCount(int memberID)
+        public async Task<int> GetMyCurrentBookingsCountAsync(int memberID)
         {
             List<ICourtBooking> participatingCourtBookings = await CourtBookingDB.GetCourtBookingsByParticipantsAsync(memberID);
 
@@ -192,12 +192,12 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
             return CurrentBookingsDict.TryGetValue(lookupKey, out ICourtBooking? courtBooking) && courtBooking?.Member_ID == memberID;
         }
 
-        public async Task<string> GetHoverTitle(ICourt court, DateTime date, int timeSlot, bool isAvailable, bool isBooked)
+        public async Task<string> GetHoverTitleAsync(ICourt court, DateTime date, int timeSlot, bool isAvailable, bool isBooked)
         {
-            return !isAvailable ? "Kan ikke bookes" : (isBooked ? await GetIsBookedString(court, date, timeSlot) : GetIsAvailableString(court, timeSlot));
+            return !isAvailable ? "Kan ikke bookes" : (isBooked ? await GetIsBookedStringAsync(court, date, timeSlot) : GetIsAvailableString(court, timeSlot));
         }
 
-        private async Task<string> GetIsBookedString(ICourt court, DateTime date, int timeSlot)
+        private async Task<string> GetIsBookedStringAsync(ICourt court, DateTime date, int timeSlot)
         {
             var lookupKey = (court.ID, DateOnly.FromDateTime(date), timeSlot);
             if (!CurrentBookingsDict.TryGetValue(lookupKey, out ICourtBooking? courtBooking)) // return early if the booking could not be found.
@@ -261,17 +261,17 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
             return "";
         }
 
-        public async Task OnPostNewAreaChosen()
+        public async Task OnPostNewAreaChosenAsync()
         {
-            await OnPageReload();
+            await OnPageReloadAsync();
         }
 
-        public async Task OnPostNewDateChosen()
+        public async Task OnPostNewDateChosenAsync()
         {
-            await OnPageReload();
+            await OnPageReloadAsync();
         }
 
-        public async Task<IActionResult> OnPostOpenBookCourtModal(int courtID, DateTime date, int timeSlot, bool isBooked)
+        public async Task<IActionResult> OnPostOpenBookCourtModalAsync(int courtID, DateTime date, int timeSlot, bool isBooked)
         {
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("User")))
             {
@@ -290,7 +290,7 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
                 ViewData["ErrorMessage"] = ex.Message;
             }
 
-            await OnPageReload();
+            await OnPageReloadAsync();
             return Page();
         }
 
@@ -301,7 +301,7 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
                 try
                 {
                     // Make sure the member has'nt already booked up to their max bookings
-                    if (MaxBookings > await GetMyCurrentBookingsCount(memberID))
+                    if (MaxBookings > await GetMyCurrentBookingsCountAsync(memberID))
                     {
                         ICourtBooking newCourtBooking = new CourtBooking(0, courtID, DateOnly.FromDateTime(date), timeSlot, null, memberID, null);
                         await CourtBookingDB.CreateCourtBookingAsync(newCourtBooking);
@@ -316,7 +316,7 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
                 }
             }
 
-            await OnPageReload();
+            await OnPageReloadAsync();
             return Page();
         }
 
@@ -326,7 +326,7 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
             {
                 try
                 {
-                    await GenerateCurrentBookingsDict(); // Make sure the bookings are actually loaded before trying to remove the booking.
+                    await GenerateCurrentBookingsDictAsync(); // Make sure the bookings are actually loaded before trying to remove the booking.
 
                     var lookupKey = (courtID, DateOnly.FromDateTime(date), timeSlot);
                     if (CurrentBookingsDict.TryGetValue(lookupKey, out ICourtBooking? courtBooking))
@@ -344,26 +344,26 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
                 }
             }
 
-            await OnPageReload();
+            await OnPageReloadAsync();
             return Page();
         }
 
-        public async Task OnPostPrevious()
+        public async Task OnPostPreviousAsync()
         {
             SelectedDate = SelectedDate.AddDays(-7);
-            await OnPageReload();
+            await OnPageReloadAsync();
         }
 
-        public async Task OnPostNext()
+        public async Task OnPostNextAsync()
         {
             SelectedDate = SelectedDate.AddDays(7);
-            await OnPageReload();
+            await OnPageReloadAsync();
         }
 
-        public async Task OnPostToday()
+        public async Task OnPostTodayAsync()
         {
             SelectedDate = DateTime.Today;
-            await OnPageReload();
+            await OnPageReloadAsync();
         }
     }
 }

@@ -50,20 +50,20 @@ namespace Gadevang_Tennis_Klub.Pages.Events
         public async Task OnGetAsync(int? year, int? month)
         {
             DateTime displayDate = (year.HasValue && month.HasValue) ? new DateTime(year.Value, month.Value, 1) : DateTime.Now;
-            await LoadCalendar(displayDate);
+            await LoadCalendarAsync(displayDate);
         }
 
         /// <summary>
         /// Sets the current year and month, updates the month name, and gets event data.
         /// </summary>
-        private async Task LoadCalendar(DateTime date)
+        private async Task LoadCalendarAsync(DateTime date)
         {
             CurrentUser = HttpContext.Session.GetString("User");
 
             CurrentYear = date.Year;
             CurrentMonth = date.Month;
             GetMonthName();
-            await GetEventData();
+            await GetEventDataAsync();
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
             MonthName = CapitalizeFirstLetter(new CultureInfo("da-DK").DateTimeFormat.GetMonthName(CurrentMonth));
         }
 
-        private async Task GetEventData()
+        private async Task GetEventDataAsync()
         {
             Events = await _eventDB.GetAllEventsAsync();
         }
@@ -85,7 +85,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
         {
             return char.ToUpper(str[0]) + str.Substring(1); // Make the first letter capital.
         }
-        public async Task<IEventBooking?> GetMemberBooking(int eventID, int memberID)
+        public async Task<IEventBooking?> GetMemberBookingAsync(int eventID, int memberID)
         {
             CurrentEventBookings = await _eventBookingDB.GetEventBookingsByEventIDAsync(eventID);
             return CurrentEventBookings.FirstOrDefault(e => e.MemberID == memberID);
@@ -93,28 +93,28 @@ namespace Gadevang_Tennis_Klub.Pages.Events
         #endregion
 
         #region OnPost Methods (Invoked by buttons)
-        public async Task OnPostPrevious(int year, int month)
+        public async Task OnPostPreviousAsync(int year, int month)
         {
             DateTime currentMonth = new DateTime(year, month, 1);
             DateTime previous = currentMonth.AddMonths(-1);
-            await LoadCalendar(previous);
+            await LoadCalendarAsync(previous);
         }
 
-        public async Task OnPostNext(int year, int month)
+        public async Task OnPostNextAsync(int year, int month)
         {
             DateTime currentMonth = new DateTime(year, month, 1);
             DateTime next = currentMonth.AddMonths(1);
-            await LoadCalendar(next);
+            await LoadCalendarAsync(next);
         }
 
-        public async Task OnPostToday()
+        public async Task OnPostTodayAsync()
         {
-            await LoadCalendar(DateTime.Now);
+            await LoadCalendarAsync(DateTime.Now);
         }
 
-        public async Task<IActionResult> OnPostOpenEventModal(int year, int month, int eventID)
+        public async Task<IActionResult> OnPostOpenEventModalAsync(int year, int month, int eventID)
         {
-            await LoadCalendar(new DateTime(year, month, 1));
+            await LoadCalendarAsync(new DateTime(year, month, 1));
 
             try
             {
@@ -132,7 +132,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
             return Page(); // Reloads the same page, now with CurrentEvent & CurrentEventActivities populated
         }
 
-        public async Task<IActionResult> OnPostEventRegister(int currentYear, int currentMonth, int eventID)
+        public async Task<IActionResult> OnPostEventRegisterAsync(int currentYear, int currentMonth, int eventID)
         {
             if (!int.TryParse(HttpContext.Session.GetString("User")?.Split('|')[0], out int memberID))
             {
@@ -148,7 +148,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
                 if (ev.Capacity > evBookings.Count)
                 {
                     // Make sure the member isn't already booked for this event before creating a new booking
-                    if (await GetMemberBooking(eventID, memberID) == null)
+                    if (await GetMemberBookingAsync(eventID, memberID) == null)
                     {
                         await _eventBookingDB.CreateEventBookingAsync(new EventBooking(memberID, eventID));
 
@@ -162,18 +162,18 @@ namespace Gadevang_Tennis_Klub.Pages.Events
                 ViewData["ErrorMessage"] = ex.Message;
             }
 
-            await LoadCalendar(new DateTime(currentYear, currentMonth, 1)); 
+            await LoadCalendarAsync(new DateTime(currentYear, currentMonth, 1)); 
             return Page();
         }
 
-        public async Task<IActionResult> OnPostEventUnregister(int currentYear, int currentMonth, int eventID)
+        public async Task<IActionResult> OnPostEventUnregisterAsync(int currentYear, int currentMonth, int eventID)
         {
             if (int.TryParse(HttpContext.Session.GetString("User")?.Split('|')[0], out int memberID))
             {
                 try
                 {
                     // Make sure the member is actually booked for this event before deleting the booking
-                    IEventBooking? evBooking = await GetMemberBooking(eventID, memberID);
+                    IEventBooking? evBooking = await GetMemberBookingAsync(eventID, memberID);
                     if (evBooking != null)
                     {
                         await _eventBookingDB.DeleteEventBookingAsync(evBooking.ID);
@@ -188,7 +188,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
                 }
             }
 
-            await LoadCalendar(new DateTime(currentYear, currentMonth, 1));
+            await LoadCalendarAsync(new DateTime(currentYear, currentMonth, 1));
             return Page();
         }
         #endregion

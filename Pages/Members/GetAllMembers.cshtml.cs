@@ -10,6 +10,8 @@ namespace Gadevang_Tennis_Klub.Pages.Members
         public IMemberDB _memberDB;
         public ITeamDB _teamDB;
         public bool IsAdmin;
+        public string? User;
+        public int UserID;
 
         public List<IMember> Members { get; set; }
 
@@ -33,9 +35,10 @@ namespace Gadevang_Tennis_Klub.Pages.Members
             {
                 Members = await _memberDB.GetAllMembersAsync();
                 SortByName(Members);
-                string? user = HttpContext.Session.GetString("User");
-                if (user != null)
-                    IsAdmin = bool.Parse(user.Split('|')[1]);
+                User = HttpContext.Session.GetString("User");
+                UserID = int.Parse(User.Split('|')[0]);
+                if (User != null)
+                    IsAdmin = bool.Parse(User.Split('|')[1]);
                 else
                     IsAdmin = false;
             }

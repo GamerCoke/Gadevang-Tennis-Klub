@@ -4,7 +4,10 @@
     ViewData["Title"] = "Opret Bane";
 }
 
-<title>Opret Bane</title>
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Opret Bane</h1>
+    <a asp-page="GetAllCourts" class="btn btn-secondary" role="button"><i class="fas fa-chevron-left"></i> Tilbage</a>
+</div>
 <form asp-page-handler="Create" method="post" enctype="multipart/form-data">
     <table>
         <div>
@@ -30,10 +33,8 @@
 
         <br />
 
-        <div>
-        <td>&nbsp</td>
-        <td><Input type="submit" value="Opret" /></td>
-        </div>
+        <td><button type="submit" class="btn btn-success">Opret Bane <i class="fa fa-check"></i></button></td>
+
     </table>
 </form>
 @if (Model.Message != null)

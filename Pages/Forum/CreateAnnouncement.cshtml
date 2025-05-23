@@ -3,8 +3,10 @@
 @{
     ViewData["Title"] = "Create Announcement";
 }
-
-<h1>Opret ny besked</h1>
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Opret Opslag</h1>
+    <a asp-page="GetAllAnnouncements" class="btn btn-secondary" role="button"><i class="fas fa-chevron-left"></i> Tilbage</a>
+</div>
 
 <form method="post">
     <div class="mb-3">
@@ -30,7 +32,7 @@
         <span asp-validation-for="NewAnnouncement.Type" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Opret</button>
+    <button type="submit" class="btn btn-success">Opret <i class="fas fa-check"></i></button>
 </form>
 
 @section Scripts {

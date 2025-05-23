@@ -3,8 +3,11 @@
 @{
     ViewData["Title"] = "Opdater Besked";
 }
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Opdater Opslag</h1>
+    <a asp-page="GetAllAnnouncements" class="btn btn-secondary" role="button"><i class="fas fa-chevron-left"></i> Tilbage</a>
+</div>
 
-<h1>Opdater Besked</h1>
 
 <form method="post">
     <input type="hidden" asp-for="Id" />
@@ -20,7 +23,7 @@
         <textarea asp-for="Text" class="form-control" rows="4"></textarea>
         <span asp-validation-for="Text" class="text-danger"></span>
     </div>
-
+@* 
     <div class="mb-3">
         <label class="form-label">Type</label>
         <input class="form-control" value="@Model.Type" disabled />
@@ -34,8 +37,8 @@
             <label class="form-check-label" asp-for="ActualFlag">Mark as Actual</label>
         </div>
     }
-
-    <button type="submit" class="btn btn-primary mt-3">Gem ændringer</button>
+ *@
+    <button type="submit" class="btn btn-success mt-3">Gem ændringer <i class="fas fa-floppy-disk"></i></button>
 </form>
 
 @section Scripts {
