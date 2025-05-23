@@ -224,7 +224,7 @@
                         @if (Model.CurrentEvent.Capacity != null && Model.CurrentEvent.Capacity > 0)
                         {
                             // If a user is logged in and is booked for the event -> show option to unregister from the event.
-                            @if ((!string.IsNullOrEmpty(Model.CurrentUser)) && (await Model.GetMemberBooking(Model.CurrentEvent.ID, int.Parse(Model.CurrentUser.Split('|')[0])) != null))
+                            @if ((!string.IsNullOrEmpty(Model.CurrentUser)) && (await Model.GetMemberBookingAsync(Model.CurrentEvent.ID, int.Parse(Model.CurrentUser.Split('|')[0])) != null))
                             {
                                 <button type="submit" class="btn btn-danger" asp-page-handler="EventUnregister">Afmeld</button>
                             }
