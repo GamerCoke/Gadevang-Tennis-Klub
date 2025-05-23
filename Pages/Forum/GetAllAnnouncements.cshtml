@@ -9,11 +9,11 @@
 
 @if (HttpContext.Session.GetString("User") != null)
 {
-    <a asp-page="/Forum/CreateAnnouncement" class="btn btn-primary mb-3">Create New Announcement</a>
+    <a asp-page="/Forum/CreateAnnouncement" class="btn btn-primary mb-3">Opret nyt opslag <i class="fas fa-plus-circle"></i></a>
 }
 else
 {
-    <p>Please <a asp-page="/User/Login">log in</a> to create announcements.</p>
+    <p>Vær sød at <a asp-page="/User/Login">log ind</a> for at lave et opslag.</p>
 }
 
 @* ---------------- Service Announcements ---------------- *@
@@ -59,7 +59,7 @@ else
                     @if ((announcement.Announcer?.Id == Model.CurrentUserId) || Model.IsAdmin)
                     {
                         <td>
-                        <a asp-page="UpdateAnnouncement" asp-route-id="@announcement.Id" class="btn btn-warning">Opdater</a>
+                        <a asp-page="UpdateAnnouncement" asp-route-id="@announcement.Id" class="btn btn-primary">Redigér <i class="fas fa-edit"></i></a>
                         </td>
                     }
                 
@@ -96,9 +96,9 @@ else
                     @if ((announcement.Announcer?.Id == Model.CurrentUserId) || Model.IsAdmin)
                     {
                         <td>
-                        <a asp-page="UpdateAnnouncement" asp-route-id="@announcement.Id" class="btn btn-warning">Opdater</a>
+                        <a asp-page="UpdateAnnouncement" asp-route-id="@announcement.Id" class="btn btn-primary">Redigér <i class="fas fa-edit"></i></a>
                         <form method="post" asp-page-handler="Delete" asp-route-id="@announcement.Id" class="d-inline">
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Er du sikker på, at du vil slette denne besked?');">Slet</button>
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Er du sikker på, at du vil slette denne besked?');">Slet <i class="fas fa-trash"></i></button>
                         </form>
                         </td>
                     }
@@ -135,9 +135,9 @@ else
                 @if ((announcement.Announcer?.Id == Model.CurrentUserId) || Model.IsAdmin)
                 {
                     <td>
-                    <a asp-page="UpdateAnnouncement" asp-route-id="@announcement.Id" class="btn btn-warning">Opdater</a>
+                    <a asp-page="UpdateAnnouncement" asp-route-id="@announcement.Id" class="btn btn-primary">Redigér <i class="fas fa-edit"></i></a>
                         <form method="post" asp-page-handler="Delete" asp-route-id="@announcement.Id" class="d-inline">
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Er du sikker på, at du vil slette denne besked?');">Slet</button>
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Er du sikker på, at du vil slette denne besked?');">Slet <i class="fas fa-trash"></i></button>
                         </form>
                     </td>
                 }
