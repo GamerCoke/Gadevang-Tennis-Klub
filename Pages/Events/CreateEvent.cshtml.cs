@@ -28,7 +28,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
             _eventDB = eventDB;
             _activityDB = activityDB;
         }
-        public IActionResult OnGet()
+        public IActionResult OnGetAsync()
         {
             // Validate if user is logged in, and is admin before showing data.         
             CurrentUser = HttpContext.Session.GetString("User");
