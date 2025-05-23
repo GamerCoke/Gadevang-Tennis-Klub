@@ -140,7 +140,7 @@
 
         @if (int.TryParse(HttpContext.Session.GetString("User")?.Split('|')[0], out int memberID))
         {
-            <h5>Dine banebookinger: @(await Model.GetMyCurrentBookingsCount(memberID))/@(Model.MaxBookings)</h5>
+            <h5>Dine banebookinger: @(await Model.GetMyCurrentBookingsCountAsync(memberID))/@(Model.MaxBookings)</h5>
             <br />
         }
 
@@ -211,7 +211,7 @@
                                             class="booking-btn"
                                             style="background-color: @(!isAvailable ? _gray : (isBooked ? (isBookedByMe ? _orange : _red) : _green));"
                                             disabled="@( (!isAvailable || (isBooked && !isBookedByMe)) ? "disabled" : null )"
-                                            title="@await Model.GetHoverTitle(courtSlot, weekDay, i, isAvailable, isBooked)">
+                                            title="@await Model.GetHoverTitleAsync(courtSlot, weekDay, i, isAvailable, isBooked)">
                                                 @if (isAvailable && isBooked)
                                                 {
                                                     <!-- Icon -->
