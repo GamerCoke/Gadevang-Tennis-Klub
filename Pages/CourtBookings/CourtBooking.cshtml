@@ -42,7 +42,7 @@
                     string organizerName = (await Model.MemberDB.GetMemberByIDAsync(bookingMemberID)).Name;
                     return $"{organizerName} har booket banen med dig:" +
                            $"\nBane {court.ID} {court.Type} kl. {timeSlot + Model.HourToBeginFrom}:00" +
-                           $"\nBooket med: {participantNames}";
+                           (courtBooking.Participants.Count > 1 ? $"\nBooket med: {participantNames}" : "");
                 }
             }
             return "Medlemsbooking";
@@ -436,7 +436,7 @@
                         </p>
                     }
 
-                    @if (organiser != null && organiser.Id == userID)
+                    @if (!Model.IsBooked || (organiser != null && organiser.Id == userID))
                     {
                         @if (Model.ParticipantIDs != null && Model.ParticipantIDs.Count < 3)
                         {
@@ -484,7 +484,7 @@
                                         <tr>
                                             <td class="ps-3">@member.Name</td>
                                             <td class="text-end">
-                                                @if (organiser != null && organiser.Id == userID)
+                                                @if (!Model.IsBooked || (organiser != null && organiser.Id == userID))
                                                 {
                                                     <button type="submit" class="btn btn-danger btn-sm" asp-page-handler="RemoveMemberFromBooking" asp-route-memberId="@participantID">
                                                         Fjern <i class="fas fa-trash"></i>
@@ -504,7 +504,7 @@
                         </div>
                     }
 
-                    @if (organiser != null && organiser.Id == userID)
+                    @if (!Model.IsBooked || (organiser != null && organiser.Id == userID))
                     {
                         <br />
 
