@@ -1,5 +1,6 @@
 using Gadevang_Tennis_Klub.Interfaces.Models;
 using Gadevang_Tennis_Klub.Interfaces.Services;
+using Gadevang_Tennis_Klub.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -12,7 +13,7 @@ namespace Gadevang_Tennis_Klub.Pages
         private IEventDB _eventDB;
         private IAnnouncementDB _announcementDB;
 
-        public IEvent Event { get; set; }
+        public IEvent? Event { get; set; }
         public List<IAnnouncement> ActualServiceAnnouncements { get; set; }
 
 
@@ -27,7 +28,8 @@ namespace Gadevang_Tennis_Klub.Pages
         {
             try
             {
-                Event = await _eventDB.GetEventByIDAsync(1); // ID 1 = Grill og Tennis event
+                List<IEvent> events = await _eventDB.GetAllEventsAsync();
+                Event = events.Where(e => e.Start > DateTime.Now).OrderBy(e => e.Start).FirstOrDefault();
 
                 ActualServiceAnnouncements = (await _announcementDB.GetAnnouncementsByTypeAsync("Service")).Where(a => a.Actual == true).ToList();
             }

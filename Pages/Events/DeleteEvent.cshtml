@@ -76,7 +76,7 @@
             @if (Model.Event.Capacity != null && Model.Event.Capacity != 0)
             {
                 <div style="color: #888; font-size: 0.9em; align-self: flex-end; margin-left: auto;">
-                    <i class="fa-solid fa-user text-center" style="width: 20px;"></i> 0 / @Model.Event.Capacity tilmeldte
+                    <i class="fa-solid fa-user text-center" style="width: 20px;"></i> @Model.EventBookings?.Count / @Model.Event?.Capacity tilmeldte
                 </div>
             }
         </div>
@@ -85,7 +85,7 @@
 
         <form method="post">
             <button class="btn btn-danger"> Slet <i class="fas fa-trash"></i></button>
-            <input type="hidden" name="eventID" value=@Model.Event.ID />
+            <input type="hidden" name="eventID" value=@Model.Event?.ID />
         </form>
     }
     else if (Model.IsDeleted)
@@ -95,7 +95,7 @@
     }
     else
     {
-        <p>Noget gik galt: Begivenheden blev ikke slettet, sandsynligvis fordi den har tilknyttede aktiviteter som skal slettes først.</p>
+        <p>Noget gik galt: Begivenheden blev ikke slettet, sandsynligvis fordi den har tilknyttede aktiviteter eller tilmeldinger som skal slettes først.</p>
         <a asp-page="GetAllEvents" class="btn btn-success">Videre</a>
     }
 </div>

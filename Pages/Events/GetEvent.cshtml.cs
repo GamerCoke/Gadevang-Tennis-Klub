@@ -3,6 +3,7 @@ using Gadevang_Tennis_Klub.Interfaces.Services;
 using Gadevang_Tennis_Klub.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 
 namespace Gadevang_Tennis_Klub.Pages.Events
 {
@@ -12,21 +13,28 @@ namespace Gadevang_Tennis_Klub.Pages.Events
         private IActivityDB _activityDB;
         private IEventBookingDB _eventBookingDB;
 
+        public IMemberDB MemberDB { get; private set; }
+
 
         public string? CurrentUser { get; private set; }
         public bool IsAdmin { get; private set; }
 
 
-        public IEvent Event { get; set; }
-        public List<IActivity> Activities { get; set; }
-        public List<IEventBooking> EventBookings { get; set; }
+        // For the message popup when successfully removing members from the event
+        public string MessageDanger { get; set; }
 
 
-        public GetEventModel(IEventDB eventDB, IActivityDB activityDB, IEventBookingDB eventBookingDB)
+        public IEvent? Event { get; set; }
+        public List<IActivity>? Activities { get; set; }
+        public List<IEventBooking>? EventBookings { get; set; }
+
+
+        public GetEventModel(IEventDB eventDB, IActivityDB activityDB, IEventBookingDB eventBookingDB, IMemberDB memberDB)
         {
             _eventDB = eventDB;
             _activityDB = activityDB;
             _eventBookingDB = eventBookingDB;
+            MemberDB = memberDB;
         }
 
         public async Task<IActionResult> OnGetAsync(int eventID)
@@ -55,6 +63,25 @@ namespace Gadevang_Tennis_Klub.Pages.Events
                 }
             }
             return RedirectToPage(@"/Index");
+        }
+
+        public async Task OnPostRemoveMemberBookingAsync(int eventID, int eventBookingID, string memberName)
+        {
+            try
+            {
+                Event = await _eventDB.GetEventByIDAsync(eventID);
+                Activities = await _activityDB.GetActivitiesByEventAsync(eventID);
+
+                await _eventBookingDB.DeleteEventBookingAsync(eventBookingID);
+
+                EventBookings = await _eventBookingDB.GetEventBookingsByEventIDAsync(eventID);
+
+                MessageDanger = $"Du har nu fjernet {memberName} fra begivenheden: {Event?.Title}";
+            }
+            catch (Exception ex)
+            {
+                ViewData["ErrorMessage"] = ex.Message;
+            }
         }
     }
 }
