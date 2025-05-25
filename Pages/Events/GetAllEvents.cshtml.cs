@@ -17,6 +17,9 @@ namespace Gadevang_Tennis_Klub.Pages.Events
         public bool IsAdmin { get; private set; }
 
 
+        public bool ShowUpcomingEvents { get; set; }
+
+
         public List<IEvent> Events { get; set; }
         public ConcurrentDictionary<int, List<IEventBooking>> EventBookingsDict { get; set; } 
 
@@ -27,7 +30,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
             _eventBookingDB = eventBookingDB;
         }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(bool showUpcomingEvents = true)
         {
             // Validate if user is logged in, and is admin before showing data.         
             CurrentUser = HttpContext.Session.GetString("User");
@@ -39,9 +42,15 @@ namespace Gadevang_Tennis_Klub.Pages.Events
             IsAdmin = bool.Parse(CurrentUser.Split('|')[1]); 
             if (IsAdmin)
             {
+                ShowUpcomingEvents = showUpcomingEvents;
+
                 try
                 {
-                    Events = _eventDB.SortEventsByDate(await _eventDB.GetAllEventsAsync());
+                    if (ShowUpcomingEvents)
+                    {
+                        Events = _eventDB.SortEventsByDate((await _eventDB.GetAllEventsAsync()).Where(e => e.Start > DateTime.Now).ToList());
+                    }
+                    else Events = _eventDB.SortEventsByDate((await _eventDB.GetAllEventsAsync()).Where(e => e.Start < DateTime.Now).ToList());
 
                     EventBookingsDict = new();
                     foreach (IEvent ev in Events)
@@ -58,6 +67,52 @@ namespace Gadevang_Tennis_Klub.Pages.Events
                 }
             }
             return RedirectToPage(@"/Index");
+        }
+
+        public async Task<IActionResult> OnPostShowUpcomingEventsAsync()
+        {
+            ShowUpcomingEvents = true;
+
+            try
+            {
+                Events = _eventDB.SortEventsByDate((await _eventDB.GetAllEventsAsync()).Where(e => e.Start > DateTime.Now).ToList());
+
+                EventBookingsDict = new();
+                foreach (IEvent ev in Events)
+                {
+                    EventBookingsDict.TryAdd(ev.ID, await _eventBookingDB.GetEventBookingsByEventIDAsync(ev.ID));
+                }
+            }
+            catch (Exception ex)
+            {
+                Events = new List<IEvent>();
+                ViewData["ErrorMessage"] = ex.Message;
+            }
+
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostShowPreviousEventsAsync()
+        {
+            ShowUpcomingEvents = false;
+
+            try
+            {
+                Events = _eventDB.SortEventsByDate((await _eventDB.GetAllEventsAsync()).Where(e => e.Start < DateTime.Now).ToList());
+
+                EventBookingsDict = new();
+                foreach (IEvent ev in Events)
+                {
+                    EventBookingsDict.TryAdd(ev.ID, await _eventBookingDB.GetEventBookingsByEventIDAsync(ev.ID));
+                }
+            }
+            catch (Exception ex)
+            {
+                Events = new List<IEvent>();
+                ViewData["ErrorMessage"] = ex.Message;
+            }
+
+            return Page();
         }
     }
 }
