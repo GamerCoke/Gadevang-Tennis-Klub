@@ -49,6 +49,14 @@ namespace Gadevang_Tennis_Klub.Pages.Members
             }
 
         }
+        public async Task<IActionResult> OnGetSearchAsync(string query)
+        {
+            var filtered = Members
+                .Where(m => m.Name.Contains(query, StringComparison.OrdinalIgnoreCase))
+                .Select(m => new { m.Name }) // Sender mindst muligt data tilbage
+                .ToList();
+            return new JsonResult(filtered);
+        }
      
     }
             
