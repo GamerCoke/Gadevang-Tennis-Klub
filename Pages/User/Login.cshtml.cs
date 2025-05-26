@@ -29,7 +29,8 @@ namespace Gadevang_Tennis_Klub.Pages.User
 
         public IActionResult OnPostLogin()
         {
-            IMember user = MemberDB.GetMemberByLoginAsync(Email, Kodeord).Result; if (user != null)
+            IMember user = MemberDB.GetMemberByLoginAsync(Email, Kodeord).Result; 
+            if (user != null)
             {
                 HttpContext.Session.SetString("User", $"{user.Id}|{user.IsAdmin}|{user.Name}");
                 return RedirectToPage(@"MyPage");
