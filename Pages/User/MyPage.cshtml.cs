@@ -15,6 +15,7 @@ namespace Gadevang_Tennis_Klub.Pages.User
         public ITeamDB TeamDB { get; set; }
         public ITrainerDB TrainerDB { get; set; }
         public IMember Member { get; set; }
+
         public MyPageModel(IMemberDB memberDB, ICourtBookingDB courtBookingDB, IEventBookingDB eventBookingDB, IEventDB eventDB, ITeamDB teamDB, ICourtDB courtDB, ITrainerDB trainerDB)
         {
             MemberDB = memberDB;
@@ -33,6 +34,31 @@ namespace Gadevang_Tennis_Klub.Pages.User
                 return RedirectToPage(@"Login");
 
             Member = await MemberDB.GetMemberByIDAsync(int.Parse(user.Split('|')[0]));
+
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostEventUnregisterAsync(int eventID)
+        {
+            if (int.TryParse(HttpContext.Session.GetString("User")?.Split('|')[0], out int memberID))
+            {
+                try
+                {
+                    Member = await MemberDB.GetMemberByIDAsync(memberID);
+
+                    List<IEventBooking> allEventBookings = await EventBookingDB.GetEventBookingsByEventIDAsync(eventID);
+                    IEventBooking? thisEventsMemberBooking = allEventBookings.FirstOrDefault(e => e.MemberID == memberID);
+
+                    if (thisEventsMemberBooking != null)
+                    {
+                        await EventBookingDB.DeleteEventBookingAsync(thisEventsMemberBooking.ID);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ViewData["ErrorMessage"] = ex.Message;
+                }
+            }
 
             return Page();
         }

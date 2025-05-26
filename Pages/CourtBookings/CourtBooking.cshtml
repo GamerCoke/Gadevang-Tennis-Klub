@@ -1,6 +1,89 @@
 ﻿@page
 @using Gadevang_Tennis_Klub.Interfaces.Models
 @model Gadevang_Tennis_Klub.Pages.CourtBookings.CourtBookingModel
+@functions
+{
+    public async Task<string> GetHoverTitleAsync(ICourt court, DateTime date, int timeSlot, bool isAvailable, bool isBooked)
+    {
+        return !isAvailable ? "Kan ikke bookes" : (isBooked ? await GetIsBookedStringAsync(court, date, timeSlot) : GetIsAvailableString(court, timeSlot));
+    }
+
+    private async Task<string> GetIsBookedStringAsync(ICourt court, DateTime date, int timeSlot)
+    {
+        var lookupKey = (court.ID, DateOnly.FromDateTime(date), timeSlot);
+        if (!Model.CurrentBookingsDict.TryGetValue(lookupKey, out ICourtBooking? courtBooking)) // return early if the booking could not be found.
+            return "";
+
+        // Check if it's a team booking
+        if (courtBooking.Team_ID is int bookingTeamID)
+        {
+            ITeam? team = await Model.TeamDB.GetTeamByIDAsync(bookingTeamID);
+            return $"Holdtræning: {team?.Name}";
+        }
+
+        // Check if it's a member booking
+        if (courtBooking.Member_ID is int bookingMemberID)
+        {
+            if (int.TryParse(HttpContext.Session.GetString("User")?.Split('|')[0], out int memberID))
+            {
+                // Get all the participants, but exclude the currently logged in user.
+                List<IMember> participants = courtBooking.Participants.Where(p => p.Id != memberID).ToList();
+
+                // Participants list.
+                string participantNames = participants.Count == 0 ? "boldmaskinen" : $"\n{string.Join("\n", participants.Select(p => p.Name))}";
+
+                if (bookingMemberID == memberID) // If the member is organisator
+                {
+                    return $"Din booking: Bane {court.ID} {court.Type} kl. {timeSlot + Model.HourToBeginFrom}:00" +
+                           $"\nBooket med: {participantNames}";
+                }
+                else if (courtBooking.Participants.Any(p => p.Id == memberID)) // If the member is a participant
+                {
+                    string organizerName = (await Model.MemberDB.GetMemberByIDAsync(bookingMemberID)).Name;
+                    return $"{organizerName} har booket banen med dig:" +
+                           $"\nBane {court.ID} {court.Type} kl. {timeSlot + Model.HourToBeginFrom}:00" +
+                           (courtBooking.Participants.Count > 1 ? $"\nBooket med: {participantNames}" : "");
+                }
+            }
+            return "Medlemsbooking";
+        }
+
+        // Check if it's an event booking
+        if (courtBooking.Event_ID is int bookingEventID)
+        {
+            IEvent? ev = await Model.EventDB.GetEventByIDAsync(bookingEventID);
+            return $"Begivenhed: {ev?.Title}";
+        }
+
+        return "";
+    }
+    private string GetIsAvailableString(ICourt court, int timeSlot)
+    {
+        return $"Bane {court.ID} {court.Type} kl. {timeSlot + Model.HourToBeginFrom}:00. Ledig: klik for at booke";
+    }
+
+    public string GetIsBookedIcon(ICourt court, DateTime date, int timeSlot)
+    {
+        var lookupKey = (court.ID, DateOnly.FromDateTime(date), timeSlot);
+        if (!Model.CurrentBookingsDict.TryGetValue(lookupKey, out ICourtBooking? courtBooking)) // return early if the booking could not be found.
+            return "";
+
+        if (courtBooking.Team_ID is int bookingTeamID)
+        {
+            return $"fa-solid fa-clock";
+        }
+        if (courtBooking.Member_ID is int bookingMemberID)
+        {
+            return "fa-solid fa-user";
+        }
+        if (courtBooking.Event_ID is int bookingEventID)
+        {
+            return $"fa-solid fa-calendar";
+        }
+
+        return "";
+    }
+}
 @{
     ViewData["Title"] = "CourtBooking";
 
@@ -44,7 +127,12 @@
     .custom-date-text {
     font-size: 14px;
     text-align: center;
-    } 
+    }
+
+    .disabled-delete-button {
+    pointer-events: none; /* prevents clicks */
+    opacity: 0.6;
+    }
 </style>
 
 
@@ -211,11 +299,11 @@
                                             class="booking-btn"
                                             style="background-color: @(!isAvailable ? _gray : (isBooked ? (isBookedByMe ? _orange : _red) : _green));"
                                             disabled="@( (!isAvailable || (isBooked && !isBookedByMe)) ? "disabled" : null )"
-                                            title="@await Model.GetHoverTitleAsync(courtSlot, weekDay, i, isAvailable, isBooked)">
+                                            title="@await GetHoverTitleAsync(courtSlot, weekDay, i, isAvailable, isBooked)">
                                                 @if (isAvailable && isBooked)
                                                 {
                                                     <!-- Icon -->
-                                                    <i class="@Model.GetIsBookedIcon(courtSlot, weekDay, i)" style="color: #000000; opacity: 0.5; font-size: 15px;"></i>
+                                                    <i class="@GetIsBookedIcon(courtSlot, weekDay, i)" style="color: #000000; opacity: 0.5; font-size: 15px;"></i>
                                                 }
                                             </button>
                                         </form>
@@ -278,55 +366,164 @@
         <div class="modal-content">
             <form method="post">
 
+                @{
+                    IMember organiser = null;
+                    if (Model.CurrentDate.HasValue && Model.CurrentTimeSlot.HasValue)
+                    {
+                        organiser = await Model.GetOrganizer(Model.CurrentCourt, Model.CurrentDate.Value, Model.CurrentTimeSlot.Value);
+                    }
+
+                    int.TryParse(HttpContext.Session.GetString("User")?.Split('|')[0], out int userID);
+                }
+
                 <!-- Modal Header -->
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        @(Model.IsBooked ? "Slet Booking" : "Bekræft Booking")
+                        @(Model.IsBooked ? "Din Booking" : "Bekræft Booking")
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <!-- Modal body -->
-                @if (Model.IsBooked)
-                {
-                    <div class="modal-body">
-                        Er du sikker på at du ønsker at slette følgende booking 
-                        <strong>
-                            bane @Model.CurrentCourt?.ID @Model.CurrentCourt?.Type
-                        </strong><br />
-                        kl. 
-                        <strong>
-                            @(Model.CurrentTimeSlot+Model.HourToBeginFrom):00
-                        </strong>
-                        d. 
-                        <strong>
-                            @Model.CurrentDate?.ToShortDateString()
-                        </strong>
-                        ?
-                    </div>
-                }
-                else
-                {
-                    <div class="modal-body">
-                        Er du sikker på at du ønsker at booke
-                        <strong>
-                            bane @Model.CurrentCourt?.ID @Model.CurrentCourt?.Type
-                        </strong><br />
-                        kl.
-                        <strong>
-                            @(Model.CurrentTimeSlot + Model.HourToBeginFrom):00
-                        </strong>
-                        d.
-                        <strong>
-                            @Model.CurrentDate?.ToShortDateString()
-                        </strong>
-                        ?
-                    </div>
-                }
+                <div class="modal-body">
+                    @if (!string.IsNullOrEmpty(@Model.MessageModalDanger))
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button>
+                            @Model.MessageModalDanger
+                        </div>
+                    }
 
+                    @if (Model.IsBooked)
+                    {
+                        <p>
+                            @if (organiser != null && organiser.Id == userID) 
+                            {
+                                <p>Du har booket</p>
+                            }
+                            else 
+                            {
+                                <p>@organiser.Name har booket</p>
+                            }
+                            <strong>
+                                bane @Model.CurrentCourt?.ID @Model.CurrentCourt?.Type
+                            </strong><br />
+                            kl. 
+                            <strong>
+                                @(Model.CurrentTimeSlot+Model.HourToBeginFrom):00
+                            </strong>
+                            d. 
+                            <strong>
+                                @Model.CurrentDate?.ToShortDateString()
+                            </strong>
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            Du er i gang med at booke
+                            <strong>
+                                bane @Model.CurrentCourt?.ID @Model.CurrentCourt?.Type
+                            </strong><br />
+                            kl.
+                            <strong>
+                                @(Model.CurrentTimeSlot + Model.HourToBeginFrom):00
+                            </strong>
+                            d.
+                            <strong>
+                                @Model.CurrentDate?.ToShortDateString()
+                            </strong>
+                        </p>
+                    }
+
+                    @if (!Model.IsBooked || (organiser != null && organiser.Id == userID))
+                    {
+                        @if (Model.ParticipantIDs != null && Model.ParticipantIDs.Count < 3)
+                        {
+                            <label for="memberId">Hvem ønsker du at booke banen med?</label>
+                            <br />
+                            <div class="d-flex align-items-center gap-2">
+                                <select name="memberId" id="memberId" class="form-select" style="width: auto;">
+                                    <option disabled selected value="">-- Vælg et medlem --</option>
+                                    @foreach (IMember member in await Model.GetAllAvailableMembers())
+                                    {
+                                        int bookingCount = await Model.GetMyCurrentBookingsCountAsync(member.Id);
+                                        bool isFullyBooked = bookingCount >= 4;
+
+                                        <option value="@member.Id" disabled="@(isFullyBooked ? "disabled" : null)">
+                                            @member.Name @(isFullyBooked ? "(Dette medlem har ikke flere banebookinger til rådighed)" : "")
+                                        </option>
+                                    }
+                                </select>
+
+                                <button type="submit" class="btn btn-success" asp-page-handler="AddMemberToBooking">
+                                    Tilføj medlem <i class="fas fa-plus-circle"></i>
+                                </button>
+                            </div>
+                        }
+                    }
+
+                    <br />
+
+                    @if (Model.ParticipantIDs != null && Model.ParticipantIDs.Count > 0)
+                    {
+                        <p>Deltagere:</p>
+
+                        <div class="d-flex justify-content-center">
+                            <table class="table" style="width:80%">
+                                <thead>
+                                    <tr>
+                                        <th>Navn</th>
+                                        <th class="text-end">Handling</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (int participantID in Model.ParticipantIDs)
+                                    {
+                                        IMember member = await Model.MemberDB.GetMemberByIDAsync(participantID);
+                                        <tr>
+                                            <td class="ps-3">@member.Name</td>
+                                            <td class="text-end">
+                                                @if (!Model.IsBooked || (organiser != null && organiser.Id == userID))
+                                                {
+                                                    <button type="submit" class="btn btn-danger btn-sm" asp-page-handler="RemoveMemberFromBooking" asp-route-memberId="@participantID">
+                                                        Fjern <i class="fas fa-trash"></i>
+                                                    </button>
+                                                }
+                                                else if (participantID == userID)
+                                                {
+                                                    <button type="submit" class="btn btn-danger btn-sm" asp-page-handler="RemoveMemberFromBooking" asp-route-memberId="@participantID">
+                                                        Forlad booking <i class="fas fa-sign-out"></i>
+                                                    </button>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+
+                    @if (!Model.IsBooked || (organiser != null && organiser.Id == userID))
+                    {
+                        <br />
+
+                        <div class="form-check mb-2">
+                            <input asp-for="UseBallMachine" class="form-check-input" type="checkbox" />
+                            <label asp-for="UseBallMachine" class="form-check-label">Jeg ønsker at booke med boldmaskinen</label>
+                        </div>
+                    }
+                </div>
+
+                <!-- Hidden fields to keep data saved -->
                 <input type="hidden" name="courtID" value="@Model.CurrentCourt?.ID" />
                 <input type="hidden" name="date" value="@Model.CurrentDate" />
                 <input type="hidden" name="timeSlot" value="@Model.CurrentTimeSlot" />
+                <input type="hidden" name="isBooked" value="@(Model.IsBooked ? "true" : "false")" />
+                @foreach (int memberId in Model.ParticipantIDs ?? new List<int>())
+                {
+                    <input type="hidden" name="participantIDs" value="@memberId" />
+                }
                 <input type="hidden" name="SelectedDate" value="@Model.SelectedDate.ToString("yyyy-MM-dd")" />
                 <input type="hidden" asp-for="SelectedArea" />
 
@@ -335,7 +532,10 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tilbage</button>
                     @if (Model.IsBooked)
                     {
-                        <button type="submit" class="btn btn-danger" asp-page-handler="RemoveCourtBooking">Slet booking</button>
+                        @if (organiser != null && organiser.Id == userID)
+                        {
+                            <button type="submit" class="btn btn-danger" asp-page-handler="RemoveCourtBooking">Slet booking</button>
+                        }
                     }
                     else
                     {

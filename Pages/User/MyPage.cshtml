@@ -149,6 +149,7 @@
             <th>Lokation</th>
             <th>Tid</th>
             <th>Beskrivelse</th>
+            <th>Handlinger</th>
         </tr>
     </thead>
     <tbody>
@@ -167,6 +168,13 @@
                     <td>@Event.Location</td>
                     <td>@($"{DateOnly.FromDateTime(Event.Start)}: {TimeOnly.FromDateTime(Event.Start)}-{Event.End}")</td>
                     <td>@Event.Description</td>
+                    <td>
+                        <form method="post" asp-page-handler="EventUnregister" asp-route-eventID="@Event.ID" onsubmit="return confirm('Er du sikker på, at du vil fjerne din tilmelding fra begivenheden: @Event?.Title?');">
+                            <button type="submit" class="btn btn-danger">
+                                Slet Booking <i class="fa fa-calendar-minus"></i>
+                            </button>
+                        </form>
+                    </td>
                 </tr>
             }
         }

@@ -9,6 +9,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
     {
         private IEventDB _eventDB;
         private IActivityDB _activityDB;
+        private IEventBookingDB _eventBookingDB;
 
 
         public string? CurrentUser { get; private set; }
@@ -16,14 +17,17 @@ namespace Gadevang_Tennis_Klub.Pages.Events
 
 
         public IEvent? Event { get; private set; }
-        public List<IActivity> Activities { get; set; }
+        public List<IActivity>? Activities { get; set; }
+        public List<IEventBooking>? EventBookings { get; set; }
+
 
         public bool IsDeleted { get; private set; }
 
-        public DeleteEventModel(IEventDB eventDB, IActivityDB activityDB)
+        public DeleteEventModel(IEventDB eventDB, IActivityDB activityDB, IEventBookingDB eventBookingDB)
         {
             _eventDB = eventDB;
             _activityDB = activityDB;
+            _eventBookingDB = eventBookingDB;
         }
 
         public async Task<IActionResult> OnGetAsync(int eventID)
@@ -42,6 +46,7 @@ namespace Gadevang_Tennis_Klub.Pages.Events
                 {
                     Event = await _eventDB.GetEventByIDAsync(eventID);
                     Activities = await _activityDB.GetActivitiesByEventAsync(eventID);
+                    EventBookings = await _eventBookingDB.GetEventBookingsByEventIDAsync(eventID);
 
                     return Page();
                 }
