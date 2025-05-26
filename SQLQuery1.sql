@@ -65,10 +65,7 @@ CREATE TABLE Announcements (
     Type varchar(16) NOT NULL,
     Actual BIT NULL,
 
-    -- Single-column CHECK: Fine inline
     CONSTRAINT typeConstraint CHECK (Type IN ('Service', 'Partner', 'General')),
-
-    -- Multi-column CHECK: Must be at table level
     CONSTRAINT CK_Announcements_Actual_OnlyForService
         CHECK (
             Actual IS NULL OR Type = 'Service'
@@ -76,8 +73,6 @@ CREATE TABLE Announcements (
 
     FOREIGN KEY (MemberID) REFERENCES Members(ID) ON DELETE CASCADE
 );
-
-
 
 CREATE TABLE Trainers (
 	ID int identity(1, 1) PRIMARY KEY not null,
@@ -163,22 +158,32 @@ CREATE TABLE Partners (
 );
 
 INSERT INTO Members
-VALUES ('Børge', 'Pass123', 'VesterVej 40', 'Børge@DanskMail.dk', '50505050', 'Herre', '1980-04-29', 'Jeg er Børge fra Vestervej 40, Jeg har ikke spillet tennis før', 0, '463054478_10233804884366780_3919973871656113720_n.png');
+VALUES ('Børge', 'Pass123', 'VesterVej 40', 'Børge@DanskMail.dk', '+45 50 50 50 50', 'Herre', '1980-04-29', 'Jeg er Børge fra Vestervej 40, Jeg har ikke spillet tennis før', 0, 'person4.jpg');
 INSERT INTO Members
-VALUES ('Bendte', '2B', 'Mestervej 32', 'Bendte@Mail.dk', '29751076', 'Dame', '1962-04-28', 'Danmarks Mester 1983', 0, null);
+VALUES ('Bendte', '2B', 'Mestervej 32', 'Bendte@Mail.dk', '+45 29 75 10 76', 'Dame', '1962-04-28', 'Danmarks Mester 1983', 0, 'person5.jpg');
 INSERT INTO Members
-VALUES ('Janne', '123456789', 'Her og der', 'i@i.dk', '+45 12 36 78 90', 'Andet', '0001-01-01', 'Hvem tror du jeg er?', 1, null);
+VALUES ('Janne', '123456789', 'Odinsvej 4', 'i@i.dk', '+45 12 36 78 90', 'Andet', '1961-01-01', 'Hvem tror du jeg er?', 1, 'person6.jpg');
 INSERT INTO Members
-VALUES ('Johnson', 'Humaniora', 'Gyden', 'Johnjohn@mail.dk', '+45 25 75 43 22', 'Herre', '1204-08-02', 'Jeg kommer fra gyden', 1, null);
+VALUES ('Johnson', 'Humaniora', 'Gydevej 34', 'Johnjohn@mail.dk', '+45 25 75 43 22', 'Herre', '1995-08-02', 'Jeg kommer fra gyden', 1, 'person8.jpg');
+INSERT INTO Members
+VALUES ('Kurt', 'Klud','Midgaardsvej 22', 'kurtsklud@gg.dk','+45 12 46 18 35', 'Andet', '1972-05-03', 'Du kender mig', 0, 'person7.jpg')
 
 INSERT INTO Courts
 VALUES ('Udendørs Tennis', 'Bane 1')
 INSERT INTO Courts
 VALUES ('Udendørs Tennis', 'Bane 2')
 INSERT INTO Courts
+VALUES ('Udendørs Tennis', 'Bane 3')
+INSERT INTO Courts
+VALUES ('Udendørs Tennis', 'Bane 4')
+INSERT INTO Courts
+VALUES ('Udendørs Tennis', 'Bane 5')
+INSERT INTO Courts
 VALUES ('Indendørs Tennis', '')
 INSERT INTO Courts
-VALUES ('Indendørs Tennis', 'Vores 2. IndendørsTennisBane')
+VALUES ('Indendørs Tennis', 'Vores 2. Indendørs Tennis Bane')
+INSERT INTO Courts
+VALUES ('Indendørs Tennis', 'Den 3. Indendørs Tennis Bane')
 INSERT INTO Courts
 VALUES ('Udendørs Padel', '')
 
@@ -236,30 +241,32 @@ VALUES(7, 'Der skal spises flødeboller', 'Flødebolleædning', '2025-06-18 11:0
 INSERT INTO Announcements
 VALUES (1, 'Søger Partner', 'Vil gerne spille noget tennis på tirsdag, er der nogen der er interesseret?', '2024-01-03', 'Partner',null)
 INSERT INTO Announcements
-VALUES (3, 'Help', 'Jeg er ikke sikker på hvad jeg skal gøre.', '0001-01-02', 'General', null)
+VALUES (3, 'Help', 'Jeg er ikke sikker på hvad jeg skal gøre.', '2001-01-02', 'General', null)
 INSERT INTO Announcements
-VALUES (3, '???', 'Mortalis es fatum. Nalyë, caurelye istya.', '2025-04-29', 'General', null)
+VALUES (1, '???', 'Mortalis es fatum. Nalyë, caurelye istya.', '2025-04-29', 'General', null)
 INSERT INTO Announcements
 VALUES (3, 'Måger', 'Der er måger der angriber alt og alle på bane 2', '2024-08-19', 'Service', 0)
 INSERT INTO Announcements
-VALUES (3, 'Boldmaskine', 'Boldmaskinen er ude af drift pg.a nogen fyldte den med æbler', '2025-05-12', 'Service', 1)
+VALUES (4, 'Boldmaskine', 'Boldmaskinen er ude af drift pg.a nogen fyldte den med æbler', '2025-05-12', 'Service', 1)
 INSERT INTO Announcements
-VALUES (3, 'Skur', 'Døren til skuret binder fordi der er nogen som super limede den.', '2025-05-14', 'Service', 1)
+VALUES (2, 'Skur', 'Døren til skuret binder fordi der er nogen som super limede den.', '2025-05-14', 'Service', 1)
+INSERT INTO Announcements
+VALUES (5, 'Brug for spiller tirsdag', 'Mangler partner til at spille tennis om tirsdagen klokken 18', '2025-05-24', 'Service', null)
 
 INSERT INTO Trainers
-VALUES ('Kenneth', '12332165', 'Kenneth@mail.dk', null)
+VALUES ('Kenneth', '+45 12 33 21 65', 'Kenneth@mail.dk', 'person1.jpg')
 INSERT INTO Trainers
-VALUES ('Smith', '+45 56 56 56 56', 'Smith@mail.dk', null)
+VALUES ('Smith', '+45 56 56 56 56', 'Smith@mail.dk', 'person2.jpg')
 INSERT INTO Trainers
-VALUES ('Daffy', '+45 56 56 56 56', 'Daffy@mail.us', null)
+VALUES ('Daffy', '+45 66 55 54 52', 'Daffy@mail.us', 'person3.jpg')
 
 
 INSERT INTO Teams
-VALUES ('test', 'test', 1, 3, 'Fredag', 1750)
+VALUES ('Turnering Træning', 'Træning til opkommende turnering', 1, 3, 'Fredag', 1750)
 INSERT INTO Teams
-VALUES ('Mini', 'Minitræning for børn i alderen 5-7 år', 1, 8, 'Onsdag', 450)
+VALUES ('Mini', 'Minitræning for børn i alderen 5-7 år', 3, 8, 'Onsdag', 450)
 INSERT INTO Teams
-VALUES ('Junior 1', 'Junior 10-14 år', 1, 8, 'Torsdag', 550)
+VALUES ('Junior 1', 'Junior 10-14 år', 3, 8, 'Torsdag', 550)
 INSERT INTO Teams
 VALUES ('Junior 2', 'Junior 10-14 år', 1, 8, 'Torsdag', 550)
 INSERT INTO Teams
@@ -289,17 +296,25 @@ INSERT INTO CourtBookings
 VALUES ('2025-08-19', 2, 4, null, null, 2)
 
 INSERT INTO TeamBookings
-VALUES (1, 2)
+VALUES (1, 5)
 INSERT INTO TeamBookings
-VALUES (2, 2)
+VALUES (4, 5)
 INSERT INTO TeamBookings
-VALUES (3, 2)
+VALUES (3, 7)
 INSERT INTO TeamBookings
 VALUES (4, 1)
 INSERT INTO TeamBookings
-VALUES (3, 1)
+VALUES (5, 1)
 INSERT INTO TeamBookings
 VALUES (1, 1)
+INSERT INTO TeamBookings
+VALUES (5, 7)
+INSERT INTO TeamBookings
+VALUES (4, 7)
+INSERT INTO TeamBookings
+VALUES (3, 5)
+INSERT INTO TeamBookings
+VALUES (3, 6)
 
 INSERT INTO EventBookings
 VALUES (1, 1)
