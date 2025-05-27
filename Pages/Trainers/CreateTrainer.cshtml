@@ -14,19 +14,19 @@
             <label asp-for="@Model.Trainer.Name" class="control-label">Navn</label>
             <br />
             <span asp-validation-for="@Model.Trainer.Name" class="text-danger"></span>
-            <input asp-for="@Model.Trainer.Name" class="form-control" />
+            <input asp-for="@Model.Trainer.Name" class="form-control" placeholder="Navn" />
         </tr>
         <tr>
             <label asp-for="@Model.Trainer.Phone" class="control-label">Telefon</label>
             <br />
             <span asp-validation-for="@Model.Trainer.Phone" class="text-danger"></span>
-            <input asp-for="@Model.Trainer.Phone" class="form-control" />
+            <input asp-for="@Model.Trainer.Phone" class="form-control" placeholder="+45 -- -- -- --" />
         </tr>
         <tr>
             <label asp-for="@Model.Trainer.Email" class="control-label">Email</label>
             <br />
             <span asp-validation-for="@Model.Trainer.Email" class="text-danger"></span>
-            <input asp-for="@Model.Trainer.Email" class="form-control" />
+            <input asp-for="@Model.Trainer.Email" class="form-control" placeholder="Email@("@")email.dk" />
         </tr>
         <tr>
 
@@ -36,5 +36,5 @@
 </form>
 @if(Model.Message != null)
 {
-    <b class="text-danger">Message</b>
+    <b class="text-danger">@Model.Message</b>
 }

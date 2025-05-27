@@ -75,7 +75,7 @@
                             <div class="form-group" style="width:80%">
                                 <label asp-for="@Model.NewActivities[i].Title" class="control-label">Titel*</label>
                                 <span asp-validation-for="@Model.NewActivities[i].Title" class="text-danger"></span>
-                                <input asp-for="@Model.NewActivities[i].Title" class="form-control" />
+                                <input asp-for="@Model.NewActivities[i].Title" class="form-control" placeholder="Titel" />
                             </div>
                             <div class="formgroup" style="margin-top: 20px">
                                 <button type="submit" class="btn btn-danger btn-sm" asp-page-handler="RemoveActivity">Fjern <i class="fas fa-trash"></i></button>
@@ -96,7 +96,7 @@
                         <div class="form-group">
                             <label asp-for="@Model.NewActivities[i].Description" class="control-label">Beskrivelse*</label>
                             <span asp-validation-for="@Model.NewActivities[i].Description" class="text-danger"></span>
-                            <textarea asp-for="@Model.NewActivities[i].Description" class="form-control" rows="2" style="max-height: 100px; overflow-y: auto;"></textarea>
+                            <textarea asp-for="@Model.NewActivities[i].Description" class="form-control" placeholder="Beskrivelse..." rows="2" style="max-height: 100px; overflow-y: auto;"></textarea>
                         </div>
                     </div>
                 }

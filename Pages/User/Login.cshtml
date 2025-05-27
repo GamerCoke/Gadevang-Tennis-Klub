@@ -12,13 +12,13 @@
         <form asp-page-handler="login" method="post" style="width:80%">   
             <div class="form-group">
                 <label asp-for="@Model.Email" class="control-label"></label>
-                <input asp-for="@Model.Email" class="form-control" />
+                <input asp-for="@Model.Email" class="form-control" placeholder="Email@("@")email.dk" />
                 <span asp-validation-for="@Model.Email" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="@Model.Kodeord" class="control-label"></label>
-                <input asp-for="@Model.Kodeord" class="form-control" />
-                <span asp-validation-for="@Model.Kodeord" class="text-danger"></span>
+                <input asp-for="@Model.Kodeord" class="form-control" placeholder="Kodeord" />
+                <span asp-validation-for="@Model.Kodeord" class="text-danger" ></span>
             </div>
             @if (Model.Message != null)
             {
