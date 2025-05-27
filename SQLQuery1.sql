@@ -220,6 +220,8 @@ De bedste hilsner,
 Bestyrelsen i Gadevang Tennisklub', '2025-06-20 20:00:00', '21:30:00', 'Gadevangsvej 145B - 3400 Hillerød', null)
 INSERT INTO Events
 VALUES ('Store Flødebolle Dag', 'I anledning af flødebollernes dag vil vi samles og spise flødeboller sammen.', '2025-06-20 10:00:00', '14:00:00', 'Klubhuset', '100')
+INSERT INTO Events
+VALUES ('Arbejdsdag', 'Gadevang Tennisklub er et lokalt forankret idrætsklub, der drives 100 % af frivillige kræfter. Derfor holder vi nu vores første af vores to årlige arbejdsdage, hvor alle kan komme og bidrage til at holde klubben vedlige og fortsætte med at gøre den til et rart og ryddeligt sted for alle vores medlemmer', '2026-01-25 10:00:00', '14:00:00', 'Gadevangsvej 145B - 3400 Hillerød', 100)
 
 INSERT INTO Activities
 VALUES(1, '', 'Klargøring af banerne', '2025-05-24 10:00:00', '2025-05-24 11:00:00')
@@ -289,11 +291,11 @@ VALUES ('2025-08-06', 3, 1, 3, null, null)
 INSERT INTO CourtBookings
 VALUES ('2025-06-13', 2, 8, 1, null, null)
 INSERT INTO CourtBookings
-VALUES ('2025-07-8', 3, 3, null, null, 1)
+VALUES ('2025-05-24', 3, 3, null, null, 1)
 INSERT INTO CourtBookings
-VALUES ('2025-05-25', 1, 11, null, null, 1)
+VALUES ('2025-05-24', 1, 11, null, null, 1)
 INSERT INTO CourtBookings
-VALUES ('2025-08-19', 2, 4, null, null, 2)
+VALUES ('2025-06-14', 2, 4, null, null, 2)
 
 INSERT INTO TeamBookings
 VALUES (1, 5)
