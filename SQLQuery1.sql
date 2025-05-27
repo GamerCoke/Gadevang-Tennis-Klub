@@ -195,7 +195,7 @@ Den officielle standerhejsning er kl. 12 med muligvis rørstrømsk tale af forma
 Så find tennisgrejet frem og kig forbi. Vi glæder os til at indånde det røde grus og håber at se jer til at skyde sæsonen igang.
 Der er fortsat plads på nogle af vores træningshold!', '2025-05-24 10:00:00', '12:00:00', 'Gadevangsvej 145B - 3400 Hillerød', 70)
 INSERT INTO Events
-VALUES ('Grill og Tennis', '', '2025-06-14 16:00:00', '22:00:00', 'Gadevangsvej 145B - 3400 Hillerød', 70)
+VALUES ('Grill og Tennis', 'Kom til en hyggelig dag med grill & tennis', '2025-06-14 16:00:00', '22:00:00', 'Gadevangsvej 145B - 3400 Hillerød', 70)
 INSERT INTO Events
 VALUES ('Introdag', 'Introdag, hvor alle nye medlemmer kan blive introduceret til sporten', '2025-06-1 10:00:00', '16:00:00', 'Gadevangsvej 145B - 3400 Hillerød', 40)
 INSERT INTO Events
@@ -219,7 +219,7 @@ Håber vi ses til en hyggelig aften.
 De bedste hilsner,
 Bestyrelsen i Gadevang Tennisklub', '2025-06-20 20:00:00', '21:30:00', 'Gadevangsvej 145B - 3400 Hillerød', null)
 INSERT INTO Events
-VALUES ('Store Flødebolle Dag', '', '2025-06-20 10:00:00', '14:00:00', 'Klubhuset', '100')
+VALUES ('Store Flødebolle Dag', 'I anledning af flødebollernes dag vil vi samles og spise flødeboller sammen.', '2025-06-20 10:00:00', '14:00:00', 'Klubhuset', '100')
 
 INSERT INTO Activities
 VALUES(1, '', 'Klargøring af banerne', '2025-05-24 10:00:00', '2025-05-24 11:00:00')
@@ -234,7 +234,7 @@ VALUES(4, '', 'Herre Double', '2025-07-26 13:00:00', '2025-07-26 15:00:00')
 INSERT INTO Activities
 VALUES(4, '', 'Herre Single', '2025-07-26 15:00:00', '2025-07-26 17:00:00')
 INSERT INTO Activities
-VALUES(7, 'Alt om flødebollers oprindelse og om hvorfor det er så vigtigt at indtage dem', 'Foredrag og flødeboller', '2025-06-20 10:00:00', '2025-06-20 11:00:00')
+VALUES(7, 'Alt om flødebollers oprindelse og om hvorfor det er så vigtigt at indtage dem', 'Foredrag om flødeboller', '2025-06-20 10:00:00', '2025-06-20 11:00:00')
 INSERT INTO Activities
 VALUES(7, 'Der skal spises flødeboller', 'Flødebolleædning', '2025-06-20 11:00:00', '2025-06-20 14:00:00')
 
