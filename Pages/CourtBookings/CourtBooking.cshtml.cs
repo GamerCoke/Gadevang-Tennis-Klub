@@ -367,6 +367,7 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
                     if (await GetMyCurrentBookingsCountAsync(memberID) >= MaxBookings)
                     {
                         MessageDanger = "Du har ikke flere tilgængelige bookinger tilbage";
+                        await OnPageReloadAsync();
                         return Page();
                     }
               
