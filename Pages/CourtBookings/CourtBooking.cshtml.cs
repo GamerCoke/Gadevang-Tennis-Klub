@@ -352,16 +352,9 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
             ParticipantIDs = participantIDs;
             bool hasParticipants = participantIDs?.Count > 0;
 
-            if (!hasParticipants && !UseBallMachine)
+            try
             {
-                MessageModalDanger = $"Tilføj venligst min. 1 deltager til din booking, eller vælg at du ønsker at booke med boldmaskinen, for at kunne booke en bane";
-                await OnPostOpenBookCourtModalAsync(courtID, date, timeSlot, false, participantIDs);
-                return Page();
-            }
-
-            if (int.TryParse(HttpContext.Session.GetString("User")?.Split('|')[0], out int memberID))
-            {
-                try
+                if (int.TryParse(HttpContext.Session.GetString("User")?.Split('|')[0], out int memberID))
                 {
                     // Make sure the member has'nt already booked up to their max bookings
                     if (await GetMyCurrentBookingsCountAsync(memberID) >= MaxBookings)
@@ -370,7 +363,14 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
                         await OnPageReloadAsync();
                         return Page();
                     }
-              
+
+                    if (!hasParticipants && !UseBallMachine)
+                    {
+                        MessageModalDanger = $"Tilføj venligst min. 1 deltager til din booking, eller vælg at du ønsker at booke med boldmaskinen, for at kunne booke en bane";
+                        await OnPostOpenBookCourtModalAsync(courtID, date, timeSlot, false, participantIDs);
+                        return Page();
+                    }
+
                     await GenerateCurrentBookingsDictAsync(); // Make sure the current bookings are loaded before trying to book the court.
 
                     // Create and add the neew booking to the DB.
@@ -393,10 +393,10 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
 
                     CurrentBookingsDict.Clear(); // Clear the dictionary before we continue, to make sure the PageReload reloads the dictionary from scatch.
                 }
-                catch (Exception ex)
-                {
-                    ViewData["ErrorMessage"] = ex.Message;
-                }
+            }
+            catch (Exception ex)
+            {
+                ViewData["ErrorMessage"] = ex.Message;
             }
 
             await OnPageReloadAsync();
