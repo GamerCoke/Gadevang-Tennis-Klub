@@ -90,6 +90,8 @@ public class GetAllAnnouncementsModel : PageModel
 
         return RedirectToPage(); // Refresh the list
     }
-
+    public bool ShowServiceActions => IsAdmin || ServiceAnnouncements.Any(a => a.Announcer?.Id == CurrentUserId);
+    public bool ShowPartnerActions => IsAdmin || PartnerAnnouncements.Any(a => a.Announcer?.Id == CurrentUserId);
+    public bool ShowGeneralActions => IsAdmin || GeneralAnnouncements.Any(a => a.Announcer?.Id == CurrentUserId);
 
 }

@@ -5,7 +5,7 @@
     ViewData["Title"] = "All Announcements";
 }
 
-<h1>All Announcements</h1>
+<h1>Forum</h1>
 
 @if (HttpContext.Session.GetString("User") != null)
 {
@@ -21,14 +21,14 @@ else
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>Title</th>
-            <th>Text</th>
-            <th>Upload</th>
-            <th>Actual</th>
-            <th>Announcer</th>
-            @if (Model.IsAdmin || Model.ServiceAnnouncements.Any(a => a.Announcer?.Id == Model.CurrentUserId))
+            <th>Titel</th>
+            <th>Tekst</th>
+            <th>Oprettet</th>
+            <th>Problem</th>
+            <th>Oprettet Af</th>
+            @if (Model.ShowServiceActions)
             {
-                <th></th>
+                <th>Handlinger</th>
             }
         </tr>
     </thead>
@@ -74,13 +74,13 @@ else
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>Title</th>
-            <th>Text</th>
-            <th>Upload</th>
-            <th>Announcer</th>
-            @if (Model.IsAdmin || Model.ServiceAnnouncements.Any(a => a.Announcer?.Id == Model.CurrentUserId))
+            <th>Titel</th>
+            <th>Tekst</th>
+            <th>Oprettet</th>
+            <th>Oprettet Af</th>
+            @if (Model.ShowPartnerActions)
             {
-                <th></th>
+                <th>Handlinger</th>
             }
         </tr>
     </thead>
@@ -113,13 +113,13 @@ else
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>Title</th>
-            <th>Text</th>
-            <th>Upload</th>
-            <th>Oplagt af</th>
-            @if (Model.IsAdmin || Model.ServiceAnnouncements.Any(a => a.Announcer?.Id == Model.CurrentUserId))
+            <th>Titel</th>
+            <th>Tekst</th>
+            <th>Oprettet</th>
+            <th>Oprettet Af</th>
+            @if (Model.ShowGeneralActions)
             {
-                <th></th>
+                <th>Handlinger</th>
             }
         </tr>
     </thead>
