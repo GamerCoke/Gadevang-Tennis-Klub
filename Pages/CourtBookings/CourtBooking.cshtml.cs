@@ -383,7 +383,7 @@ namespace Gadevang_Tennis_Klub.Pages.CourtBookings
                     // Add participants if there is any...
                     if (hasParticipants)
                     {
-                        foreach (var participantID in ParticipantIDs)
+                        foreach (int participantID in ParticipantIDs)
                         {
                             await CourtBookingDB.AddPartisipantAsync(newBookingID, participantID);
                         }
