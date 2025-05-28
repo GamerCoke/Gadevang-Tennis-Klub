@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GTK_unittest
+namespace GTK_unittest.Kasper
 {
     [TestClass]
     public class Test_EventBookingDB_SQL

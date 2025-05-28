@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GTK_unittest
+namespace GTK_unittest.Kasper
 {
     public static class ResetClass
     {
