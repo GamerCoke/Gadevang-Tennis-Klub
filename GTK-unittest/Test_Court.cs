@@ -16,10 +16,10 @@ namespace GTK_unittest
             CourtDB_SQL db = new CourtDB_SQL();
 
             //Act
-            ICourt original = new Court(0, "Indendørs Tennis", "Mark");
+            ICourt original = new Court { ID = 10, Type = "Indendørs Tennis", Name = "Mark" };
             if (!db.CreateCourtAsync(original).Result)
                 Assert.Fail();
-            ICourt saved = db.GetCourtByIDAsync(9).Result;
+            ICourt saved = db.GetCourtByIDAsync(10).Result;
 
             //Assert
             Assert.AreEqual(original.Name, saved.Name);
@@ -28,9 +28,9 @@ namespace GTK_unittest
         }
         private class TestIsvalidCourt : ICourt
         {
-            public int ID { get; set; } = -1;
-            public string Type { get; set; } = "Indendørs Tennis";
-            public string? Name { get; set; } = "Mark";
+            public int ID { get; set; } = 3;
+            public string Type { get; set; } = null;
+            public string? Name { get; set; } = null;
         }
         [TestMethod]
         public void Test_InvalidCreateCourtAsync()
