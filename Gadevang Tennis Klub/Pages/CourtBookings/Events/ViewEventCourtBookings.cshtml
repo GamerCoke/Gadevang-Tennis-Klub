@@ -1,0 +1,63 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.CourtBookings.Events.ViewEventCourtBookingsModel
+@{
+    ViewData["Title"] = "Begivenhed-Bookede-Baner";
+}
+
+<h1>Alle Begivenhed-Bookede Baner</h1>
+
+<div class="col text-end">
+    <a asp-page="/CourtBookings/Events/AddEventCourtBookings" class="btn btn-success" role="button">Book bane for begivenhed <i class="fas fa-plus-circle"></i></a>
+</div>
+
+<br />
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Bane ID</th>
+            <th>Bane Type</th>
+            <th>Begivenhed ID</th>
+            <th>Begivenhed</th>
+            <th>Dag</th>
+            <th>Tidsramme</th>
+            <th>Handlinger</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var bookings = (await Model.GetAllEventCourtBookingsAsync()).ToList();
+            bookings.Sort((b1, b2) => b1.Date.CompareTo(b2.Date) * 10 + b1.Timeslot.CompareTo(b2.Timeslot));
+            var sortedbookings = bookings.Where(b => b.Date >= DateOnly.FromDateTime(DateTime.Now));
+            foreach (var booking in sortedbookings)
+            {
+                <tr>
+                    <td>@booking.Court_ID</td>
+                    <td>@((await Model.GetCourtAsync((int)booking.Court_ID)).Type)</td>
+                    <td>@booking.Event_ID</td>
+                    <td>@((await Model.GetEventAsync((int)booking.Event_ID)).Title)</td>
+                    <td>@booking.Date</td>
+                    <td>fra @(booking.Timeslot + 6).00 til @(booking.Timeslot + 7).00</td>
+                    <td>
+                        <form method="post" asp-page="/CourtBookings/Events/RemoveEventCourtBookings" asp-route-bookingId="@booking.ID" class="d-inline">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Er du sikker på, at du vil slette denne besked?');">Slet <i class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+
+@* <ul>
+    @foreach (var booking in await Model.GetAllEventCourtBookingsAsync())
+    {
+        <li>
+            <p>
+                @($"Bane #{booking.Court_ID} booket for Begivenhed #{booking.Event_ID} {(await Model.GetEventAsync((int)booking.Event_ID)).Title} på {booking.Date} fra {booking.Timeslot + 6}.00 til {booking.Timeslot + 7}.00")
+                <a asp-page="/CourtBookings/Events/RemoveEventCourtBookings" asp-route-bookingId=@booking.ID class="btn btn-danger" role="button">Slet <i class="fas fa-trash"></i></a>
+            </p>
+        </li>
+    }
+ *@

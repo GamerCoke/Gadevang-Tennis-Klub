@@ -1,0 +1,71 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.CourtBookings.Members.CreateMemberBookingModel
+@inject Gadevang_Tennis_Klub.Services.OwnerData ownerData;
+@{
+    ViewData["Title"] = "Book Bane";
+}
+<h1>Book en Bane</h1>
+
+<form method="post">
+    <table>
+        <tr>
+            <div>
+                <label asp-for="@Model.Date" class="control-label">Dato</label>
+                <br />
+                <span asp-validation-for="@Model.Date" class="text-danger"></span>
+                <input asp-for="@Model.Date" type="date" class="form-control" />
+            </div>
+        </tr>
+        <tr>
+            <label asp-for="@Model.Timeslot" class="control-label">Tidsslot</label>
+            <br />
+            <select name="timeslot" id="timeslot">
+                @for (int hour = ownerData.CourtsOpen; hour < ownerData.CourtsClose; hour++)
+                {
+                    @if (hour == Model.Timeslot)
+                    {
+                        <option value="@(hour - ownerData.CourtsOpen)" selected>
+                            @($"{hour}.00 - {hour + 1}.00")
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="@(hour - ownerData.CourtsOpen)">
+                            @($"{hour}.00 - {hour + 1}.00")
+                        </option>
+                    }
+                }
+            </select>
+            <br />
+        </tr>
+        <tr>
+            <label for="courtId">Vælg en bane:</label>
+            <br />
+            <select name="courtId" id="courtId">
+                @foreach (var court in await Model.CourtDB.GetAllCourtsAsync())
+                {
+                    @if (court.ID == Model.CourtId)
+                    {
+                        <option value="@court.ID" selected>
+                            @($"Bane ({court.ID}): {court.Name}, Type: {court.Type}")
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="@court.ID">
+                            @($"Bane ({court.ID}): {court.Name}, Type: {court.Type}")
+                        </option>
+                    }
+                }
+            </select>
+        </tr>
+        <tr>
+            @if (Model.Message != null)
+            {
+                <p class="text-danger">@Model.Message</p>
+            }
+            <td>&nbsp</td>
+            <td><Input type="submit" value="Opret" /></td>
+        </tr>
+    </table>
+</form>

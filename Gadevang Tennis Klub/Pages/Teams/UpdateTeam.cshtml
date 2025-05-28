@@ -1,0 +1,50 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.Teams.UpdateTeamModel
+@{
+    ViewData["Title"] = "Update Team";
+}
+
+<h2>Update Team</h2>
+<a asp-page="GetAllTeams" class="btn btn-secondary" role="button"><i class="fas fa-chevron-left"></i> Tilbage</a>
+
+<form method="post">
+    <input type="hidden" asp-for="Team.ID" />
+    <div class="form-group">
+        <label asp-for="Team.Name"></label>
+        <input asp-for="Team.Name" class="form-control" />
+        <span asp-validation-for="Team.Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Team.Description"></label>
+        <input asp-for="Team.Description" class="form-control" />
+        <span asp-validation-for="Team.Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Team.TrainerId"></label>
+        <select asp-for="Team.TrainerId" asp-items="Model.TrainerOptions" class="form-control"></select>
+        <span asp-validation-for="Team.TrainerId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Team.Capacity"></label>
+        <input asp-for="Team.Capacity" class="form-control" />
+        <span asp-validation-for="Team.Capacity" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Team.Price"></label>
+        <input asp-for="Team.Price" class="form-control" />
+        <span asp-validation-for="Team.Price" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Team.ActiveDay"></label>
+        <input asp-for="Team.ActiveDay" class="form-control" />
+        <span asp-validation-for="Team.ActiveDay" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Gem Ændringer <i class="fas fa-floppy-disk"></i></button>
+    <a asp-page="/Teams/GetAllTeams" class="btn btn-secondary"><i class="fas fa-chevron-left"></i> Tilbage</a>
+</form>

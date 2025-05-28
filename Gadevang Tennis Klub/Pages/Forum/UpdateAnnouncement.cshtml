@@ -1,0 +1,43 @@
+﻿@page "{id:int}"
+@model Gadevang_Tennis_Klub.Pages.Forum.UpdateAnnouncementModel
+@{
+    ViewData["Title"] = "Opdater Annonce";
+}
+
+<h1>Opdater Besked</h1>
+
+<form method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Text" class="form-label"></label>
+        <textarea asp-for="Text" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Text" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Type</label>
+        <input class="form-control" value="@Model.Type" disabled />
+        <input type="hidden" name="Type" value="@Model.Type" />
+    </div>
+
+    @if (Model.IsAdmin && Model.Type == "Service")
+    {
+        <div class="form-check">
+            <input class="form-check-input" asp-for="ActualFlag" type="checkbox" />
+            <label class="form-check-label" asp-for="ActualFlag">Mark as Actual</label>
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary mt-3">Gem ændringer</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

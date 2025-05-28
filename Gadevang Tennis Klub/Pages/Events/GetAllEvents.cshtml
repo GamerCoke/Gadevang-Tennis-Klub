@@ -1,0 +1,101 @@
+﻿@page
+@using Gadevang_Tennis_Klub.Models
+@model Gadevang_Tennis_Klub.Pages.Events.GetAllEventsModel
+@{
+    ViewData["Title"] = "Events";
+}
+
+
+@if (Model.ShowUpcomingEvents)
+{
+    <h1>Kommende Begivenheder</h1>
+}
+else
+{
+    <h1>Tidligere Begivenheder</h1>
+}
+
+<hr />
+
+<!-- Events count & Create event button -->
+<div class="row align-items-center mb-3">
+    <div class="col">
+        <p class="mb-0">Antal begivenheder: @Model.Events.Count</p>
+    </div>
+    <div class="col text-end">
+        <div class="d-flex justify-content-end gap-2">
+            @if (Model.ShowUpcomingEvents)
+            {
+                <form method="post" asp-page-handler="ShowPreviousEvents" class="mb-0">
+                    <button type="submit" class="btn btn-secondary">
+                        Vis tidligere begivenheder
+                    </button>
+                </form>
+            }
+            else
+            {
+                <form method="post" asp-page-handler="ShowUpcomingEvents" class="mb-0">
+                    <button type="submit" class="btn btn-primary">
+                        Vis kommende begivenheder
+                    </button>
+                </form>
+            }
+            <a asp-page="CreateEvent" class="btn btn-success" role="button">
+                Opret begivenhed <i class="fas fa-plus-circle"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<table class="table table-hover" style="width: 100%; border-collapse: collapse;">
+    <tbody>
+        @{ 
+            int? currentYear = null;
+        }
+
+        @foreach (Event ev in Model.Events)
+        {
+            <!-- To show year above the table -->
+            var year = ev.Start.Year;
+
+            if (year != currentYear)
+            {
+                currentYear = year;
+                <tr style="background-color: #ededed; height: 40px;">
+                    <td colspan="1" class="align-middle text-center">
+                        <h4 class="mb-0">@year</h4>
+                    </td>
+                </tr>
+            }
+
+            <!-- Table data -->
+            <tr onclick="window.location.href='@Url.Page("GetEvent", new { eventID = ev.ID })'" style="cursor:pointer; border-bottom: 1px solid #ccc;">
+                <td style="padding: 10px;">
+                    <div style="display: flex; align-items: center;">
+                        <!-- Calenderbox -->
+                        <div style="width: 50px; border: 1px solid @(Model.ShowUpcomingEvents ? "#C6583A" : "gray"); text-align: center; font-family: Arial, sans-serif;">
+                            <div style="background-color: @(Model.ShowUpcomingEvents ? "#C6583A" : "gray"); color: white; padding: 4px 0; font-size: 0.8em;">
+                                @ev.Start.ToString("MMM", new System.Globalization.CultureInfo("da-DK")).ToUpper()
+                            </div>
+                            <div style="background-color: white; color: black; padding: 6px 0; font-size: 1.2em; font-weight: bold;">
+                                @ev.Start.Day
+                            </div>
+                        </div>
+                        <!-- Eventdetails -->
+                        <div style="margin-left: 15px;">
+                            <div style="font-size: 1.1em; font-weight: bold;">@ev.Title</div>
+                            <div style="color: #555;"><i class="fas fa-clock text-center" style="width: 20px;"></i> @ev.Start.ToString("HH:mm")-@ev.End</div>
+                            <div style="color: #555;"><i class="fa-solid fa-location-dot text-center" style="width: 20px;"></i> @ev.Location</div>
+                        </div>
+                        @if (ev.Capacity != null && ev.Capacity != 0)
+                        {
+                            <div style="color: #888; font-size: 0.9em; align-self: flex-end; margin-left: auto;">
+                                <i class="fa-solid fa-user text-center" style="width: 20px;"></i> @(Model.EventBookingsDict[ev.ID].Count) / @(ev.Capacity) tilmeldte
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

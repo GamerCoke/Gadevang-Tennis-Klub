@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Gadevang Tennis Klub\Gadevang Tennis Klub\Gadevang Tennis Klub.csproj" />
+    <ProjectReference Include="..\Gadevang Tennis Klub\Gadevang Tennis Klub\Gadevang Tennis Klub\Gadevang Tennis Klub.csproj" />
   </ItemGroup>
 
   <ItemGroup>

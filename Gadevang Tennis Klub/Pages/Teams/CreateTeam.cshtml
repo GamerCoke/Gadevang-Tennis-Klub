@@ -1,0 +1,67 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.Teams.CreateTeamModel
+@{
+    ViewData["Title"] = "Create Team";
+}
+
+<div class="card p-3 mx-auto" style="width:65%">
+    <div class="d-flex justify-content-between align-items-center">
+        <h1>Opret Hold</h1>
+        <a asp-page="GetAllTeams" class="btn btn-secondary"><i class="fas fa-chevron-left"></i> Tilbage</a>
+    </div>
+
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="Team.Name" class="control-label">Holdnavn*</label>
+            <input asp-for="Team.Name" class="form-control" placeholder="Holdnavn" />
+            <span asp-validation-for="Team.Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Team.Description" class="control-label">Beskrivelse*</label>
+            <textarea asp-for="Team.Description" class="form-control" placeholder="Om holdet..." rows="3" style="max-height: 175px; overflow-y: auto;"></textarea>
+            <span asp-validation-for="Team.Description" class="text-danger"></span>
+        </div>
+
+        <div class="row mb-2">
+            <div class="form-group col-md">
+                <label asp-for="Team.Capacity" class="control-label">Kapacitet*</label>
+                <input asp-for="Team.Capacity" type="number" min="1" class="form-control" placeholder="Max" />
+                <span asp-validation-for="Team.Capacity" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md">
+                <label asp-for="Team.Price" class="control-label">Pris*</label>
+                <input asp-for="Team.Price" type="number" min="0" step="1" class="form-control" placeholder="dkk" />
+                <span asp-validation-for="Team.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md">
+                <label asp-for="Team.ActiveDay" class="control-label">Aktiv dag*</label>
+                <select asp-for="Team.ActiveDay" class="form-control">
+                    <option value="">Vælg dag</option>
+                    <option>Mandag</option>
+                    <option>Tirsdag</option>
+                    <option>Onsdag</option>
+                    <option>Torsdag</option>
+                    <option>Fredag</option>
+                    <option>Lørdag</option>
+                    <option>Søndag</option>
+                </select>
+                <span asp-validation-for="Team.ActiveDay" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Team.TrainerId" class="control-label">Træner*</label>
+            <select asp-for="Team.TrainerId" class="form-select" asp-items="Model.TrainerOptions">
+                <option value="">Vælg træner</option>
+            </select>
+            <span asp-validation-for="Team.TrainerId" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Opret Hold<i class="fas fa-check"></i></button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

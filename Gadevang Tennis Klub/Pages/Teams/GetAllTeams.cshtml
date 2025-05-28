@@ -1,0 +1,94 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.Teams.GetAllTeamsModel
+@{
+    ViewData["Title"] = "All Teams";
+}
+
+<h2>All Teams</h2>
+
+@if (Model.IsAdmin)
+{
+    <a asp-page="/Teams/CreateTeam" class="btn btn-success" style="margin-bottom: 20px;">Opret Hold <i class="fas fa-plus-circle"></i></a>
+}
+
+<table class="table table-striped">
+    <thead>
+        @if (Model.IsAdmin)
+        {
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Trainer</th>
+                <th>Members</th>
+                <th>Price</th>
+                <th>Active Day</th>
+                <th>Membership</th>
+                <th>Actions</th>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Trainer</th>
+                <th>Members</th>
+                <th>Price</th>
+                <th>Active Day</th>
+                <th>Membership</th>
+            </tr>
+        }
+    </thead>
+    <tbody>
+        @foreach (var team in Model.Teams)
+        {
+            <tr>
+                <td>@team.Name</td>
+                <td>@team.Description</td>
+                <td>
+                    @if (Model.TrainerNames.ContainsKey(team.TrainerId))
+                    {
+                        @Model.TrainerNames[team.TrainerId]
+                    }
+                    else
+                    {
+                        <em>No Trainer Found</em>
+                    }
+                </td>
+                <td>@Model.GetMemberCountForTeam(team.ID.Value) / @team.Capacity</td>
+                <td>@team.Price</td>
+                <td>@team.ActiveDay</td>
+                <td>
+                    @if (Model.UserIsInTeam(team.ID.Value, Model.CurrentUserId))
+                    {
+                        <form method="post" asp-page-handler="LeaveTeam">
+                            <input type="hidden" name="teamID" value="@team.ID" />
+                            <button type="submit" class="btn btn-danger btn-sm">Forlad <i class="fas fa-sign-out"></i></button>
+                        </form>
+                    }
+                    else if (Model.GetMemberCountForTeam(team.ID.Value) < team.Capacity)
+                    {
+                        <form method="post" asp-page-handler="JoinTeam">
+                            <input type="hidden" name="teamID" value="@team.ID" />
+                            <button type="submit" class="btn btn-success btn-sm">Deltag <i class="fas fa-sign-in"></i></button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="text-muted">Team Full</span>
+                    }
+                </td>
+                @if (Model.IsAdmin)
+                {
+                    <td>
+                        <a asp-page="/Teams/UpdateTeam" asp-route-id="@team.ID" class="btn btn-sm btn-primary">Redigér <i class="fas fa-edit"></i></a>
+                        <form method="post" asp-page-handler="Delete" asp-route-teamID="@team.ID" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this team?');">Slet <i class="fas fa-trash"></i></button>
+                        </form>
+                        <a asp-page="/Teams/TeamBookings" asp-route-teamID="@team.ID" class="btn btn-info btn-sm">Se Deltagere <i class="fas fa-users-rectangle"></i></a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

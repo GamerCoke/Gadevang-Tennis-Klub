@@ -1,0 +1,143 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.Members.CreateMemberModel
+@{
+    ViewData["Title"] = "Opret Medlem";
+}
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Opret Medlem</h1>
+    <a asp-page="GetAllMembers" class="btn btn-secondary" role="button"><i class="fas fa-chevron-left"></i> Tilbage</a>
+</div>
+
+<form asp-page-handler="Create" method="post" enctype="multipart/form-data">
+    <table>
+        <div>
+            <label asp-for="@Model.Member.Name" class="control-label">Navn</label>
+            <br />
+            <span asp-validation-for="@Model.Member.Name" class="text-danger"></span>
+            <input asp-for="@Model.Member.Name" class="form-control" placeholder="Indtast navn" />
+        </div>
+
+        <br />
+
+        <div>
+            <label asp-for="@Model.Member.Password" class="control-label">Kodeord</label>
+            <br />
+            <span asp-validation-for="@Model.Member.Password" class="text-danger"></span>
+            <input asp-for="@Model.Member.Password" class="form-control" placeholder="Indtast kodeord" />
+        </div>
+
+        <br />
+
+        <div>
+            <label asp-for="@Model.Member.Phone" class="control-label">Telefon</label>
+            <br />
+            <span asp-validation-for="@Model.Member.Phone" class="text-danger"></span>
+            <input asp-for="@Model.Member.Phone" class="form-control" placeholder="+45 -- -- -- -- " />
+        </div>
+
+        <br />
+
+        <div>
+            <label asp-for="@Model.Member.Email" class="control-label">Email</label>
+            <br />
+            <span asp-validation-for="@Model.Member.Email" class="text-danger"></span>
+            <input asp-for="@Model.Member.Email" class="form-control" placeholder="eksempel@("@")email.com" />
+        </div>
+
+        <br />
+
+        <div>
+            <label asp-for="@Model.Member.Address" class="control-label">Adresse</label>
+            <br />
+            <span asp-validation-for="@Model.Member.Address" class="text-danger"></span>
+            <input asp-for="@Model.Member.Address" class="form-control" placeholder="Adresse... " />
+        </div>
+
+        <br />
+
+        <!-- Valg af Fødsels dato -->
+        <div>
+            <label asp-for="@Model.Member.Dob" class="control-label">Fødsels dag</label>
+            <br />
+            <span asp-validation-for="@Model.Member.Dob" class="text-danger"></span>
+            <input asp-for="@Model.Member.Dob" type="date" class="form-control" />
+        </div>
+
+        <br />
+
+        <!-- Dropdown menu for valg af Sex (default er 'Mand')-->
+        <div>
+            <label asp-for="@Model.Member.Sex" class="control-label">Sex</label>
+            <br />
+            <span asp-validation-for="@Model.Member.Sex" class="text-danger"></span>
+            <select asp-for="@Model.Member.Sex" class="form-control">
+                <option value="Herre">Herre</option>
+                <option value="Dame">Dame</option>
+                <option value="Andet">Andet</option>
+            </select>
+        </div>
+
+        <br />
+
+        <div>
+            <label asp-for="@Model.Member.Bio" class="control-label">Biografi</label>
+            <br />
+            <span asp-validation-for="@Model.Member.Bio" class="text-danger"></span>
+            <input asp-for="@Model.Member.Bio" class="form-control" placeholder="Skriv lidt om dig selv..." />
+        </div>
+
+        <br />
+
+        <!-- Valg af oprettelse af ny admin ja/nej (nej er default)-->
+        <div>
+            <label asp-for="@Model.Member.IsAdmin" class="control-label">Er Admin</label>
+            <br />
+            <span asp-validation-for="@Model.Member.IsAdmin" class="text-danger"></span>
+            <input asp-for="@Model.Member.IsAdmin" class="form-check-input" type="checkbox" />
+        </div>
+
+        <br />
+
+        <!-- Upload af billede til profil, opretter unikt navn til billede med path -->
+        <div>
+            <td colspan="2">
+                <label asp-for="@Model.Photo" class="control-label">Profil Billede</label>
+                <div class="custome-file">
+                    <input asp-for="@Model.Photo" class="custom-file-input form-control" onchange="previewImage(event)" />
+                </div>
+                <br />
+                <!-- Billede Visning-->
+                <div>
+                    <img id="imagePreview" style="max-width: 200px; max-height: 200px; display: none;" />
+                </div>
+                <span asp-validation-for="@Model.Photo" class="text-danger"></span>
+            </td>
+        </div>
+
+        <br />
+
+        <td><button type="submit" class="btn btn-success">Opret Medlem <i class="fa fa-check"></i></button></td>
+
+    </table>
+</form>
+@if (Model.Message != null)
+{
+    <b class="text-danger">@Model.Message</b>
+}
+<!-- JavaScript for at vise billeder -->
+<script>
+    function previewImage(e) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+            const image = document.getElementById('imagePreview');
+            image.src = event.target.result;
+            image.style.display = 'block'; // viser billede
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+</script>

@@ -1,0 +1,248 @@
+﻿@page
+@model Gadevang_Tennis_Klub.Pages.User.MyPageModel
+@inject Gadevang_Tennis_Klub.Services.OwnerData ownerData;
+@{
+    ViewData["Title"] = "Min side";
+}
+
+<h1 class="text-center">Min Profil</h1>
+
+<br />
+
+<div class="container">
+    <div class="row g-4">
+        <!-- Member Info + Image -->
+        <div class="col-md-5">
+            <div class="card h-100 shadow rounded-4 border-0">
+                <div class="card-body d-flex flex-column align-items-center text-center p-4">
+                    <!-- Image -->
+                    <div class="mb-3">
+                        <img class="rounded-circle shadow"
+                             src="@(
+                                 Model.Member.Image == null
+                                 ? Url.Content("~/images/ImageTemp.png")
+                                 : Url.Content($"~/Images/{Model.Member.Image}")
+                             )"
+                             alt="@Model.Member.Name"
+                             style="width: 130px; height: 130px; object-fit: cover;" />
+                    </div>
+
+                    <!-- Name -->
+                    <h4 class="fw-semibold mb-3">@Model.Member.Name</h4>
+
+                    <!-- Member Info -->
+                    <div class="text-start w-100">
+                        <h6 class="text-muted">Medlemsoplysninger</h6>
+                        <hr class="mb-3" />
+
+                        <dl class="row small">
+                            <dt class="col-5">ID:</dt>
+                            <dd class="col-7">@Model.Member.Id</dd>
+
+                            <dt class="col-5">Navn:</dt>
+                            <dd class="col-7">@Model.Member.Name</dd>
+
+                            <dt class="col-5">Adresse:</dt>
+                            <dd class="col-7">@Model.Member.Address</dd>
+
+                            <dt class="col-5">Fødselsdato:</dt>
+                            <dd class="col-7">@Model.Member.Dob.ToShortDateString()</dd>
+
+                            <dt class="col-5">Køn:</dt>
+                            <dd class="col-7">@Model.Member.Sex</dd>
+
+                            <dt class="col-5">Email:</dt>
+                            <dd class="col-7">@Model.Member.Email</dd>
+
+                            <dt class="col-5">Telefon:</dt>
+                            <dd class="col-7">@Model.Member.Phone</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bio -->
+        <div class="col-md-7">
+            <div class="card h-100 shadow rounded-4 border-0">
+                <div class="card-body p-4">
+                    <h5 class="fw-semibold mb-3">Bio</h5>
+                    <hr />
+                    <p class="text-muted">
+                        @(!string.IsNullOrWhiteSpace(Model.Member.Bio)
+                            ? Model.Member.Bio
+                            : "Ingen bio angivet.")
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<a asp-page="/Members/UpdateMember" asp-route-memberID=@Model.Member.Id class="btn btn-primary">Redigér <i class="fas fa-edit"></i></a>
+
+<br />
+<br />
+<br />
+
+<h1>Baner bookede</h1>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Bane</th>
+            <th>Tid</th>
+            <th>Organisator</th>
+            <th>Deltagere</th>
+            <th>Handlinger</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var list = await Model.CourtBookingDB.GetCourtBookingsByParticipantsAsync(Model.Member.Id);
+            list.Sort((b1, b2) => b1.Date.CompareTo(b2.Date) * 10 + b1.Timeslot.CompareTo(b2.Timeslot));
+            var sortedList = list.Where(b => b.Date >= DateOnly.FromDateTime(DateTime.Now));
+            foreach (var booking in sortedList)
+            {
+                <tr>
+                    <td>@($"#{booking.Court_ID}: {(await Model.CourtDB.GetCourtByIDAsync(booking.Court_ID)).Name}")</td>
+                    <td>@($"Dato: {booking.Date} | Tidslot: {booking.Timeslot} / {booking.Timeslot + ownerData.CourtsOpen}.00-{booking.Timeslot + ownerData.CourtsOpen + 1}.00")</td>
+                    <td>@($"{(await Model.MemberDB.GetMemberByIDAsync((int)booking.Member_ID)).Name}")</td>
+                    <td>
+                        @{
+                            var members = booking.Participants;
+                            if (members.Count == 0)
+                            {
+                                <p>Du spiller mod Maskinen</p>
+                            }
+                            else
+                            {
+                                foreach (var member in members)
+                                {
+                                    <p>@member.Name</p>
+                                }
+                            }
+                        }
+                    </td>
+                    <td>
+                        @if (Model.Member.Id == booking.Member_ID)
+                        {
+                            <a class="btn btn-success" asp-page="/CourtBookings/Members/AddParticipant" asp-route-bookingId=@booking.ID>Tilføj Deltager <i class="fas fa-user-plus"></i></a>
+                            <br />
+                            <a class="btn btn-danger" asp-page="/CourtBookings/Members/DeleteMemberBooking" asp-route-bookingId=@booking.ID>Slet Booking <i class="fa fa-calendar-minus"></i></a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-danger" asp-page="/CourtBookings/Members/LeaveBooking" asp-route-bookingId=@booking.ID>Forlad Booking <i class="fas fa-sign-out"></i></a>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<br />
+<h1>Begivenheder bookede</h1>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Titel</th>
+            <th>Lokation</th>
+            <th>Tid</th>
+            <th>Beskrivelse</th>
+            <th>Handlinger</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var eventBookingList = 
+                (await Model.EventBookingDB.GetAllEventBookingsAsync())
+                .Where(@event => @event.MemberID == Model.Member.Id).ToList();
+            var eventList = eventBookingList.ConvertAll(
+                booking => Model.EventDB.GetEventByIDAsync(booking.EventID).Result
+            );
+            eventList.Sort((b1, b2) => b1.Start.CompareTo(b2.Start));
+            foreach (var Event in eventList)
+            {
+                <tr>
+                    <td>@Event.Title</td>
+                    <td>@Event.Location</td>
+                    <td>@($"{DateOnly.FromDateTime(Event.Start)}: {TimeOnly.FromDateTime(Event.Start)}-{Event.End}")</td>
+                    <td>@Event.Description</td>
+                    <td>
+                        <form method="post" asp-page-handler="EventUnregister" asp-route-eventID="@Event.ID" onsubmit="return confirm('Er du sikker på, at du vil fjerne din tilmelding fra begivenheden: @Event?.Title?');">
+                            <button type="submit" class="btn btn-danger">
+                                Slet Booking <i class="fa fa-calendar-minus"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<br />
+<h1>Teams bookede</h1>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Navn</th>
+            <th>Træner</th>
+            <th>Beskrivelse</th>
+            <th>Pris</th>
+            <th>Dag</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int GetValue(string day)
+            {
+                switch (day)
+                {
+                    case "Mandag": return 1;
+                    case "Tirsdag": return 2;
+                    case "Onsdag": return 3;
+                    case "Torsdag": return 4;
+                    case "Fredag": return 5;
+                    case "Lørdag": return 6;
+                    case "Søndag": return 7;
+                    default: return 0;
+                }
+            }
+            var teamList = await Model.TeamDB.GetTeamsByMemberAsync(Model.Member.Id);
+            teamList.Sort((b1, b2) => GetValue(b1.ActiveDay).CompareTo(GetValue(b2.ActiveDay)));
+            foreach (var team in teamList)
+            {
+                <tr>
+                    <td>@team.Name</td>
+                    <td>
+                        @{
+                            var trainers = await Model.TrainerDB.GetAllTrainersAsync();
+                            int trainerID = -1;
+                            foreach (var tr in trainers)
+                            {
+                                foreach (var te in await Model.TeamDB.GetTeamsByTrainerAsync(tr.Id.ToString()))
+                                {
+                                    if (te.ID == team.ID)
+                                    {
+                                        trainerID = tr.Id;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (trainerID == -1) throw new Exception("WTF --- kill me");
+                            var trainer = await Model.TrainerDB.GetTrainerByIDAsync(trainerID);
+                            <p>@trainer.Name</p>
+                            @if (trainer.Image != null)
+                            {
+                                <img class="img-fluid" src="~/Images/@trainer.Image" alt="@trainer.Name" style="max-width: 100px; max-height: 100px;" />
+                            }
+                        }
+                    </td>
+                    <td>@team.Description</td>
+                    <td>@team.Price</td>
+                    <td>@team.ActiveDay</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

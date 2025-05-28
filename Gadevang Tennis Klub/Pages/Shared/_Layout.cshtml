@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Gadevang_Tennis_Klub</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Gadevang_Tennis_Klub.styles.css" asp-append-version="true" />
+
+    <!-- To use the icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+
+    <style>
+        .custom-navbar-css {
+        background-color: #69841A !important; /* The color of the navbar */
+        }
+
+        /*body {
+        background-color: #fffdfa; /* The color of the background */
+        /*}*/
+
+        thead th {
+        border-bottom: 0 !important;
+        background-color: #ededed !important; /* The color of all tables */
+        }
+
+        .nav-link {
+        white-space: nowrap; /* Makes sure the menu titles stay in a single line (no wrapping) */
+        }
+
+        .nav-link::first-letter {
+        font-size: 1.1em; /* Makes the first letter in the menu titles bigger */
+        }
+
+        .dropdown-toggle::after {
+        color: white !important; /* Set login button arrows color to white */
+        }
+
+        /* Fixing the footer */
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        body > .container {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    @if (ViewData["ErrorMessage"] != null)
+    {
+        <script type="text/javascript">
+            window.onload = function ()
+            {
+            alert("@ViewData["ErrorMessage"]");
+            };
+        </script>
+        ViewData["ErrorMessage"] = null;
+    }
+
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 custom-navbar-css" style="margin:0; padding-top:0; padding-bottom:0; padding-right:10px;">
+            <div class="container-fluid p-0 m-0">
+                <!-- #region navbar logo -->
+                <a class="navbar-brand" asp-area="" asp-page="/Index" style="margin:0; padding:0;">
+                    <img src="@Url.Content("~/Images/GadevangTennisklub2.png")" alt="Logo" style="min-width: 110px; max-width:300px; width:100%; height:auto;">
+                </a>
+                <!-- #endregion -->
+                @*                 <a class="navbar-brand" asp-area="" asp-page="/Index">Gadevang Tennisklub</a> *@
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav ms-auto text-uppercase">
+                        <!-- Menus -->
+                        <li class="nav-item"><a class="nav-link text-light" asp-area="" asp-page="/Informations/AboutUs">Om Os</a></li>
+                        <li class="nav-item"><a class="nav-link text-light" asp-area="" asp-page="/Events/Calendar">Kalender</a></li>
+@*                         <li class="nav-item"><a class="nav-link text-light" asp-area="" asp-page="/CourtBookings/Members/CreateMemberBooking">Banebooking</a></li> *@
+                        <li class="nav-item"><a class="nav-link text-light" asp-area="" asp-page="/CourtBookings/CourtBooking">Banebooking</a></li>
+                        <li class="nav-item"><a class="nav-link text-light" asp-area="" asp-page="/Forum/GetAllAnnouncements">Forum</a></li>
+
+                        <!-- Dropdown menu for teams -->
+@*                         @using Gadevang_Tennis_Klub.Interfaces.Models
+                        @using Gadevang_Tennis_Klub.Interfaces.Services
+                        @inject ITeamDB _teamDB
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-light dropdown-toggle" id="coursesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Holdoversigt
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="coursesDropdown">
+                                @foreach (ITeam team in await _teamDB.GetAllTeamsAsync())
+                                {
+                                    <!-- Link til en GetTeam side som viser info om holdet ?? -->
+                                    <li><a asp-page="/Teams/GetTeam" asp-route-teamId="@team.ID" class="dropdown-item" style="text-transform: none;">@team.Name</a></li>
+                                }
+                            </ul>
+                        </li> *@
+                        <!-- Dropdown menu for about us -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-light dropdown-toggle" id="coursesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Om Klubben</a>
+                            <ul class="dropdown-menu" aria-labelledby="coursesDropdown">
+                                <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Trainers/PublicTrainerOverview">Trænere</a></li>
+                                <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Informations/Gallery">Galleri</a></li>
+                                <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Informations/CourtRules">Banepleje og Etikette</a></li>
+                                <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Informations/TennisRules">Tennisregler</a></li>
+                            </ul>
+                        </li>
+                        @if (string.IsNullOrEmpty(Context.Session.GetString("User")))
+                        {
+                            <a class="btn rounded-pill ms-3" asp-area="" asp-page="/User/Login"
+                            style="background-color: #1b2e1b; padding: 10px 20px;">
+                                <span class="text-light">Login <i class="fas fa-sign-in"></i></span>
+                            </a>
+                        }
+                        else
+                        {
+                            <div class="dropdown">
+                                <button type="button" class="btn rounded-pill dropdown-toggle ms-3" data-bs-toggle="dropdown"
+                                style="background-color: #1b2e1b; padding: 10px 20px;">
+                                    <span class="text-light">@Context.Session.GetString("User").Split('|')[2]</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/User/MyPage">Min Profil <i class="fas fa-user"></i></a></li>
+                                    <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Teams/GetAllTeams">Hold <i class="fas fa-users-rectangle"></i></a></li>
+
+                                    @if (bool.Parse(Context.Session.GetString("User").Split('|')[1]))
+                                    {
+                                        <li><hr class="dropdown-divider"></hr></li>
+                                        <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Members/GetAllMembers">Medlemmer</a></li>
+                                        <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Courts/GetAllCourts">Baner</a></li>
+                                        <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Trainers/ReadAllTrainers">Trænere</a></li>
+                                        <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/Events/GetAllEvents">Begivenheder</a></li>
+                                        <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/CourtBookings/Events/ViewEventCourtBookings">Baner Bookede for Begivenheder</a></li>
+                                        <li><a class="dropdown-item" style="text-transform: none;" asp-area="" asp-page="/CourtBookings/Teams/ViewTeamCourtBookings">Baner Bookede for Hold</a></li>
+                                    }
+                                    <li>     
+                                      <hr class="dropdown-divider"></hr>
+                                    </li>
+                                    <li>
+                                        <a asp-area="" asp-page="/User/Logout" class="dropdown-item" style="text-transform: none;">Log af <i class="fas fa-sign-out"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container d-flex justify-content-between align-items-center py-2">
+            <span>&copy; 2025 - Gadevang Tennisklub - Gadevangsvej 145B - 3400 Hillerød</span>
+
+            <!-- Facebook-icon with link -->
+            <a href="https://www.facebook.com/groups/499486406821368/?locale=da_DK" target="_blank" class="text-decoration-none">
+                <i class="fab fa-facebook fa-2x" style="color: #4267B2;"></i>
+            </a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

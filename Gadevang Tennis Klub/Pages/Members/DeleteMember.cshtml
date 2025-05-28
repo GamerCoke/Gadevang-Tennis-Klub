@@ -1,0 +1,86 @@
+﻿@page
+@using Gadevang_Tennis_Klub.Interfaces.Models
+@model Gadevang_Tennis_Klub.Pages.Members.DeleteMemberModel
+@{
+    ViewData["Title"] = "Slet medlem";
+}
+
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Slet et medlem</h1>
+    <a asp-page="GetAllMembers" class="btn btn-secondary" role="button"><i class="fas fa-chevron-left"></i> Tilbage</a>
+</div>
+
+
+<p>Er du sikker på at du ønsker at slette følgende medlem:</p>
+
+<table class="table table-hover">
+<thead>
+    <tr>
+        <th>Billede</th>
+        @if (Model.IsAdmin)
+        {
+            <th>Id</th>
+            <th>Er Admin</th>
+        }
+        <th>Navn</th>
+        <th>Telefon</th>
+        <th>Email</th>
+        <th>Fødsels dag</th>
+        <th>Sex</th>
+        <th>Adresse</th>
+        <th>bio</th>
+    </tr>
+</thead>
+<tbody>
+
+        <tr>
+            <td>
+                @if (Model.Member.Image == null)
+                {
+                    <p>null</p>
+                }
+                else
+                {
+                    <img class="img-fluid" src="~/Images/@Model.Member.Image" alt="@Model.Member.Name" style="max-width: 100px; max-height: 100px;" />
+                }
+            </td>
+            @if (Model.IsAdmin)
+            {
+                <td>@Model.Member.Id</td>
+                <td>@Model.Member.IsAdmin</td>
+            }
+            <td>@Model.Member.Name</td>
+            <td>@Model.Member.Phone</td>
+            <td>@Model.Member.Email</td>
+            <td>@Model.Member.Dob</td>
+            <td>@Model.Member.Sex</td>
+            <td>@Model.Member.Address</td>
+            <td>@Model.Member.Bio</td>
+            </tr>
+    </tbody>
+</table>
+
+<br />
+
+<form method="post">
+    <button class="btn btn-danger"> Slet medlem <i class="fas fa-trash"></i> </button>
+    <input type="hidden" name="memberID" value=@Model.Member.Id />
+</form>
+
+<!-- JS function to show an image preview -->
+<script>
+    function previewImage(member) {
+        const file = member.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const image = document.getElementById('imagePreview');
+            image.src = e.target.result;
+            image.style.display = 'block'; // Show the image
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
