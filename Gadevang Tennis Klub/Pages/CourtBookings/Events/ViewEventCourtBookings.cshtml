@@ -37,7 +37,7 @@
                     <td>@booking.Event_ID</td>
                     <td>@((await Model.GetEventAsync((int)booking.Event_ID)).Title)</td>
                     <td>@booking.Date</td>
-                    <td>fra @(booking.Timeslot + 6).00 til @(booking.Timeslot + 7).00</td>
+                    <td>fra @(booking.Timeslot).00 til @(booking.Timeslot).00</td>
                     <td>
                         <form method="post" asp-page="/CourtBookings/Events/RemoveEventCourtBookings" asp-route-bookingId="@booking.ID" class="d-inline">
                             <button type="submit" class="btn btn-danger" onclick="return confirm('Er du sikker på, at du vil slette denne besked?');">Slet <i class="fas fa-trash"></i></button>

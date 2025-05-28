@@ -1,24 +1,25 @@
 ﻿using Gadevang_Tennis_Klub.Interfaces.Models;
+using Gadevang_Tennis_Klub.Interfaces.Services;
 using Gadevang_Tennis_Klub.Models;
 using Gadevang_Tennis_Klub.Services.SQL;
 
 namespace GTK_unittest
 {
     [TestClass]
-    public sealed class Test1
+    public sealed class Test_Court
     {
         [TestMethod]
         public void Test_CreateCourtBookingAsync()
         {
             //Arrange
-            ResetClass.Reset();
+            ResetClassM.Reset();
             CourtDB_SQL db = new CourtDB_SQL();
 
             //Act
             ICourt original = new Court(0, "Indendørs Tennis", "Mark");
             if (!db.CreateCourtAsync(original).Result)
                 Assert.Fail();
-            ICourt saved = db.GetCourtByIDAsync(5).Result;
+            ICourt saved = db.GetCourtByIDAsync(9).Result;
 
             //Assert
             Assert.AreEqual(original.Name, saved.Name);
@@ -27,7 +28,7 @@ namespace GTK_unittest
         }
         private class TestIsvalidCourt : ICourt
         {
-            public int ID { get; set; } = 0;
+            public int ID { get; set; } = -1;
             public string Type { get; set; } = "Indendørs Tennis";
             public string? Name { get; set; } = "Mark";
         }
@@ -35,7 +36,7 @@ namespace GTK_unittest
         public void Test_InvalidCreateCourtAsync()
         {
             //Arrange
-            ResetClass.Reset();
+            ResetClassM.Reset();
             CourtDB_SQL db = new CourtDB_SQL();
 
             //Act
@@ -59,7 +60,7 @@ namespace GTK_unittest
         public void Test_UpdateCourtAsync()
         {
             //Arrange
-            ResetClass.Reset();
+            ResetClassM.Reset();
             CourtDB_SQL db = new CourtDB_SQL();
 
             //Act
@@ -77,7 +78,7 @@ namespace GTK_unittest
         public void Test_DeleteCourtAsync()
         {
             //Arrange
-            ResetClass.Reset();
+            ResetClassM.Reset();
             CourtDB_SQL db = new CourtDB_SQL();
 
             //Act
@@ -93,7 +94,7 @@ namespace GTK_unittest
         public void Test_GetAllCourtsAsync()
         {
             //Arrange
-            ResetClass.Reset();
+            ResetClassM.Reset();
             CourtDB_SQL db = new CourtDB_SQL();
 
             //Act
@@ -130,7 +131,7 @@ namespace GTK_unittest
         public void Test_GetCourtByIDAsync()
         {
             //Arrange
-            ResetClass.Reset();
+            ResetClassM.Reset();
             CourtDB_SQL db = new CourtDB_SQL();
 
             //Act
@@ -147,7 +148,7 @@ namespace GTK_unittest
         public void Test_GetCourtsByNameAsync()
         {
             //Arrange
-            ResetClass.Reset();
+            ResetClassM.Reset();
             CourtDB_SQL db = new CourtDB_SQL();
 
             //Act
@@ -168,7 +169,7 @@ namespace GTK_unittest
         public void Test_GetCourtsByTypeAsync()
         {
             //Arrange
-            ResetClass.Reset();
+            ResetClassM.Reset();
             CourtDB_SQL db = new CourtDB_SQL();
 
             //Act
