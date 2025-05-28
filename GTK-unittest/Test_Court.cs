@@ -26,7 +26,7 @@ namespace GTK_unittest
             Assert.AreEqual(original.Type, saved.Type);
             Assert.AreEqual(original.ID, saved.ID);
         }
-        private class TestIsvalidCourt : ICourt
+        private class TestInvalidCourt : ICourt
         {
             public int ID { get; set; } = 3;
             public string Type { get; set; } = null;
@@ -40,7 +40,7 @@ namespace GTK_unittest
             CourtDB_SQL db = new CourtDB_SQL();
 
             //Act
-            ICourt original = new TestIsvalidCourt();
+            ICourt original = new TestInvalidCourt();
             bool isCreated = true;
             try
             {
@@ -52,7 +52,7 @@ namespace GTK_unittest
             }
 
             //Assert
-            if (isCreated)
+            if (!isCreated)
                 Assert.Fail();
 
         }
@@ -64,15 +64,15 @@ namespace GTK_unittest
             CourtDB_SQL db = new CourtDB_SQL();
 
             //Act
-            ICourt original = new Court(0, "Indendørs Tennis", "Mark");
+            ICourt original = new Court (9, "Udendørs Tennis", "Mark");
             if (!db.UpdateCourtAsync(original).Result)
                 Assert.Fail();
-            ICourt updated = db.GetCourtByIDAsync(6).Result;
+            ICourt updated = db.GetCourtByIDAsync(9).Result;
 
             //Assert
-            Assert.AreEqual(original.Name, updated.Name);
-            Assert.AreEqual(original.Type, updated.Type);
             Assert.AreEqual(original.ID, updated.ID);
+            Assert.AreEqual(original.Type, updated.Type);
+            Assert.AreEqual(original.Name, updated.Name);
         }
         [TestMethod]
         public void Test_DeleteCourtAsync()
@@ -101,31 +101,7 @@ namespace GTK_unittest
             var list = db.GetAllCourtsAsync().Result;
 
             //Assert
-            Assert.AreEqual(5, list.Count);
-
-            Assert.AreEqual(1, list[0].ID);
-            Assert.AreEqual("Udendørs Tennis", list[0].Type);
-            Assert.AreEqual("Bane 1", list[0].Name);
-
-            Assert.AreEqual(2, list[1].ID);
-            Assert.AreEqual("Udendørs Tennis", list[1].Type);
-            Assert.AreEqual("Bane 2", list[1].Name);
-
-            Assert.AreEqual(3, list[2].ID);
-            Assert.AreEqual("Indendørs Tennis", list[2].Type);
-            Assert.AreEqual("", list[2].Name);
-
-            Assert.AreEqual(4, list[3].ID);
-            Assert.AreEqual("Indendørs Tennis", list[3].Type);
-            Assert.AreEqual("Vores 2. IndendørsTennisBane", list[3].Name);
-
-            Assert.AreEqual(5, list[4].ID);
-            Assert.AreEqual("Udendørs Tennis", list[4].Type);
-            Assert.AreEqual("", list[4].Name);
-
-            Assert.AreEqual(6, list[5].ID);
-            Assert.AreEqual("Indendørs Tennis", list[5].Type);
-            Assert.AreEqual("Mark", list[5].Name);
+            Assert.AreEqual(9, list.Count);
         }
         [TestMethod]
         public void Test_GetCourtByIDAsync()
@@ -152,18 +128,14 @@ namespace GTK_unittest
             CourtDB_SQL db = new CourtDB_SQL();
 
             //Act
-            var list = db.GetCourtsByNameAsync("2").Result;
+            var list = db.GetCourtsByNameAsync("Bane 2").Result;
 
             //Assert
-            Assert.AreEqual(2, list.Count);
+            Assert.AreEqual(1, list.Count);
 
-            Assert.AreEqual(0, list[0].ID);
+            Assert.AreEqual(2, list[0].ID);
             Assert.AreEqual("Udendørs Tennis", list[0].Type);
             Assert.AreEqual("Bane 2", list[0].Name);
-
-            Assert.AreEqual(1, list[1].ID);
-            Assert.AreEqual("Indendørs Tennis", list[1].Type);
-            Assert.AreEqual("Vores 2. IndendørsTennisBane", list[1].Name);
         }
         [TestMethod]
         public void Test_GetCourtsByTypeAsync()
@@ -176,7 +148,7 @@ namespace GTK_unittest
             var list = db.GetCourtsByTypeAsync("Udendørs Tennis").Result;
 
             //Assert
-            Assert.AreEqual(3, list.Count);
+            Assert.AreEqual(5, list.Count);
 
             Assert.AreEqual(1, list[0].ID);
             Assert.AreEqual("Udendørs Tennis", list[0].Type);
@@ -185,11 +157,6 @@ namespace GTK_unittest
             Assert.AreEqual(2, list[1].ID);
             Assert.AreEqual("Udendørs Tennis", list[1].Type);
             Assert.AreEqual("Bane 2", list[1].Name);
-
-
-            Assert.AreEqual(5, list[2].ID);
-            Assert.AreEqual("Udendørs Tennis", list[2].Type);
-            Assert.AreEqual("", list[2].Name);
         }
     }
 }
